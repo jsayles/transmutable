@@ -1,0 +1,39 @@
+
+ADMINS = ( ('Your Name', 'your_email@somedomainyouown.com'), )
+MANAGERS = ADMINS
+
+SECRET_KEY = 'a secret'
+
+PRODUCTION = False
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+OPEN_REGISTRATION = True
+OPEN_INVITE_REQUEST = False
+OPEN_INVITE = True
+
+#CACHE_BACKEND = 'dummy:///'
+CACHE_BACKEND = 'locmem:///'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'transmutable',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
+
+
+DEFAULT_FROM_EMAIL = "someaddress@gmail.com"
+EMAIL_HOST = "smtp.nothing.com"
+EMAIL_HOST_PASSWORD = "12344321"
+EMAIL_HOST_USER = "someaddress@gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+
+LOGGING_NAME = '/tmp/transmutable.log'
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s', filename=LOGGING_NAME, filemode = 'w')
