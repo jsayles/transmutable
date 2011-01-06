@@ -1,0 +1,8 @@
+*.pyc
+local_settings.py
+backups
+media/banana
+media/person
+media/resized_image
+media/person_photo
+

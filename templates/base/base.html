@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<!--[if IE]><![endif]-->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<meta name="DC.title" content="{{ site.name }}" />
+	<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
+
+	<link rel="stylesheet" href="{{MEDIA_URL}}base/base.css?v=1" />
+
+	<link rel="shortcut icon" href="{{MEDIA_URL}}base/favicon.gif" />
+	<link rel="apple-touch-icon" href="{{MEDIA_URL}}base/apple-touch-icon.png" />
+
+	<script src="{{MEDIA_URL}}js/modernizr-1.5.min.js"></script>
+	<script src="{{MEDIA_URL}}jquery/js/jquery-1.4.2.min.js"></script>
+	<script src="{{MEDIA_URL}}jquery/js/jquery-ui-1.8.4.custom.min.js"></script>
+	<script src="{{MEDIA_URL}}js/plugins.js?v=1"></script>
+	<script src="{{MEDIA_URL}}js/script.js?v=1"></script>
+	<script src="{{MEDIA_URL}}base/base.js"></script>
+	<!--[if lt IE 7 ]>
+	  <script src="{{MEDIA_URL}}js/dd_belatedpng.js?v=1"></script>
+	<![endif]-->
+
+	{%block sub-head %}{% endblock %}
+	
+	{% block feed-link %}{% endblock %}
+	
+	<style>
+	{% block style %}{% endblock %}
+	</style>
+
+</head>
+<!--[if lt IE 7 ]> <body class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <body class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
+{% block body %}
+{% block header %}<header>
+
+<nav id="nav-tabs"><ul>
+	{% if request.user.is_authenticated %}
+	<li><a href="{% url django.contrib.auth.views.logout_then_login %}">Logout</a></li>
+	{% else %}
+	<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">Login</a>{% endblock %}</li>
+	{% endif %}
+</ul></nav>
+
+{% block header-title %}<h1><a href="{% url banana.views.index %}">{{ site.name }}</a></h1>{% endblock %}
+
+</header>{% endblock %}
+
+<div id="content">{% block content %}{% endblock %}</div>
+
+{% block footer %}<footer>
+	{% if request.user.is_staff %}
+		<a href="{% url admin:index %}">admin</a>
+	{% endif %}
+</footer>{% endblock %}
+
+{% endblock %}<!-- end body block -->
+</body>
+</html>
