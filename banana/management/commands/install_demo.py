@@ -44,4 +44,4 @@ class Command(BaseCommand):
 		person.save()
 		return person
 
-# Copyright 2010 by 2038 Solutions LLC (http://2038solutions.com/). All Rights Reserved.
+# Copyright 2010 by Trevor F. Smith. All Rights Reserved.
