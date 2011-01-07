@@ -36,6 +36,7 @@ def user(request, username):
 	user = get_object_or_404(User, username=username)
 	return render_to_response('banana/user.html', { 'user':user, }, context_instance=RequestContext(request))
 
+@login_required
 def edit_workdoc(request, username):
 	user = get_object_or_404(User, username=username)
 	if request.method == 'POST':
