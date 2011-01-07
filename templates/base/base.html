@@ -23,6 +23,8 @@
 	  <script src="{{MEDIA_URL}}js/dd_belatedpng.js?v=1"></script>
 	<![endif]-->
 
+	{% block extra-links %}{% endblock %}
+
 	{%block sub-head %}{% endblock %}
 	
 	{% block feed-link %}{% endblock %}
@@ -42,6 +44,7 @@
 
 <nav id="nav-tabs"><ul>
 	{% if request.user.is_authenticated %}
+	<li><a href="{% url person.views.profile request.user.username %}">Account</a></li>
 	<li><a href="{% url django.contrib.auth.views.logout_then_login %}">Logout</a></li>
 	{% else %}
 	<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">Login</a>{% endblock %}</li>

@@ -1,1 +1,12 @@
 /* Banana CSS */
+.rendered-wrapper li { 	padding-left: 0em; margin-left: 1.6em;}
+
+.rendered-wrapper ul > li {
+	list-style-type: disc;
+}
+
+.rendered-wrapper ol > li {
+	list-style-type: decimal;
+}
+
+.rendered-wrapper a, .rendered-wrapper a:hover { text-decoration: underline; }

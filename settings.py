@@ -26,7 +26,7 @@ MEDIA_URL = '/media/'
 
 ADMIN_MEDIA_PREFIX = '/admin-media/'
 
-#AUTH_PROFILE_MODULE = "person.UserProfile"
+AUTH_PROFILE_MODULE = "person.UserProfile"
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',

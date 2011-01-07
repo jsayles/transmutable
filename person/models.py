@@ -151,6 +151,5 @@ def get_display_name(user):
 	return user.username
 def get_user_url(user):
 	return reverse('person.views.profile', kwargs={'username':user.username})
-User.get_absolute_url = get_user_url	
 User.get_profile = lambda self: UserProfile.objects.get_or_create(user=self)[0]
 User.display_name = get_display_name

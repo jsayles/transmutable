@@ -1,8 +1,19 @@
-{% extends "base/base.html" %}
+{% extends "banana/base.html" %}
+{% load imagetags %}
 {% block style %}
 {% endblock %}
 
 {% block content %}
-<h1>{{ user.get_full_name }}:</h1>
-
+{% if user.get_profile.photo %}
+<img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" />
+{% else %}
+<img class="person-photo" src="{{ MEDIA_URL }}person/BlankIcon150x150.jpg" width="150" height="150" />		
+{% endif %}
+<h1>
+	{{ user.get_full_name }}:
+</h1>
+<h3>Currently working on:</h3>
+<div id="work-doc" class="rendered-wrapper">
+	{{ user.work_doc.rendered|safe }}
+</div>
 {% endblock %}

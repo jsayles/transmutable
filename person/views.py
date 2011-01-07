@@ -103,8 +103,8 @@ def invites(request):
 @login_required
 def profile(request, username):
 	#request.upload_handlers.insert(0, QuotaUploadHandler())
-
-	profile = get_object_or_404(UserProfile, user__username=username)
+	user = get_object_or_404(User, username=username)
+	profile = user.get_profile()
 	message = None
 	if request.method == 'POST' and request.user.is_authenticated() and request.user.id == profile.user.id:
 		profile_form = ProfileForm(request.POST, instance=profile)

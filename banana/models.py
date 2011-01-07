@@ -28,9 +28,13 @@ from django.contrib.markup.templatetags.markup import markdown
 class WorkDoc(models.Model):
 	"""A markdown document displaying a person's current work queue."""
 	user = models.ForeignKey(User, related_name='work_docs', unique=True)
-	markup = models.TextField(blank=True, null=True)
+	markup = models.TextField(blank=False, null=False, default='')
 	rendered = models.TextField(blank=True, null=True)
 	modified = models.DateTimeField(auto_now=True)
+
+	def save_markdown(self, markup):
+		self.markup = markup
+		self.save()
 
 	def save(self, *args, **kwargs):
 		"""When saving the markup, render via markdown and save to self.rendered"""
@@ -43,3 +47,4 @@ class WorkDoc(models.Model):
 		ordering = ['user__username']
 
 User.work_doc = property(lambda u: WorkDoc.objects.get_or_create(user=u)[0])
+User.get_absolute_url = lambda u: reverse('banana.views.user', kwargs={ 'username':u.username })	
