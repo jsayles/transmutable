@@ -30,7 +30,7 @@ class Command(BaseCommand):
 		site.save()
 				
 		person1 = self.create_user('trevor', '1234', 'Trevor F.', 'Smith', 'Seattle, WA', is_staff=True, is_superuser=True)
-		person1.work_doc.save_markdown("""#Thursday:
+		person1.work_doc.save_markup("""#Thursday:
 * Legal homework
 * Call Dr. Foolish
 * read [the NYT](http://nytimes.com/ "NY Times")
@@ -50,7 +50,7 @@ Read "Good to Great"
 """)
 		
 		person2 = self.create_user('jerry', '1234', 'Jerry', 'Dorfendorf', 'Detroit, MI', is_staff=False, is_superuser=False)
-		person2.work_doc.save_markdown("I am currently flying between one of three coasts.")
+		person2.work_doc.save_markup("I am currently flying between one of three coasts.")
 		
 		person3 = self.create_user('amy', '1234', 'Amy', 'Scout', 'Bothell, WA', is_staff=False, is_superuser=False)
 		

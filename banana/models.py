@@ -25,6 +25,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.markup.templatetags.markup import markdown
 
+from person import sanitizeHtml
+
 class WorkDoc(models.Model):
 	"""A markdown document displaying a person's current work queue."""
 	user = models.ForeignKey(User, related_name='work_docs', unique=True)
@@ -32,13 +34,13 @@ class WorkDoc(models.Model):
 	rendered = models.TextField(blank=True, null=True)
 	modified = models.DateTimeField(auto_now=True)
 
-	def save_markdown(self, markup):
+	def save_markup(self, markup):
 		self.markup = markup
 		self.save()
 
 	def save(self, *args, **kwargs):
 		"""When saving the markup, render via markdown and save to self.rendered"""
-		self.rendered = markdown(urlize(self.markup))
+		self.rendered = markdown(urlize(sanitizeHtml(self.markup)))
 		super(WorkDoc, self).save(*args, **kwargs)
 
 	def __unicode__(self):

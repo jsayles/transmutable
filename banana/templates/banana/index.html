@@ -2,7 +2,6 @@
 {% load imagetags %}
 
 {% block sub-head %}
-
 <script>
 $(document).ready(function() {
 	$('button[name="add-search-button"]').click(function(){ $('#search-form').show();  $('#id_terms').focus(); });
@@ -13,11 +12,12 @@ $(document).ready(function() {
 {% block style %}
 #user-list {
 	width: 600px; 
+	min-height: 400px;
 }
 #user-list > li {
-	padding: 1em 1em 1em 1em;
+	padding: 1em 1em 0.5em 1em;
 	border-radius: 2em 0 2em 0;
-	border: solid 1px #EEE;
+	border: solid 1px #DDD;
 	margin-bottom: 20px; 
 }
 
@@ -31,10 +31,10 @@ $(document).ready(function() {
 
 #about-panel {
 	float: right;
-	width: 300px;
-	border: solid 1px #EEE;
-	padding: 10px;
+	width: 370px;
 }
+
+.last-p { margin-bottom: 30px; }
 
 #user-list > li { background-color: #FFF; cursor: pointer; }
 #user-list > li:hover { background-color: #EEE; }
@@ -46,10 +46,19 @@ $(document).ready(function() {
 
 {% block content %}
 <div id="about-panel">
-	<h1>Work in public:</h1>
+	<h1>We work in public:</h1>
+	<p class="last-p">People are starting to come out from behind their intellectual firewalls and share the details of what it takes to do what they do.</p>
+
+	<h2>Everyone will see your stuff. That's crazy!</h2>
+	<p>That's what many people think about sharing the details of their work. Have you heard of Twitter, Facebook, and blogs?</p>
+	<p class="last-p">Yeah. They said that was crazy, too.</p>
+
+	<h2>Can I get in on this?</h2>
+	<p>If you know people using this site (as in really know them) then ask them how they got in.</p>
+	<p class="last-p">Otherwise, use <a href="https://github.com/TrevorFSmith/transmutable">the source</a>, Luke.</p>
 </div>
 <ul id="user-list">
-{% for user in users %}
+{% for user in users|slice:":10" %}
 	{% if user.work_doc.rendered %}
 	<li onclick="document.location.href='{{ user.get_absolute_url }}'; return false;">
 		<a href="{{ user.get_absolute_url }}">

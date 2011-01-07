@@ -22,7 +22,7 @@ a:hover { text-decoration: underline;}
 
 p { margin-bottom: 0.5em; }
 
-ul { margin-bottom: 1em; }
+ul, ol { margin-bottom: 1em; }
 
 blockquote { margin: 0px 10px; font-style: italic; }
 

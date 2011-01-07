@@ -44,10 +44,12 @@
 
 <nav id="nav-tabs"><ul>
 	{% if request.user.is_authenticated %}
-	<li><a href="{% url person.views.profile request.user.username %}">Account</a></li>
-	<li><a href="{% url django.contrib.auth.views.logout_then_login %}">Logout</a></li>
+	<li><a href="{% url banana.views.user request.user.username %}">home</a></li>
+	<li><a href="{% url person.views.profile request.user.username %}">account</a></li>
+	<li><a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></li>
 	{% else %}
-	<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">Login</a>{% endblock %}</li>
+	<li><a href="{% url banana.views.index %}">home</a></li>
+	<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">login</a>{% endblock %}</li>
 	{% endif %}
 </ul></nav>
 

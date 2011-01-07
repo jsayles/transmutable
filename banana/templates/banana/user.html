@@ -1,6 +1,20 @@
 {% extends "banana/base.html" %}
 {% load imagetags %}
 {% block style %}
+#work-doc {
+	width: 600px;
+}
+.editable-workdoc:hover { background-color: #EEE; }
+#work-doc-controls { visibility: hidden; float: right; padding: 5px; }
+.editable-workdoc:hover #work-doc-controls { visibility: visible; }
+{% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+	$('button[name="edit-work-doc-button"]').click(function(){ document.location.href = "{% url banana.views.edit_workdoc request.user.username %}"; })
+});
+</script>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +27,8 @@
 	{{ user.get_full_name }}:
 </h1>
 <h3>Currently working on:</h3>
-<div id="work-doc" class="rendered-wrapper">
+<div id="work-doc" class="rendered-wrapper{% if request.user.username == user.username %} editable-workdoc{% endif %}">
+	<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">click to edit</button></div>
 	{{ user.work_doc.rendered|safe }}
 </div>
 {% endblock %}
