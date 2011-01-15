@@ -27,7 +27,7 @@ from django.utils import feedgenerator
 from django.utils.encoding import smart_str
 
 from models import *
-from forms import WorkDocForm
+from forms import WorkDocForm, CompletedItemForm
 
 def index(request):
 	return render_to_response('banana/index.html', { 'users':User.objects.all().order_by('-work_docs__modified') }, context_instance=RequestContext(request))
@@ -37,13 +37,23 @@ def user(request, username):
 	return render_to_response('banana/user.html', { 'user':user, }, context_instance=RequestContext(request))
 
 @login_required
-def edit_workdoc(request, username):
-	user = get_object_or_404(User, username=username)
+def edit_completed(request):
+	if request.method == 'POST':
+		completed_form = CompletedItemForm(request.POST, instance=CompletedItem(user=request.user))
+		if completed_form.is_valid():
+			item = completed_form.save()
+			completed_form = CompletedItemForm()
+	else:
+		completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
+	return render_to_response('banana/edit_completed.html', { 'completed_form':completed_form }, context_instance=RequestContext(request))
+
+@login_required
+def edit_workdoc(request):
 	if request.method == 'POST':
 		workdoc_form = WorkDocForm(request.POST)
 		if workdoc_form.is_valid():
-			user.work_doc.save_markup(workdoc_form.cleaned_data['markup'])
-			return HttpResponseRedirect(reverse('banana.views.user', kwargs={ 'username':user.username }))
+			request.user.work_doc.save_markup(workdoc_form.cleaned_data['markup'])
+			return HttpResponseRedirect(reverse('banana.views.user', kwargs={ 'username':request.user.username }))
 	else:
-		workdoc_form = WorkDocForm(instance=user.work_doc)
-	return render_to_response('banana/edit_workdoc.html', { 'user':user, 'workdoc_form':workdoc_form }, context_instance=RequestContext(request))
+		workdoc_form = WorkDocForm(instance=request.user.work_doc)
+	return render_to_response('banana/edit_workdoc.html', { 'workdoc_form':workdoc_form }, context_instance=RequestContext(request))

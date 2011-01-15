@@ -1,0 +1,51 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+
+{% block style %}
+#id_markup{
+	width: 350px;
+	height: 5em;
+}
+button[name="completed-form-button"] { margin-right: 40px; }
+#completed-form { min-height: 120px;}
+#content h2 { clear: both;  }
+#completed-list {
+	width: 350px;
+	border: solid 2px #EEE;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
+}
+{% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+	$('button[name="completed-form-button"]').click(function(){ $('#completed-form').submit(); });
+	$('button[name="completed-reset-button"]').click(function(){ document.location.href = "{% url banana.views.user request.user.username %}"; });
+	$('#id_markup').focus();
+	$('#id_markup').keydown(function(e) {
+		//if(e.keyCode == 13){ $('#completed-form').submit(); return false; }
+	});
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>So, what'd you do?</h1>
+<form id="completed-form" action="." method="post">
+	{% for field in completed_form %}{{ field }}{% endfor %}
+	<br clear="all" />
+	<button accesskey="s" name="completed-form-button" type="button" class="positive">save</button>
+	<button name="completed-reset-button" type="button" class="negative">cancel</button>
+</form>
+<h2>What you went and did:</h2>
+<ul id="completed-list">
+{% for completed_item in user.completed_items.all|slice:":50" %}
+	<li>
+		{% include "banana/completed_item.frag" %}
+	</li>
+{% endfor %}
+</ul>
+<a href="http://nytimes.com" accesskey="" onclick="alert('ho'); return false;cat: /tmp/TextMate-ScratchSnippet.txt: No such file or directory
+">nyt</a>
+{% endblock %}

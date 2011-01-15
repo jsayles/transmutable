@@ -27,9 +27,7 @@ from django.contrib.markup.templatetags.markup import markdown
 
 from person import sanitizeHtml
 
-class WorkDoc(models.Model):
-	"""A markdown document displaying a person's current work queue."""
-	user = models.ForeignKey(User, related_name='work_docs', unique=True)
+class MarkedUpModel(models.Model):
 	markup = models.TextField(blank=False, null=False, default='')
 	rendered = models.TextField(blank=True, null=True)
 	modified = models.DateTimeField(auto_now=True)
@@ -41,12 +39,23 @@ class WorkDoc(models.Model):
 	def save(self, *args, **kwargs):
 		"""When saving the markup, render via markdown and save to self.rendered"""
 		self.rendered = markdown(urlize(sanitizeHtml(self.markup)))
-		super(WorkDoc, self).save(*args, **kwargs)
+		super(MarkedUpModel, self).save(*args, **kwargs)
+	
+	class Meta:
+		abstract = True
+		ordering = ['-modified']
 
+class CompletedItem(MarkedUpModel):
+	"""Something which a user has completed, mostly items taked off of the work doc."""
+	user = models.ForeignKey(User, related_name='completed_items')
+	def __unicode__(self):
+		return 'CompletedItem for %s' % self.user
+	
+class WorkDoc(MarkedUpModel):
+	"""A markdown document displaying a person's current work queue."""
+	user = models.ForeignKey(User, related_name='work_docs', unique=True)
 	def __unicode__(self):
 		return 'WordDoc for %s' % self.user
-	class Meta:
-		ordering = ['user__username']
 
 User.work_doc = property(lambda u: WorkDoc.objects.get_or_create(user=u)[0])
 User.get_absolute_url = lambda u: reverse('banana.views.user', kwargs={ 'username':u.username })	

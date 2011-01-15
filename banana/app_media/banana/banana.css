@@ -10,3 +10,9 @@
 }
 
 .rendered-wrapper a, .rendered-wrapper a:hover { text-decoration: underline; }
+
+.completed-item-li {
+	border-bottom: solid 1px #EEE;
+	margin-bottom: 10px;
+}
+.completed-item-meta { width: 100%; text-align: right; color: #888; }

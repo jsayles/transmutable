@@ -1,18 +1,33 @@
 {% extends "banana/base.html" %}
 {% load imagetags %}
 {% block style %}
-#work-doc {
-	width: 600px;
+#work-doc, #completed-list {
+	min-height: 400px; 	
+	border: solid 2px #EEE;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
 }
-.editable-workdoc:hover { background-color: #EEE; }
-#work-doc-controls { visibility: hidden; float: right; padding: 5px; }
-.editable-workdoc:hover #work-doc-controls { visibility: visible; }
+#work-doc {
+	width: 580px;
+}
+.editable-section { 
+	position: relative;
+}
+.editable-section:hover { background-color: #EEE; }
+#work-doc-controls, #completed-controls { visibility: hidden; float: right; padding: 0px; }
+.editable-section:hover #work-doc-controls, .editable-section:hover #completed-controls { visibility: visible; }
+
+#right-column {
+	width: 380px;
+	float: right;
+}
 {% endblock %}
 
 {% block sub-head %}
 <script>
 $(document).ready(function() {
-	$('button[name="edit-work-doc-button"]').click(function(){ document.location.href = "{% url banana.views.edit_workdoc request.user.username %}"; })
+	$('button[name="edit-work-doc-button"]').click(function(){ document.location.href = "{% url banana.views.edit_workdoc %}"; })
+	$('button[name="edit-completed-button"]').click(function(){ document.location.href = "{% url banana.views.edit_completed %}"; })
 });
 </script>
 {% endblock %}
@@ -26,9 +41,19 @@ $(document).ready(function() {
 <h1>
 	{{ user.get_full_name }}:
 </h1>
+
+<div id="right-column">
+	<h3>Recently completed:</h3>
+	<ul id="completed-list" class="{% if request.user.username == user.username %}editable-section{% endif %}">
+	{% if request.user.username == user.username %}<div id="completed-controls"><button name="edit-completed-button" class="positive">edit</button></div>{% endif %}
+	{% for completed_item in user.completed_items.all|slice:":10" %}
+		{% include "banana/completed_item.frag" %}
+	{% endfor %}
+	</ul>
+</div>
 <h3>Currently working on:</h3>
-<div id="work-doc" class="rendered-wrapper{% if request.user.username == user.username %} editable-workdoc{% endif %}">
-	<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">click to edit</button></div>
+<div id="work-doc" class="rendered-wrapper{% if request.user.username == user.username %} editable-section{% endif %}">
+	{% if request.user.username == user.username %}<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">edit</button></div>{% endif %}
 	{{ user.work_doc.rendered|safe }}
 </div>
 {% endblock %}
