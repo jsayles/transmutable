@@ -48,6 +48,7 @@ class MarkedUpModel(models.Model):
 class CompletedItem(MarkedUpModel):
 	"""Something which a user has completed, mostly items taked off of the work doc."""
 	user = models.ForeignKey(User, related_name='completed_items')
+	def flatten(self): return {'user':self.user.username, 'rendered':self.rendered, 'modified':'%s' % self.modified}
 	def __unicode__(self):
 		return 'CompletedItem for %s' % self.user
 	

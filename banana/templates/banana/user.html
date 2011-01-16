@@ -26,8 +26,8 @@
 {% block sub-head %}
 <script>
 $(document).ready(function() {
-	$('button[name="edit-work-doc-button"]').click(function(){ document.location.href = "{% url banana.views.edit_workdoc %}"; })
-	$('button[name="edit-completed-button"]').click(function(){ document.location.href = "{% url banana.views.edit_completed %}"; })
+	$('button[name="edit-work-doc-button"]').click(function(){ document.location.href = "{% url banana.views.user_edit %}"; })
+	$('button[name="edit-completed-button"]').click(function(){ document.location.href = "{% url banana.views.user_edit %}"; })
 });
 </script>
 {% endblock %}

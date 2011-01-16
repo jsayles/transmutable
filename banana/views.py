@@ -3,6 +3,7 @@ import calendar
 import pprint
 import traceback
 import urllib
+import simplejson as json
 
 from django.utils.html import urlize
 from django.core.urlresolvers import reverse
@@ -37,23 +38,26 @@ def user(request, username):
 	return render_to_response('banana/user.html', { 'user':user, }, context_instance=RequestContext(request))
 
 @login_required
-def edit_completed(request):
-	if request.method == 'POST':
-		completed_form = CompletedItemForm(request.POST, instance=CompletedItem(user=request.user))
-		if completed_form.is_valid():
-			item = completed_form.save()
-			completed_form = CompletedItemForm()
-	else:
-		completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
-	return render_to_response('banana/edit_completed.html', { 'completed_form':completed_form }, context_instance=RequestContext(request))
+def user_edit(request):
+	return render_to_response('banana/user_edit.html', { 'completed_form':CompletedItemForm(instance=CompletedItem(user=request.user)), 'workdoc_form':WorkDocForm(instance=request.user.work_doc) }, context_instance=RequestContext(request))
 
 @login_required
-def edit_workdoc(request):
+def completed_edit(request):
+	try:
+		if request.method == 'POST':
+			completed_form = CompletedItemForm(request.POST, instance=CompletedItem(user=request.user))
+			if completed_form.is_valid():
+				item = completed_form.save()
+				return HttpResponse(json.dumps(item.flatten()), mimetype='application/json')
+		return HttpResponseRedirect(reverse('banana.views.user_edit'))
+	except:
+		traceback.print_exc()
+		raise HttpResponseServerError('Error')
+
+@login_required
+def workdoc_edit(request):
 	if request.method == 'POST':
 		workdoc_form = WorkDocForm(request.POST)
 		if workdoc_form.is_valid():
 			request.user.work_doc.save_markup(workdoc_form.cleaned_data['markup'])
-			return HttpResponseRedirect(reverse('banana.views.user', kwargs={ 'username':request.user.username }))
-	else:
-		workdoc_form = WorkDocForm(instance=request.user.work_doc)
-	return render_to_response('banana/edit_workdoc.html', { 'workdoc_form':workdoc_form }, context_instance=RequestContext(request))
+	return HttpResponseRedirect(reverse('banana.views.user', kwargs={ 'username':request.user.username }))

@@ -136,7 +136,6 @@ def password_edit(request):
 
 @login_required
 def profile(request, username):
-	#request.upload_handlers.insert(0, QuotaUploadHandler())
 	user = get_object_or_404(User, username=username)
 	profile = user.get_profile()
 	message = None

@@ -13,7 +13,7 @@ This README will evolve with the code, so watch this space.
 
 ## Installation:
 
-	pip install django pil south ipython markdown psycopg2 beautifulsoup
+	pip install django pil south ipython markdown psycopg2 beautifulsoup simplejson
 	./manage syncdb
 	./manage migrate
 

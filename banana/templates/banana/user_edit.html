@@ -1,0 +1,88 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+
+{% block style %}
+
+#right-column {
+	float: right;
+	width: 320px;
+}
+
+#center-column {
+	margin-right: 380px;
+}
+
+#work-doc-form textarea {
+	width: 100%;
+	height: 40em;
+}
+button[name="work-doc-form-button"] { margin-right: 40px; }
+
+#completed-form textarea {
+	width: 300px;
+	height: 5em;
+}
+button[name="completed-form-button"] { margin-right: 40px; }
+#completed-form { min-height: 120px;}
+#completed-list {
+	width: 280px;
+	border: solid 2px #EEE;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
+}
+#center-bottom-message { text-align: right; }
+{% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+	$('button[name="work-doc-form-button"]').click(function(){ $('#work-doc-form').submit(); });
+	$('button[name="work-doc-reset-button"]').click(function(){ document.location.href = "{% url banana.views.user request.user.username %}"; });
+	$('#work-doc-form textarea').focus();
+	
+	$('button[name="completed-form-button"]').click(function(){ $('#completed-form').submit(); });
+	$('#completed-form').submit(function(){
+		console.log("Submitting completed item");
+		$.post(
+			'{% url banana.views.completed_edit %}',
+			$("#completed-form").serialize(),
+			function(data) {
+				$('#completed-list').prepend('<li class="completed-item-li rendered-wrapper">' + data.rendered + '<div class="completed-item-meta">just now</div></li>');
+			},
+			'json'
+		);
+		$('#completed-form textarea').val('');
+		return false;
+	});
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="right-column">
+	<h2>So, what'd you do?</h2>
+	<form id="completed-form" action="{% url banana.views.completed_edit %}" method="post">
+		{% for field in completed_form %}{{ field }}{% endfor %}
+		<br clear="all" />
+		<button name="completed-form-button" type="button" class="positive">to-done!</button>
+	</form>
+	<h2>What you went and did:</h2>
+	<ul id="completed-list">
+	{% for completed_item in user.completed_items.all|slice:":10" %}
+		<li>
+			{% include "banana/completed_item.frag" %}
+		</li>
+	{% endfor %}
+	</ul>
+</div>
+
+<div id="center-column">
+	<h2>What's happening?</h2>
+	<form id="work-doc-form" action="{% url banana.views.workdoc_edit %}" method="post">
+		{% for field in workdoc_form %}{{ field }}{% endfor %}
+	</form>
+	<button accesskey="s" name="work-doc-form-button" type="button" class="positive">save</button>
+	<button name="work-doc-reset-button" type="button" class="negative">cancel</button>
+	<div id="center-bottom-message">It's all <a target="top" href="http://daringfireball.net/projects/markdown/syntax">markdown</a>, don't cha know.</div>
+</div>
+{% endblock %}

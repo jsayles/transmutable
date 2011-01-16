@@ -59,11 +59,7 @@
 
 <div id="content">{% block content %}{% endblock %}</div>
 
-{% block footer %}<footer>
-	{% if request.user.is_staff %}
-		<a href="{% url admin:index %}">admin</a>
-	{% endif %}
-</footer>{% endblock %}
+{% block footer %}<footer></footer>{% endblock %}
 
 {% endblock %}<!-- end body block -->
 </body>
