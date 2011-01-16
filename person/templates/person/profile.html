@@ -9,6 +9,9 @@
 function profileInitialize(){
 	$("#profile-tabs").tabs();
 	setTimeout("hideMessage();", 5000);
+	if($.urlVar("message")){
+		$('body').prepend('<h2 id="message">' + $.urlVar("message") + '</h2>');
+	}
 }
 $(document).ready(profileInitialize);
 

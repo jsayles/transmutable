@@ -101,6 +101,40 @@ def invites(request):
 	return render_to_response('person/invites.html', { 'message':message, 'invite_form':invite_form }, context_instance=RequestContext(request))
 
 @login_required
+def photo_edit(request):
+	profile = request.user.get_profile()
+	if request.method == 'POST':
+		photo_form = PhotoForm(request.POST, request.FILES)
+		if photo_form.is_valid():
+			try:
+				photo = photo_form.save()
+				if profile.photo: profile.photo.delete()
+				profile.photo = photo 
+				profile.save()
+			except:
+				traceback.print_exc()
+				logging.exception('Could not upload the image')
+	return HttpResponseRedirect('%s#edit-photo' % reverse('person.views.profile', kwargs={'username':request.user.username}))
+
+@login_required
+def password_edit(request):
+	#request.upload_handlers.insert(0, QuotaUploadHandler())
+	profile = request.user.get_profile()
+	if request.method == 'POST':
+		password_change_form = PasswordChangeForm(profile.user, request.POST)
+		if password_change_form.is_valid():
+			password_change_form.save()
+			password_change_form = PasswordChangeForm(profile.user)
+			message = 'Your password has been changed.'
+		else:
+			message = 'Your password has not been changed.'
+	else:
+		message = 'Your password has not been changed'
+	
+	return HttpResponseRedirect('%s#change-password?message=%s' % (reverse('person.views.profile', kwargs={'username':request.user.username}), message))
+
+
+@login_required
 def profile(request, username):
 	#request.upload_handlers.insert(0, QuotaUploadHandler())
 	user = get_object_or_404(User, username=username)
@@ -108,46 +142,14 @@ def profile(request, username):
 	message = None
 	if request.method == 'POST' and request.user.is_authenticated() and request.user.id == profile.user.id:
 		profile_form = ProfileForm(request.POST, instance=profile)
-		password_change_form = PasswordChangeForm(profile.user, request.POST)
-		photo_form = PhotoForm(request.POST, request.FILES)
-		print photo_form.is_valid(), profile_form.is_valid(), password_change_form.is_valid()
-		if photo_form.is_valid():
-			print 'photo form is valid', photo_form
-			try:
-				photo = photo_form.save()
-				if profile.photo: profile.photo.delete()
-				profile.photo = photo 
-				profile.save()
-				message = "Your profile has been updated."
-			except:
-				traceback.print_exc()
-				logging.exception('Could not upload the image')
-			profile_form = ProfileForm(instance=profile)
-			password_change_form = PasswordChangeForm(profile.user)
-		elif profile_form.is_valid():
-			photo_form = PhotoForm(instance = profile.photo or None)
-			password_change_form = PasswordChangeForm(profile.user)
+		if profile_form.is_valid():
 			profile_form.save()
 			profile = get_object_or_404(UserProfile, user__username=request.user.username)
 			profile_form = ProfileForm(instance=profile)
 			message = "Your profile has been saved."
-		elif password_change_form.is_valid():
-			photo_form = PhotoForm(instance = profile.photo or None)
-			profile_form = ProfileForm(instance=profile)
-			password_change_form.save()
-			password_change_form = PasswordChangeForm(profile.user)
-			message = 'Your password has been changed.'
-		elif request.META.get('HTTP_CONTENT_TYPE', None) and request.META.get('HTTP_CONTENT_TYPE').startswith('multipart/form-data;'):
-			# handle the case in which the image wasn't valid
-			profile_form = ProfileForm(instance=profile)
-			password_change_form = PasswordChangeForm(profile.user)
-		else:
-			logging.debug('nothing doing: %s' % request)
 	else:
 		profile_form = ProfileForm(instance=profile)
-		photo_form = PhotoForm(instance = profile.photo or None)
-		password_change_form = PasswordChangeForm(profile.user)
-	return render_to_response('person/profile.html', { 'profile':profile, 'password_change_form':password_change_form, 'profile_form':profile_form, 'photo_form':photo_form, 'message':message }, context_instance=RequestContext(request))
+	return render_to_response('person/profile.html', { 'profile':profile, 'password_change_form':PasswordChangeForm(profile.user), 'profile_form':profile_form, 'photo_form':PhotoForm(instance = profile.photo or None), 'message':message }, context_instance=RequestContext(request))
 
 def email_validate(request, username, secret):
 	user = get_object_or_404(User, username=username)

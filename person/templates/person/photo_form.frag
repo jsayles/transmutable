@@ -8,7 +8,7 @@
 
 <h3 style="margin-top: 20px;">Upload a Photo:</h3>
 <h4 style="font-weight: normal;">(smaller than 1MB, JPEG, GIF, or PNG)</h4>
-<form id="photo-form" enctype="multipart/form-data" action="./#edit-photo" method="post">
+<form id="photo-form" enctype="multipart/form-data" action="{% url person.views.photo_edit %}" method="post">
 {% for field in photo_form %}{{ field }}{% endfor %}
 <input type="hidden" name="image_form" value="True" />
 <input type="submit" value="save profile image" />

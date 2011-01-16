@@ -1,5 +1,5 @@
 {% load imagetags %}
-<form id="password-change-form" action="./#change-password" method="post">
+<form id="password-change-form" action="{% url person.views.password_edit %}" method="post">
 <table>
 {{ password_change_form }}
 <tr>

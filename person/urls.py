@@ -12,5 +12,7 @@ urlpatterns = patterns('',
 	(r'^find/$', 'person.views.find_people'),
 	(r'^password-reset/$', 'person.views.password_reset'),
 	(r'^email-validate/(?P<username>[^/]+)/(?P<secret>[^/]+)/$', 'person.views.email_validate'),
+	(r'^edit/photo/$', 'person.views.photo_edit'),
+	(r'^edit/password/$', 'person.views.password_edit'),
 	(r'(?P<username>[^/]+)/$' , 'person.views.profile'),
 )
