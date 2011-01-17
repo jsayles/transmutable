@@ -63,6 +63,7 @@ INSTALLED_APPS = (
 	'south',
 	'person',
 	'banana',
+	'peach',
 )
 
 from local_settings import *

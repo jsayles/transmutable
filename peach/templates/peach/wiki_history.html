@@ -1,0 +1,20 @@
+{% extends "peach/base.html" %}
+
+{% block sub-title %}History | {{ page.name }} | {% endblock %}
+
+{% block style %}
+.wiki-page-log-item { margin: 10px 10px;}
+{% endblock %}
+
+{% block content %}
+<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.name }}</a> &raquo; <a href="{% url peach.views.wiki page.namespace.name page.name %}">{{ page.name }}</a> &raquo; History:</h1>
+
+{% for log in page.wikipagelog_set.all %}
+{% ifchanged log.created.day %}
+	<h3>{{ log.created|date:"F j"}}:</h3>
+{% endifchanged %}
+<div class="wiki-page-log-item">
+	<a href="{{ log.get_absolute_url }}">{{ log.created|date:"g:i A" }}</a>
+</div>
+{% endfor %}
+{% endblock %}

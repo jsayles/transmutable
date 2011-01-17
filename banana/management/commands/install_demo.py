@@ -21,6 +21,7 @@ class Command(BaseCommand):
 		if 'no-reset' not in labels:
 			call_command('syncdb', interactive=False)
 			call_command('migrate', interactive=False)
+			call_command('reset', 'peach', interactive=False)
 			call_command('reset', 'banana', interactive=False)
 			#for user in User.objects.all(): user.delete()
 			
@@ -59,12 +60,22 @@ I really wanted the kids to learn:
 		completed_item3 = self.create_completed_item(person1, "Submitted bid to Cthulu")
 		completed_item4 = self.create_completed_item(person1, "Rebooted the Internet")
 		
-		
 		person2 = self.create_user('jerry', '1234', 'Jerry', 'Dorfendorf', 'Detroit, MI', is_staff=False, is_superuser=False)
 		person2.work_doc.save_markup("I am currently flying between one of three coasts.")
 		
 		person3 = self.create_user('amy', '1234', 'Amy', 'Scout', 'Bothell, WA', is_staff=False, is_superuser=False)
+		
+		namespace1 = self.create_namespace('Dev Notes')
+		page1 = self.create_wiki_page(namespace1, 'SplashPage', 'This is the splash page.')
 	
+	def create_wiki_page(self, namespace, name, content):
+		from peach.models import WikiPage
+		return WikiPage.objects.create(namespace=namespace, name=name, content=content)
+	
+	def create_namespace(self, name):
+		from peach.models import Namespace
+		return Namespace.objects.get_or_create(name=name)[0]
+
 	def create_completed_item(self, user, markup):
 		from banana.models import CompletedItem
 		return CompletedItem.objects.create(user=user, markup=markup)

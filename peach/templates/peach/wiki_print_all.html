@@ -1,0 +1,13 @@
+{% extends "peach/base.html" %}
+
+{% block title %}{{ site.name }} Wiki{% endblock %}
+{% block style %}
+.page-breaker { margin-bottom: 30px; page-break-after: always; }
+{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+{% for page in pages %}
+   {% include "peach/wiki_print_render.frag" %}
+   <hr class="page-breaker" />
+{% endfor %}
+{% endblock %}

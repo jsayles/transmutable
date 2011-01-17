@@ -145,7 +145,7 @@ class UserProfile(ThumbnailedModel):
 		return self.user.username
 	class Meta:
 		ordering = ['user__username']
-
+	
 def get_display_name(user):
 	if user.get_full_name(): return user.get_full_name()
 	return user.username

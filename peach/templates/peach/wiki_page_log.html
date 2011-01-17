@@ -1,0 +1,21 @@
+{% extends "peach/base.html" %}
+{% load wikitags %}
+
+{% block sub-title %}Snapshot {{ page_log.created|date:"F j, g:i A"}} | {{ page_log.wiki_page.name }} | {% endblock %}
+
+{% block style %}
+#id_content { width: 100%; height: 400px; }
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+	<div style="float: right; margin-top: 5px; ">
+			[<a href="." onclick="document.getElementById('revert-form').submit(); return false;">revert to this version</a>]
+			<form id="revert-form" action="{{ page_log.get_absolute_url }}" method="post"><input type="hidden" name="revert" value="true">{% csrf_token %}</form>
+	</div>
+{% endif %}
+<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page_log.wiki_page.namespace.name %}">{{ page_log.wiki_page.namespace.name }}</a> &raquo; <a href="{% url peach.views.wiki page_log.wiki_page.namespace.name page_log.wiki_page.name %}">{{ page_log.wiki_page.name }}</a> on {{ page_log.created|date:"F j, g:i A"}}:</h1>
+
+{{ page_log.content|wiki|safe }}
+
+{% endblock %}

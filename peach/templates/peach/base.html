@@ -1,0 +1,19 @@
+{% extends "banana/base.html" %}
+
+{% block style %}
+.wiki-photo-item { display: inline; width: 160px; height: 170px; }
+
+.rendered-page { margin: 20px 0px; border-bottom: solid 1px #DDD; }
+.rendered-page em { font-weight: bold; }
+.rendered-page hr { margin: 20px 0px; }
+.rendered-page li { margin: 0px 0px 10px 20px; }
+.rendered-page h1, .rendered-page h2, .rendered-page h3, .rendered-page h4, .rendered-page h5 { color: #000; }
+.rendered-page code { white-space:pre; font-family: monospace; }
+.wiki-control-links { float: right; margin-top: 5px; }
+.wiki-control-links a { font-size: 0.8em; }
+.wiki-control-links form { display: inline; margin-right: 15px; }
+.printed-page { border-bottom: none; }
+.printed-page a { text-decoration: none; color: #000; }
+.printed-page h1 a { color: #000; font-size: 1.2em; }
+{% block sub-style%}{% endblock %}
+{% endblock %}
