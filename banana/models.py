@@ -31,6 +31,7 @@ class MarkedUpModel(models.Model):
 	markup = models.TextField(blank=False, null=False, default='')
 	rendered = models.TextField(blank=True, null=True)
 	modified = models.DateTimeField(auto_now=True)
+	created = models.DateTimeField(auto_now_add=True)
 
 	def save_markup(self, markup):
 		self.markup = markup
@@ -43,7 +44,7 @@ class MarkedUpModel(models.Model):
 	
 	class Meta:
 		abstract = True
-		ordering = ['-modified']
+		ordering = ['-created']
 
 class CompletedItem(MarkedUpModel):
 	"""Something which a user has completed, mostly items taked off of the work doc."""
