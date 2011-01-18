@@ -6,7 +6,7 @@
 </script>
 {% endblock %}
 
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
 	<div class="wiki-control-links">
 		[<a href="{% url peach.views.wiki_history page.namespace.name page.name %}">page history</a>]
 		[<a href="{% url peach.views.wiki_print page.namespace.name page.name %}">print version</a>]
@@ -14,7 +14,7 @@
 	</div>
 {% endif %}
 
-	{% if not hide_title %}<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.name }}</a> &raquo; {{ page.name }}</h1>{% endif %}
+	{% if not hide_title %}<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; {{ page.name }}:</h1>{% endif %}
 
 	{% if page.rendered %}
 		<div class="rendered-page">{{ page.rendered|include_constants|safe }}</div>

@@ -65,16 +65,26 @@ I really wanted the kids to learn:
 		
 		person3 = self.create_user('amy', '1234', 'Amy', 'Scout', 'Bothell, WA', is_staff=False, is_superuser=False)
 		
-		namespace1 = self.create_namespace('Dev Notes')
-		page1 = self.create_wiki_page(namespace1, 'SplashPage', 'This is the splash page.')
+		namespace1 = self.create_namespace('Dev Notes', person1)
+		page1 = self.create_wiki_page(namespace1, 'SplashPage', """#This is the SplashPage
+* this is a list item
+* and another item
+* you think there's more, right?
+* well, you are correct.
+
+[This link](http://example.net/) has no title attribute.
+""")
+
+		namespace2 = self.create_namespace('Dog Walks in Bothell', person3)
+		page2 = self.create_wiki_page(namespace2, 'How to Make Dog Biscuits', """Google the recipe. CamelCase """)
 	
 	def create_wiki_page(self, namespace, name, content):
 		from peach.models import WikiPage
 		return WikiPage.objects.create(namespace=namespace, name=name, content=content)
 	
-	def create_namespace(self, name):
+	def create_namespace(self, name, owner):
 		from peach.models import Namespace
-		return Namespace.objects.get_or_create(name=name)[0]
+		return Namespace.objects.get_or_create(display_name=name, owner=owner)[0]
 
 	def create_completed_item(self, user, markup):
 		from banana.models import CompletedItem

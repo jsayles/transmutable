@@ -9,6 +9,7 @@ import traceback
 import logging
 import pprint
 
+from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.db import models
@@ -21,6 +22,13 @@ from templatetags.wikitags import wiki
 
 class Namespace(models.Model):
 	name = models.CharField(max_length=1000, unique=True, blank=False, null=False)
+	display_name = models.CharField(max_length=1000, blank=False, null=False)
+	owner = models.ForeignKey(User, blank=False, null=False, related_name='namespaces')
+
+	def save(self, *args, **kwargs):
+		self.name = slugify(self.display_name)
+		super(Namespace, self).save(*args, **kwargs)
+		
 	@models.permalink
 	def get_absolute_url(self): return ('peach.views.namespace', [], { 'namespace':self.name })
 	def __unicode__(self): return self.name
@@ -48,7 +56,7 @@ class WikiPage(models.Model):
 		return self.name
 	def save(self, *args, **kwargs):
 		"""When saving the content, render via markdown and save to self.rendered"""
-		self.rendered = wiki(self.content)
+		self.rendered = wiki(self.content, self.namespace.name)
 		super(WikiPage, self).save(*args, **kwargs)
 		WikiPageLog.objects.create(wiki_page=self, content=self.content)
 	class Meta:

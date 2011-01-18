@@ -15,12 +15,28 @@
 }
 .editable-section:hover { background-color: #EEE; }
 #work-doc-controls, #completed-controls { visibility: hidden; float: right; padding: 0px; }
-.editable-section:hover #work-doc-controls, .editable-section:hover #completed-controls { visibility: visible; }
+.editable-section:hover #work-doc-controls, .editable-section:hover #completed-controls, #notes-list:hover form { visibility: visible; }
 
 #right-column {
 	width: 380px;
 	float: right;
 }
+
+#top-right-column {
+	float: right;
+	width: 380px;
+	height: 170px;
+}
+#top-right-column h3 a { text-decoration: none; }
+#top-right-column h3 a:hover { text-decoration: underline; }
+#notes-list {
+	border: solid 2px #EEE;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
+	height: 100px;
+}
+#notes-list li { display: inline; margin-right: 10px; }
+#notes-list form { text-align: left; visibility: hidden; }
 {% endblock %}
 
 {% block sub-head %}
@@ -33,6 +49,21 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
+
+<div id="top-right-column">
+	<h3><a href="{% url peach.views.index %}">Notes</a>:</h3>
+	<div id="notes-list" class="{% if request.user.username == user.username %}editable-section{% endif %}">
+		<ul>
+			{% for namespace in user.namespaces.all %}
+			<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
+			{% endfor %}
+		</ul>
+		{% if request.user.is_authenticated and request.user.username == user.username %}
+			<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+		{% endif %}
+	</div>
+</div>
+
 {% if user.get_profile.photo %}
 <img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" />
 {% else %}

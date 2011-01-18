@@ -29,13 +29,26 @@ from models import *
 from forms import *
 
 def index(request):
-	return render_to_response('peach/index.html', { 'namespaces': Namespace.objects.all() }, context_instance=RequestContext(request))
+	if request.method == 'POST' and request.user.is_authenticated():
+		namespace_form = NamespaceForm(request.POST, instance=Namespace(owner=request.user))
+		if namespace_form.is_valid():
+			namespace = namespace_form.save()
+			return HttpResponseRedirect(namespace.get_absolute_url())
+	else:
+		namespace_form = NamespaceForm(instance=Namespace(owner=request.user))
+	return render_to_response('peach/index.html', { 'users': User.objects.all(), 'namespace_form':namespace_form }, context_instance=RequestContext(request))
 
 def namespace(request, namespace):
-	if request.user.is_authenticated(): Namespace.objects.get_or_create(name=namespace)
-	if Namespace.objects.filter(name=namespace).count() == 0: raise Http404()
+	ns = get_object_or_404(Namespace, name=namespace)
 	page = WikiPage.objects.get_or_create(namespace__name=namespace, name='SplashPage')[0]
-	return render_to_response('peach/namespace.html', { 'wiki_pages':WikiPage.objects.filter(namespace__name=namespace).exclude(name='SplashPage'), 'page':page }, context_instance=RequestContext(request))
+	if request.method == 'POST' and request.user.is_authenticated() and ns.owner == request.user:
+		create_wiki_page_form = CreateWikiPageForm(request.POST, instance=WikiPage(namespace=ns))
+		if create_wiki_page_form.is_valid():
+			page = create_wiki_page_form.save()
+			return HttpResponseRedirect(page.get_absolute_url())
+	else:
+		create_wiki_page_form = CreateWikiPageForm(instance=WikiPage(namespace=ns))
+	return render_to_response('peach/namespace.html', { 'namespace':ns, 'create_wiki_page_form':create_wiki_page_form, 'wiki_pages':WikiPage.objects.filter(namespace__name=namespace).exclude(name='SplashPage'), 'page':page }, context_instance=RequestContext(request))
 
 def photo_redirect(request, id):
 	photo = get_object_or_404(WikiPhoto, pk=id)
@@ -55,8 +68,12 @@ def file(request, namespace, name, id):
 
 def wiki(request, namespace, name):
 	if request.user.is_authenticated():
-		page, created = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)
-		if created or page.content == '': return HttpResponseRedirect(page.get_edit_url())
+		ns = get_object_or_404(Namespace, name=namespace)
+		if ns.owner == request.user:
+			page, created = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)
+			if created or page.content == '': return HttpResponseRedirect(page.get_edit_url())
+		else:
+			page = get_object_or_404(WikiPage, namespace__name=namespace, name=name)
 	else:
 		page = get_object_or_404(WikiPage, namespace__name=namespace, name=name)
 	return render_to_response('peach/wiki.html', { 'page':page }, context_instance=RequestContext(request))
@@ -72,8 +89,11 @@ def wiki_print_all(request):
 
 @login_required
 def wiki_add(request, namespace, name):
+	ns = get_object_or_404(Namespace, name=namespace)
+	if request.user != ns.owner: return HttpResponseRedirect('peaches.views.wiki', kwargs={'namespace':namespace, 'name':name})
 	page = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)[0]
-	if request.method == 'POST' and request.user.is_authenticated:
+	if request.method == 'POST':
+		if request.user != ns.owner: return HttpResponseRedirect('peaches.views.index')
 		wiki_photo_form = WikiPhotoForm(request.POST, request.FILES)
 		wiki_file_form = WikiFileForm(request.POST, request.FILES)
 		if request.POST.get('photo-form', None):
@@ -108,7 +128,9 @@ def wiki_history(request, namespace, name):
 @login_required
 def wiki_page_log(request, namespace, name, id):
 	page_log = get_object_or_404(WikiPageLog, wiki_page__name=name, pk=id)
-	if request.method == 'POST' and request.POST.get('revert', None) and request.user.is_authenticated:
+	ns = get_object_or_404(Namespace, name=namespace)
+	if request.method == 'POST' and request.POST.get('revert', None):
+		if request.user != ns.owner: return HttpResponseRedirect(page_log.get_absolute_url())
 		page_log.wiki_page.content = page_log.content
 		page_log.wiki_page.save()
 		return HttpResponseRedirect(page_log.wiki_page.get_absolute_url())
@@ -116,8 +138,10 @@ def wiki_page_log(request, namespace, name, id):
 
 @login_required
 def wiki_edit(request, namespace, name):
+	ns = get_object_or_404(Namespace, name=namespace)
+	if request.user != ns.owner: return HttpResponseRedirect(reverse('peach.views.namespace', kwargs={'namespace':namespace}))
 	page = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)[0]
-	if request.method == 'POST' and request.user.is_authenticated:
+	if request.method == 'POST':
 		page_form = WikiPageForm(request.POST, instance=page)
 		if page_form.is_valid():
 			page = page_form.save()

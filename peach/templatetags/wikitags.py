@@ -17,14 +17,14 @@ WIKI_PHOTO = r'(?:Photo([\d]+))'
 WIKI_PHOTO_REGEX = re.compile(r'\b(%s)\b' % WIKI_PHOTO)
 
 @register.filter
-def wiki(text):
+def wiki(text, namespace):
 	"""Convert the text into HTML using markdown and image name replacement."""
 	#text = strip_tags(text)
 	#text = urlize(text)
 	text = markdown(text)
 	text = WIKI_PHOTO_REGEX.sub(r'<a href="%sphoto-detail/\2/"><img src="%sphoto/\2/" width="150" /></a>' % (reverse('peach.views.index', args=[], kwargs={}), reverse('peach.views.index', args=[], kwargs={})), text)
-	text = WIKIREGEX.sub(r' \1<a href="%s\2/">\2</a>\3' % reverse('peach.views.index', args=[], kwargs={}), text)
-	text = WIKI_HARD_NAME_REGEX.sub(r'<a href="%s\2/">\2</a>' % reverse('peach.views.index', args=[], kwargs={}), text)
+	text = WIKIREGEX.sub(r' \1<a href="%s%s/\2/">\2</a>\3' % (reverse('peach.views.index', args=[], kwargs={}), namespace), text)
+	text = WIKI_HARD_NAME_REGEX.sub(r'<a href="%s%s/\2/">\2</a>' % (reverse('peach.views.index', args=[], kwargs={}), namespace), text)
 	return text
 
 @register.filter

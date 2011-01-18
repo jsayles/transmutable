@@ -1,20 +1,40 @@
 {% extends "peach/base.html" %}
-{% load wikitags %}
+{% load imagetags %}
 {% block sub-title %}Notes | {% endblock %}
 
 {% block sub-style %}
+#namespace-form input[type=text] { width: 10em; }
+.namespace-list li { margin-left: 20px; list-style-type: disc; margin-bottom: 8px; }
+.person-photo { margin-top: 20px; }
 {% endblock %}
 
 {% block content %}
 <h1>Notes:</h1>
 <p>Information we use while working.</p>
 
-<h2>Sections:</h2>
-<ul>
-{% for namespace in namespaces %}
-	<li>
-		<a href="{{ namespace.get_absolute_url }}">{{ namespace.name }}</a>
-	</li>
+{% for user in users %}
+{% if user.namespaces.all or request.user.username == user.username %}
+	{% if user.get_profile.photo %}
+	<a href="{{ user.get_absolute_url }}"><img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"50w" }}" width="50" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" /></a>
+	{% else %}
+	<a href="{{ user.get_absolute_url }}"><img class="person-photo" src="{{ MEDIA_URL }}person/BlankIcon150x150.jpg" width="50" height="50" /></a>
+	{% endif %}
+	<h2><a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a>:</h2>
+	<ul class="namespace-list">
+		{% for namespace in user.namespaces.all %}
+		<li>
+			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+		</li>
+		{% endfor %}
+		{% if request.user.is_authenticated and request.user.username == user.username %}
+			<li>
+				<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+			</li>
+		{% endif %}
+	</ul>
+{% endif %}
 {% endfor %}
-</ul>
+
+
 {% endblock %}
+

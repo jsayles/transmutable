@@ -15,5 +15,13 @@
 .printed-page { border-bottom: none; }
 .printed-page a { text-decoration: none; color: #000; }
 .printed-page h1 a { color: #000; font-size: 1.2em; }
+.rendered-page ul > li {
+	list-style-type: disc;
+}
+
+.rendered-page ol > li {
+	list-style-type: decimal;
+}
+
 {% block sub-style%}{% endblock %}
 {% endblock %}
