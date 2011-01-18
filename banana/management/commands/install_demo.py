@@ -17,6 +17,9 @@ class Command(BaseCommand):
 	requires_model_validation = True
 	
 	def handle(self, *labels, **options):
+		if settings.PRODUCTION:
+			print 'I will not install the demo on a PRODUCTION machine.  Sorry.'
+			return
 		from banana.models import WorkDoc, CompletedItem
 		if 'no-reset' not in labels:
 			call_command('syncdb', interactive=False)

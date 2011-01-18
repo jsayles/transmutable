@@ -16,7 +16,7 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-<h1>Send a Test Email:</h1>
+<h1><a href="{% url apple.views.index %}">Staff Tools</a> &raquo; Send a Test Email:</h1>
 
 {% if page_message %}<strong>{{ page_message }}</strong>{% endif %}
 

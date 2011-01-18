@@ -15,7 +15,7 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-<h1>Create an Account:</h1>
+<h1><a href="{% url apple.views.index %}">Staff Tools</a> &raquo; Create an Account:</h1>
 <form enctype="multipart/form-data" action='.' method='post'>
    <table id="signup">
       {% for field in create_account_form %}
