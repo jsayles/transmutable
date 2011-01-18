@@ -1,0 +1,8 @@
+Hey,
+
+This is a test email from {{ site.name }} over at http://{{ site.domain}}/
+
+If you receive this email then the test worked.
+
+- {{ admin_name }}
+

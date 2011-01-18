@@ -1,0 +1,22 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+}
+</script>
+{% endblock %}
+
+{% block style %}
+#content li { 	padding-left: 0em; margin-left: 1.6em;}
+#content ul > li { list-style-type: disc; }
+#content ol > li { list-style-type: decimal; }
+{% endblock %}
+
+{% block content %}
+<h1>Staff tools:</h1>
+<ul>
+	<li><a href="{% url apple.views.create_account %}">Create an Account</a></li>
+</ul>
+{% endblock %}

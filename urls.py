@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
     (r'^p/', include('person.urls')),
     (r'^notes/', include('peach.urls')),
+    (r'^staff/', include('apple.urls')),
     (r'^', include('banana.urls')),
 )
 

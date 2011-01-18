@@ -1,0 +1,37 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+}
+</script>
+{% endblock %}
+
+{% block style %}
+#content li { 	padding-left: 0em; margin-left: 1.6em;}
+#content ul > li { list-style-type: disc; }
+#content ol > li { list-style-type: decimal; }
+{% endblock %}
+
+{% block content %}
+<h1>Create an Account:</h1>
+<form enctype="multipart/form-data" action='.' method='post'>
+   <table id="signup">
+      {% for field in create_account_form %}
+         <tr class="{% cycle 'row-even' 'row-odd' %}">
+            <td>{{ field.label_tag }}</td>
+            <td>
+               {{ field }}
+            </td>
+            {% if field.errors %}
+            <td>
+               {{ field.errors }}
+            </td>
+            {% endif %}
+         </tr>
+      {% endfor %}
+      <tr><td></td><td><input type="submit" value="Create!" /></td></tr>
+   </table>
+</form>
+{% endblock %}

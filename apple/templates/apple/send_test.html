@@ -1,0 +1,41 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+{% block sub-title %}Send Test | {% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+}
+</script>
+{% endblock %}
+
+{% block style %}
+#content li { 	padding-left: 0em; margin-left: 1.6em;}
+#content ul > li { list-style-type: disc; }
+#content ol > li { list-style-type: decimal; }
+{% endblock %}
+
+{% block content %}
+<h1>Send a Test Email:</h1>
+
+{% if page_message %}<strong>{{ page_message }}</strong>{% endif %}
+
+<form id="send-email-form" action='.' method='post'>
+   <table>
+      {% for field in send_test_email_form %}
+         <tr class="{% cycle 'row-even' 'row-odd' %}">
+            <td>{{ field.label_tag }}</td>
+            <td>
+               {{ field }}
+            </td>
+            {% if field.errors %}
+            <td>
+               {{ field.errors }}
+            </td>
+            {% endif %}
+         </tr>
+      {% endfor %}
+      <tr><td></td><td><input type="submit" value="Send Email" /></td></tr>
+   </table>
+</form>
+{% endblock %}
