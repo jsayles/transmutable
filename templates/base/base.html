@@ -47,6 +47,9 @@
 	{% if request.user.is_authenticated %}
 		<li><a href="{% url banana.views.user request.user.username %}">home</a></li>
 		<li><a href="{% url person.views.profile request.user.username %}">account</a></li>
+		{% if request.user.is_staff %}
+		<li><a href="{% url apple.views.index %}">staff</a></li>
+		{% endif %}
 		<li><a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></li>
 	{% else %}
 		<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">login</a>{% endblock %}</li>

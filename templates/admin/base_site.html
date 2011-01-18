@@ -11,5 +11,5 @@
 {% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="/">Site</a> › {{site.name}} administration</h1>
+<h1 id="site-name"><a href="{% url banana.views.index %}">Site</a> &raquo; <a href="{% url apple.views.index %}">Staff</a> &raquo; {{site.name}} administration</h1>
 {% endblock %}
