@@ -8,18 +8,34 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
+        # Adding model 'CompletedItem'
+        db.create_table('banana_completeditem', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('markup', self.gf('django.db.models.fields.TextField')(default='')),
+            ('rendered', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2011, 1, 17, 23, 49, 28, 166703), auto_now_add=True, null=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='completed_items', to=orm['auth.User'])),
+        ))
+        db.send_create_signal('banana', ['CompletedItem'])
+
         # Adding model 'WorkDoc'
         db.create_table('banana_workdoc', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='work_docs', to=orm['auth.User'])),
-            ('markup', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('markup', self.gf('django.db.models.fields.TextField')(default='')),
             ('rendered', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2011, 1, 17, 23, 49, 28, 166703), auto_now_add=True, null=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='work_docs', unique=True, to=orm['auth.User'])),
         ))
         db.send_create_signal('banana', ['WorkDoc'])
 
 
     def backwards(self, orm):
         
+        # Deleting model 'CompletedItem'
+        db.delete_table('banana_completeditem')
+
         # Deleting model 'WorkDoc'
         db.delete_table('banana_workdoc')
 
@@ -28,7 +44,7 @@ class Migration(SchemaMigration):
         'auth.group': {
             'Meta': {'object_name': 'Group'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'unique': 'True'}),
             'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
         },
         'auth.permission': {
@@ -52,14 +68,25 @@ class Migration(SchemaMigration):
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+            'username': ('django.db.models.fields.CharField', [], {'max_length': '30', 'unique': 'True'})
+        },
+        'banana.completeditem': {
+            'Meta': {'ordering': "['-created']", 'object_name': 'CompletedItem'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2011, 1, 17, 23, 49, 28, 166703)', 'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'markup': ('django.db.models.fields.TextField', [], {'default': "''"}),
+            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'rendered': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'completed_items'", 'to': "orm['auth.User']"})
         },
         'banana.workdoc': {
-            'Meta': {'ordering': "['user__username']", 'object_name': 'WorkDoc'},
+            'Meta': {'ordering': "['-created']", 'object_name': 'WorkDoc'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2011, 1, 17, 23, 49, 28, 166703)', 'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'markup': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'markup': ('django.db.models.fields.TextField', [], {'default': "''"}),
+            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'rendered': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'work_docs'", 'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'work_docs'", 'unique': 'True', 'to': "orm['auth.User']"})
         },
         'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},

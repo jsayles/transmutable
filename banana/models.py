@@ -31,7 +31,7 @@ class MarkedUpModel(models.Model):
 	markup = models.TextField(blank=False, null=False, default='')
 	rendered = models.TextField(blank=True, null=True)
 	modified = models.DateTimeField(auto_now=True)
-	created = models.DateTimeField(auto_now_add=True)
+	created = models.DateTimeField(auto_now_add=True, null=True, blank=True, default=datetime.datetime.now())
 
 	def save_markup(self, markup):
 		self.markup = markup
