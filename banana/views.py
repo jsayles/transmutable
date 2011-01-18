@@ -38,6 +38,17 @@ def user(request, username):
 	user = get_object_or_404(User, username=username)
 	return render_to_response('banana/user.html', { 'user':user, 'namespace_form':NamespaceForm() }, context_instance=RequestContext(request))
 
+def completed_item(request, username, id):
+	item = get_object_or_404(CompletedItem, user__username=username, pk=id)
+	if request.method == 'POST' and request.user.is_authenticated() and request.user == item.user:
+		completed_item_form = CompletedItemForm(request.POST, instance=item)
+		if completed_item_form.is_valid():
+			item = completed_item_form.save()
+			completed_item_form = CompletedItemForm(instance=item)
+	else:
+		completed_item_form = CompletedItemForm(instance=item)
+	return render_to_response('banana/completed_item.html', { 'completed_item_form':completed_item_form, 'completed_item':item, }, context_instance=RequestContext(request))
+
 @login_required
 def user_edit(request):
 	return render_to_response('banana/user_edit.html', { 'completed_form':CompletedItemForm(instance=CompletedItem(user=request.user)), 'workdoc_form':WorkDocForm(instance=request.user.work_doc) }, context_instance=RequestContext(request))

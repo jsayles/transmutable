@@ -62,6 +62,7 @@ I really wanted the kids to learn:
 		
 		person2 = self.create_user('jerry', '1234', 'Jerry', 'Dorfendorf', 'Detroit, MI', is_staff=False, is_superuser=False)
 		person2.work_doc.save_markup("I am currently flying between one of three coasts.")
+		completed_item5 = self.create_completed_item(person2, "Joined Two Pieces Of Wood")
 		
 		person3 = self.create_user('amy', '1234', 'Amy', 'Scout', 'Bothell, WA', is_staff=False, is_superuser=False)
 		

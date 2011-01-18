@@ -1,0 +1,61 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+{% block sub-title%}Completed Item {{ completed_item.id }} | {% endblock %}
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+	$('#edit-widget').hide();
+	$('button[name="edit-completed-button"]').click(function(){
+		$('#completed-list ul').hide();
+		$('#completed-controls').remove();
+		$('#edit-widget').show();
+	})
+	$('button[name="re-done-button"]').click(function(){ $('#completed-item-form').submit(); });
+});
+</script>
+{% endblock %}
+
+{% block style %}
+#user-info { float: left; }
+#completed-list {
+	position: absolute;
+	left: 300px;
+	width: 400px;
+	border: solid 2px #EEE;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
+}
+#completed-list li { border-bottom: none; }
+.completed-item-meta a { text-decoration: none; }
+#completed-controls { visibility: hidden; float: right; padding: 0px; }
+.editable-section:hover #completed-controls { visibility: visible; }
+.editable-section:hover { background-color: #EEE; }
+#id_markup { width: 100%; }
+{% endblock %}
+
+{% block content %}
+
+<div id="user-info">
+	{% if completed_item.user.get_profile.photo %}
+	<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" /></a>
+	{% else %}
+	<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{ MEDIA_URL }}person/BlankIcon150x150.jpg" width="150" height="150" /></a>
+	{% endif %}
+	<h1>
+		<a href="{{ completed_item.user.get_absolute_url }}">{{ completed_item.user.get_full_name }}</a>
+	</h1>
+</div>
+
+<div id="completed-list" class="{% if request.user.username == completed_item.user.username %}editable-section{% endif %}">
+	{% if request.user.username == user.username %}<div id="completed-controls"><button name="edit-completed-button" class="positive">edit</button></div>{% endif %}
+	<ul>{% include "banana/completed_item.frag" %}</ul>
+	{% if request.user == completed_item.user %}
+	<div id="edit-widget">
+		<form action="." method="post" id="completed-item-form">
+			{% for field in completed_item_form %}{{ field }}{% endfor %}
+		</form>
+		<button type="submit" name="re-done-button">re-done!</button>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

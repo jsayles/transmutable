@@ -49,8 +49,9 @@ class CompletedItem(MarkedUpModel):
 	"""Something which a user has completed, mostly items taked off of the work doc."""
 	user = models.ForeignKey(User, related_name='completed_items')
 	def flatten(self): return {'user':self.user.username, 'rendered':self.rendered, 'modified':'%s' % self.modified}
-	def __unicode__(self):
-		return 'CompletedItem for %s' % self.user
+	@models.permalink
+	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'username':self.user.username, 'id':self.id })
+	def __unicode__(self): return 'CompletedItem for %s' % self.user
 	
 class WorkDoc(MarkedUpModel):
 	"""A markdown document displaying a person's current work queue."""

@@ -6,4 +6,5 @@ urlpatterns = patterns('',
 	(r'^edit/completed/$', 'banana.views.completed_edit'),
 	(r'^edit/user/$', 'banana.views.user_edit'),
 	(r'^u/(?P<username>[^/]+)/$', 'banana.views.user'),
+	(r'^u/(?P<username>[^/]+)/completed/(?P<id>[\d]+)/$', 'banana.views.completed_item'),
 )
