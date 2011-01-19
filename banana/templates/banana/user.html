@@ -74,7 +74,7 @@ $(document).ready(function() {
 	<h1>{{ user.get_full_name }}</h1>
 </div>
 <div id="right-column">
-	<h3>Recently completed:</h3>
+	<h3>What I did:</h3>
 	<ul id="completed-list" class="{% if request.user.username == user.username %}editable-section{% endif %}">
 	{% if request.user.username == user.username %}<div id="completed-controls"><button name="edit-completed-button" class="positive">edit</button></div>{% endif %}
 	{% for completed_item in user.completed_items.all|slice:":10" %}
@@ -82,7 +82,7 @@ $(document).ready(function() {
 	{% endfor %}
 	</ul>
 </div>
-<h3>Currently working on:</h3>
+<h3>What I'm doing:</h3>
 <div id="work-doc" class="rendered-wrapper{% if request.user.username == user.username %} editable-section{% endif %}">
 	{% if request.user.username == user.username %}<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">edit</button></div>{% endif %}
 	{{ user.work_doc.rendered|safe }}
