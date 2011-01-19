@@ -4,7 +4,10 @@ from django.contrib.auth.models import User
 
 class SendTestEmailForm(forms.Form):
 	email = forms.EmailField(max_length=100, required=True, label="Email *")
-	
+
+class EmailEveryoneForm(forms.Form):
+	subject = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'placeholder':'subject'}))
+	message = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'plain text email message'}))
 
 class CreateAccountForm(forms.Form):
 	username = forms.RegexField(max_length=30, regex=r'^[\w.@+-]+$', help_text = "30 characters or fewer. Letters, digits and @/./+/-/_ only.", error_messages = {'invalid': "This value may contain only letters, numbers and @/./+/-/_ characters."}, label="Username *")

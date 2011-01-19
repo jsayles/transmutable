@@ -28,10 +28,34 @@ from django.utils import feedgenerator
 from django.utils.encoding import smart_str
 from django.core.mail import send_mail
 
-from forms import CreateAccountForm, SendTestEmailForm
+from forms import CreateAccountForm, SendTestEmailForm, EmailEveryoneForm
 
 @staff_member_required
 def index(request): return render_to_response('apple/index.html', { }, context_instance=RequestContext(request))
+
+@staff_member_required
+def email_everyone(request):
+	page_message = None
+	if request.method == 'POST':
+		email_everyone_form = EmailEveryoneForm(request.POST)
+		if email_everyone_form.is_valid():
+			subject = email_everyone_form.cleaned_data['subject']
+			message = email_everyone_form.cleaned_data['message']
+			if settings.PRODUCTION:
+				for user in User.objects.filter(is_active=True, email__isnull=False):
+					if not user.get_profile().email_validated: continue
+					try:
+						print 'Mailing', user.email
+						send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+					except:
+						print traceback.print_exc()
+				page_message = 'Sent the email to everyone.'
+			else:
+				page_message = 'If this were production, we would have mailed everyone.'
+			email_everyone_form = EmailEveryoneForm()
+	else:
+		email_everyone_form = EmailEveryoneForm()
+	return render_to_response('apple/email_everyone.html', { 'page_message':page_message, 'email_everyone_form':email_everyone_form }, context_instance=RequestContext(request))
 
 @staff_member_required
 def send_test(request):
