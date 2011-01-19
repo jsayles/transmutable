@@ -46,9 +46,21 @@ class MarkedUpModel(models.Model):
 		abstract = True
 		ordering = ['-created']
 
+class CompletedItemManager(models.Manager):
+	def recent(self, max_count=10):
+		results = []
+		users = {}
+		for item in self.all().order_by('-created'):
+			if len(results) >= max_count: break
+			if users.has_key(item.user.id): continue
+			users[item.user.id] = item.user
+			results.append(item)
+		return results
+
 class CompletedItem(MarkedUpModel):
 	"""Something which a user has completed, mostly items taked off of the work doc."""
 	user = models.ForeignKey(User, related_name='completed_items')
+	objects = CompletedItemManager()
 	def flatten(self): return {'user':self.user.username, 'rendered':self.rendered, 'modified':'%s' % self.modified}
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'username':self.user.username, 'id':self.id })
