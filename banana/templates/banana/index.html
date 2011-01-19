@@ -67,7 +67,7 @@ $(document).ready(function() {
 	<p>If you know people using this site (as in really know them) then ask them how they got in.</p>
 	<p class="last-p">Otherwise, use <a href="https://github.com/TrevorFSmith/transmutable">the source</a>, Luke.</p>
 	
-	<h3>Recent completed:</h3>
+	<h3>Recent to-dones:</h3>
 	<ul id="completed-list">
 		{% for completed_item in completed_items|slice:":10" %}
 			<li class="completed-item-li rendered-wrapper" onclick="document.location.href='{{ completed_item.user.get_absolute_url }}'; return false;">
