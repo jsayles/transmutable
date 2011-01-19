@@ -29,7 +29,7 @@ $(document).ready(function() {
 	margin-left: 60px;
 }
 
-#about-panel {
+#right-column {
 	float: right;
 	width: 370px;
 }
@@ -42,10 +42,20 @@ $(document).ready(function() {
 #user-list > li a { text-decoration: none; }
 #user-list > li a:hover { text-decoration: underline; }
 
+#completed-list > li {
+	border: solid 2px #EEE;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
+	min-height: 60px; cursor: pointer; 
+}
+.completed-item-meta a { text-decoration: none; }
+#completed-controls { visibility: hidden; float: right; padding: 0px; }
+.completed-item-li:hover { background-color: #EEE; }
+.completed-item-li img { float: left; margin-right: 8px; }
 {% endblock %}
 
 {% block content %}
-<div id="about-panel">
+<div id="right-column">
 	<h1>We work in public:</h1>
 	<p class="last-p">People are emerging from their intellectual firewalls and sharing the details of what it takes to do what they do.</p>
 
@@ -56,6 +66,22 @@ $(document).ready(function() {
 	<h2>Can I get in on this?</h2>
 	<p>If you know people using this site (as in really know them) then ask them how they got in.</p>
 	<p class="last-p">Otherwise, use <a href="https://github.com/TrevorFSmith/transmutable">the source</a>, Luke.</p>
+	
+	<h3>Recent completed:</h3>
+	<ul id="completed-list">
+		{% for completed_item in completed_items|slice:":10" %}
+			<li class="completed-item-li rendered-wrapper" onclick="document.location.href='{{ completed_item.user.get_absolute_url }}'; return false;">
+				{% if completed_item.user.get_profile.photo %}
+				<img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|fit_image:"50x50" }}" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" />
+				{% else %}
+				<img class="person-photo" src="{{ MEDIA_URL }}person/BlankIcon150x150.jpg" width="50" height="50" />
+				{% endif %}
+				{{ completed_item.user.get_full_name }}
+				{{ completed_item.rendered|safe|truncatewords_html:20 }}
+				<div class="completed-item-meta"><a href="{{ completed_item.get_absolute_url }}">{{ completed_item.created|timesince }} ago</a></div>
+			</li>
+		{% endfor %}
+	</ul>
 </div>
 <ul id="user-list">
 {% for user in users|slice:":10" %}
