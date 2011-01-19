@@ -47,10 +47,14 @@ class MarkedUpModel(models.Model):
 		ordering = ['-created']
 
 class CompletedItemManager(models.Manager):
-	def recent(self, max_count=10):
+	def recent(self, max_count=10, created_after=None):
 		results = []
 		users = {}
-		for item in self.all().order_by('-created'):
+		if created_after:
+			items = self.filter(created__gte=created_after)
+		else:
+			items = self.all()
+		for item in items.order_by('-created'):
 			if len(results) >= max_count: break
 			if users.has_key(item.user.id): continue
 			users[item.user.id] = item.user

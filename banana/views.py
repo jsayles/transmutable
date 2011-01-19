@@ -32,7 +32,7 @@ from forms import WorkDocForm, CompletedItemForm
 from peach.forms import NamespaceForm
 
 def index(request):
-	return render_to_response('banana/index.html', { 'completed_items':CompletedItem.objects.recent(max_count=10), 'users':User.objects.all().order_by('-work_docs__modified') }, context_instance=RequestContext(request))
+	return render_to_response('banana/index.html', { 'completed_items':CompletedItem.objects.recent(max_count=10, created_after=datetime.datetime.now() - datetime.timedelta(days=4)), 'users':User.objects.all().order_by('-work_docs__modified') }, context_instance=RequestContext(request))
 
 def user(request, username):
 	user = get_object_or_404(User, username=username)
