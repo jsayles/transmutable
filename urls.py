@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/media/favicon.gif'}),
+	(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/media/base/favicon.gif'}),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 
