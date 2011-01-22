@@ -29,7 +29,7 @@ class WikiPhotoForm(forms.ModelForm):
 		fields = ('image','title','description')
 
 class NamespaceForm(forms.ModelForm):
-	display_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'create a namespace'}))
+	display_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'create a document'}))
 
 	class Meta:
 		model = Namespace

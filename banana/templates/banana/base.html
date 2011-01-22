@@ -1,5 +1,25 @@
 {% extends "base/base.html" %}
 
 {% block extra-links %}
-	<link rel="stylesheet" href="{{MEDIA_URL}}banana/banana.css?v=1" />
+	<link rel="stylesheet" href="{{MEDIA_URL}}banana/banana.css?v=2" />
+
+<style>
+{% if request.user.is_authenticated %}
+.completed-item-li:hover .completed-item-rock-button { visibility: visible; position: relative; }
+{% else %}
+.completed-item-li:hover .completed-item-rock-button { visibility: hidden; position: absolute; }
+{% endif %}
+</style>
+
+<script>
+function rockCompletedItem(itemID, callback){
+	$.post(
+		'{% url banana.views.rock_completed_item %}',
+		'completed_item_id=' + itemID,
+		function(data) { if(callback) callback(data); },
+		'json'
+	);
+	return false;
+}
+</script>
 {% endblock %}

@@ -17,7 +17,7 @@ class Command(BaseCommand):
 		return os.system(command) == 0
 	
 	def handle(self, *labels, **options):
-		if settings.DATABASE_ENGINE != 'postgresql_psycopg2': raise CommandError('This command only works with PostgreSQL')
+		if settings.DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql_psycopg2': raise CommandError('This command only works with PostgreSQL')
 		if not hasattr(settings, 'DYNAMIC_MEDIA_DIRS'): raise CommandError('You must define DYNAMIC_MEDIA_DIRS in settings.py')
 		for dir_path in settings.DYNAMIC_MEDIA_DIRS:
 			if not os.path.exists(os.path.join(settings.MEDIA_ROOT, dir_path)): raise CommandError('Specified dynamic media directory "%s" does not exist.' % dir_path)
@@ -29,9 +29,12 @@ class Command(BaseCommand):
 		now = datetime.datetime.now()
 		file_token = '%d-%02d-%02d_%02d-%02d-%02d' % (now.year, now.month, now.day, now.hour, now.minute, now.second)
 
+		db_name = settings.DATABASES['default']['NAME']
+		db_user = settings.DATABASES['default']['USER']
+		db_password = settings.DATABASES['default']['PASSWORD']
 		sql_file = '%s-sql.gz' % file_token
 		sql_path = '%s%s' % (settings.BACKUP_ROOT, sql_file)
-		command = 'pg_dump -U %s %s | gzip > "%s"' % (settings.DATABASE_USER, settings.DATABASE_NAME, sql_path)
+		command = 'pg_dump -U %s %s | gzip > "%s"' % (db_user, db_name, sql_path)
 		if not self.call_system(command):
 			print 'aborting'
 			return

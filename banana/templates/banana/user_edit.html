@@ -26,7 +26,10 @@ button[name="completed-form-button"] { margin-right: 40px; }
 #completed-form { min-height: 120px;}
 #completed-list {
 	width: 280px;
+}
+#completed-list > li {
 	border: solid 2px #EEE;
+	-moz-border-radius: 2em 0 2em 0;
 	border-radius: 2em 0 2em 0;
 	padding: 1em 1em 0.5em 1em;
 }
@@ -69,9 +72,7 @@ $(document).ready(function() {
 	<h2>What you went and did:</h2>
 	<ul id="completed-list">
 	{% for completed_item in user.completed_items.all|slice:":10" %}
-		<li>
-			{% include "banana/completed_item.frag" %}
-		</li>
+		{% include "banana/completed_item.frag" %}
 	{% endfor %}
 	</ul>
 </div>

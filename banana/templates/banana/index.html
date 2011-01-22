@@ -16,6 +16,7 @@ $(document).ready(function() {
 }
 #user-list > li {
 	padding: 1em 1em 0.5em 1em;
+	-moz-border-radius: 2em 0 2em 0;
 	border-radius: 2em 0 2em 0;
 	border: solid 2px #DDD;
 	margin-bottom: 20px; 
@@ -36,22 +37,17 @@ $(document).ready(function() {
 
 .last-p { margin-bottom: 30px; }
 
-#user-list > li { background-color: #FFF; cursor: pointer; }
-#user-list > li:hover { background-color: #EEE; }
-
 #user-list > li a { text-decoration: none; }
-#user-list > li a:hover { text-decoration: underline; }
+#user-list > li:hover a { text-decoration: underline; }
 
 #completed-list > li {
 	border: solid 2px #EEE;
+	-moz-border-radius: 2em 0 2em 0;
 	border-radius: 2em 0 2em 0;
 	padding: 1em 1em 0.5em 1em;
-	min-height: 60px; cursor: pointer; 
+	min-height: 60px; 
 }
-.completed-item-meta a { text-decoration: none; }
 #completed-controls { visibility: hidden; float: right; padding: 0px; }
-.completed-item-li:hover { background-color: #EEE; }
-.completed-item-li img { float: left; margin-right: 8px; }
 {% endblock %}
 
 {% block content %}
@@ -70,23 +66,14 @@ $(document).ready(function() {
 	<h3>Recent to-dones:</h3>
 	<ul id="completed-list">
 		{% for completed_item in completed_items|slice:":10" %}
-			<li class="completed-item-li rendered-wrapper" onclick="document.location.href='{{ completed_item.user.get_absolute_url }}'; return false;">
-				{% if completed_item.user.get_profile.photo %}
-				<img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|fit_image:"50x50" }}" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" />
-				{% else %}
-				<img class="person-photo" src="{{ MEDIA_URL }}person/BlankIcon150x150.jpg" width="50" height="50" />
-				{% endif %}
-				{{ completed_item.user.get_full_name }}
-				{{ completed_item.rendered|safe|truncatewords_html:20 }}
-				<div class="completed-item-meta"><a href="{{ completed_item.get_absolute_url }}">{{ completed_item.created|timesince }} ago</a></div>
-			</li>
+			{% with "True" as show_completed_item_user %}{% include "banana/completed_item.frag" %}{% endwith %}
 		{% endfor %}
 	</ul>
 </div>
 <ul id="user-list">
 {% for user in users|slice:":10" %}
 	{% if user.work_doc.rendered %}
-	<li onclick="document.location.href='{{ user.get_absolute_url }}'; return false;">
+	<li>
 		<a href="{{ user.get_absolute_url }}">
 			{% if user.get_profile.photo %}
 			<img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"50w" }}" width="50" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" />

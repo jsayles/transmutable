@@ -15,4 +15,24 @@
 	border-bottom: solid 1px #EEE;
 	margin-bottom: 10px;
 }
+.completed-item-li a { text-decoration: none; }
+.completed-item-li img { float: left; margin-right: 8px; }
+.completed-item-li:hover a { text-decoration: underline; }
+.completed-item-li:hover .completed-item-meta-timestamp { visibility: hidden;}
+
 .completed-item-meta { width: 100%; text-align: right; color: #888; }
+
+.completed-item-meta-button {
+	position: absolute;
+	visibility: hidden;
+	border: solid 1px #999;
+	background-color: #FFF;
+	display: inline;
+	padding: 0 2px 0 2px;
+	text-decoration: none;
+}
+.completed-item-li:hover .completed-item-meta-button {
+	position: relative;
+	visibility: visible;
+	text-decoration: none;
+}

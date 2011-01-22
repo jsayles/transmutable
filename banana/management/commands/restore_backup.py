@@ -19,7 +19,7 @@ class Command(BaseCommand):
 		return os.system(command) == 0
 
 	def handle(self, *labels, **options):
-		if settings.DATABASE_ENGINE != 'postgresql_psycopg2': raise CommandError('This command only works with PostgreSQL')
+		if settings.DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql_psycopg2': raise CommandError('This command only works with PostgreSQL')
 		if not labels or len(labels) != 1: raise CommandError('Enter one argument, the path to the backup tar file.')
 		backup_path = os.path.realpath(labels[0])
 		if not os.path.exists(backup_path): raise CommandError('The backup file "%s" does not exist.' % backup_path)
@@ -48,11 +48,15 @@ class Command(BaseCommand):
 			shutil.move(os.path.join(media_dir, new_media_dir), target_dir)
 
 		# now delete and recreate the database
-		command = 'echo "drop database %s; create database %s; grant all on database %s to %s;" | psql -U %s' % (settings.DATABASE_NAME, settings.DATABASE_NAME, settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_USER)
+		db_name = settings.DATABASES['default']['NAME']
+		db_user = settings.DATABASES['default']['USER']
+		db_password = settings.DATABASES['default']['PASSWORD']
+
+		command = 'echo "drop database %s; create database %s; grant all on database %s to %s;" | psql -U %s' % (db_name, db_name, db_name, db_user, db_user)
 		if not self.call_system(command): raise CommandError('Aborting restoration.')
 
 		# now load the SQL into the database
-		command = 'gunzip -c %s/*-sql.gz | psql -U %s %s' % (working_dir, settings.DATABASE_USER, settings.DATABASE_NAME)
+		command = 'gunzip -c %s/*-sql.gz | psql -U %s %s' % (working_dir, db_user, db_name)
 		if not self.call_system(command): raise CommandError('Aborting restoration.')
 
 # Copyright 2011 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

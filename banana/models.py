@@ -69,7 +69,14 @@ class CompletedItem(MarkedUpModel):
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'username':self.user.username, 'id':self.id })
 	def __unicode__(self): return 'CompletedItem for %s' % self.user
-	
+
+class CompletedItemRock(models.Model):
+	"""Indicates that someone other than the completed item owner thinks that the completed item rocks."""
+	completed_item = models.ForeignKey(CompletedItem, blank=False, null=False, related_name='rocks')
+	user = models.ForeignKey(User, blank=False, null=False)
+	created = models.DateTimeField(auto_now_add=True)
+	def flatten(self): return {'user':self.user.username, 'completed_item':self.completed_item.flatten(), 'created':'%s' % self.created}
+
 class WorkDoc(MarkedUpModel):
 	"""A markdown document displaying a person's current work queue."""
 	user = models.ForeignKey(User, related_name='work_docs', unique=True)

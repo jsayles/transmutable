@@ -21,16 +21,24 @@ $(document).ready(function() {
 	position: absolute;
 	left: 300px;
 	width: 400px;
+}
+#completed-list li {
 	border: solid 2px #EEE;
+	-moz-border-radius: 2em 0 2em 0;
 	border-radius: 2em 0 2em 0;
 	padding: 1em 1em 0.5em 1em;
 }
-#completed-list li { border-bottom: none; }
 .completed-item-meta a { text-decoration: none; }
 #completed-controls { visibility: hidden; float: right; padding: 0px; }
-.editable-section:hover #completed-controls { visibility: visible; }
-.editable-section:hover { background-color: #EEE; }
 #id_markup { width: 100%; }
+
+.completed-item-li:hover .completed-item-meta-button { visibility: hidden; position: absolute; }
+
+{% if request.user == completed_item.user %}
+	#completed-list:hover #completed-controls { visibility: visible; }
+{% endif %}
+
+.completed-item-li:hover .completed-item-meta-timestamp { visibility: visible; }
 {% endblock %}
 
 {% block content %}
@@ -46,9 +54,9 @@ $(document).ready(function() {
 	</h1>
 </div>
 
-<div id="completed-list" class="{% if request.user.username == completed_item.user.username %}editable-section{% endif %}">
+<div id="completed-list">
 	{% if request.user.username == user.username %}<div id="completed-controls"><button name="edit-completed-button" class="positive">edit</button></div>{% endif %}
-	<ul>{% include "banana/completed_item.frag" %}</ul>
+	<ul class="{% if request.user.username == completed_item.user.username %}editable-section{% endif %}">{% include "banana/completed_item.frag" %}</ul>
 	{% if request.user == completed_item.user %}
 	<div id="edit-widget">
 		<form action="." method="post" id="completed-item-form">

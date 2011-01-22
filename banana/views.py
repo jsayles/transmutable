@@ -28,7 +28,7 @@ from django.utils import feedgenerator
 from django.utils.encoding import smart_str
 
 from models import *
-from forms import WorkDocForm, CompletedItemForm
+from forms import WorkDocForm, CompletedItemForm, RockCompletedItemForm
 from peach.forms import NamespaceForm
 
 def index(request):
@@ -52,6 +52,23 @@ def completed_item(request, username, id):
 @login_required
 def user_edit(request):
 	return render_to_response('banana/user_edit.html', { 'completed_form':CompletedItemForm(instance=CompletedItem(user=request.user)), 'workdoc_form':WorkDocForm(instance=request.user.work_doc) }, context_instance=RequestContext(request))
+
+@login_required
+def rock_completed_item(request):
+	try:
+		if request.method == 'POST':
+			rock_completed_item_form = RockCompletedItemForm(request.POST)
+			if rock_completed_item_form.is_valid():
+				completed_item = get_object_or_404(CompletedItem, pk=rock_completed_item_form.cleaned_data['completed_item_id'])
+				rock, created = CompletedItemRock.objects.get_or_create(completed_item=completed_item, user=request.user)
+				flat_rock = rock.flatten()
+				flat_rock['created'] = created
+				return HttpResponse(json.dumps(flat_rock), mimetype='application/json')
+			else:
+				print 'not valid', rock_completed_item_form
+	except:
+		traceback.print_exc()
+	raise HttpResponseServerError('Error')
 
 @login_required
 def completed_edit(request):
