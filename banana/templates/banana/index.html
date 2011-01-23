@@ -9,7 +9,7 @@
 $(document).ready(function() {
 	{% if request.user.is_authenticated %}
 		if($.isMobile()){
-			$('body').prepend('<div id="mobile-ui-header"><a href="{% url banana.mobile_views.index %}">Go to the mobile ui &raquo;</a>');
+			$('body').prepend('<div id="mobile-ui-header"><a href="{% url banana.mobile_views.index %}">Go to the mobile version &raquo;</a>');
 		}
 	{% endif %}
 	$('button[name="add-search-button"]').click(function(){ $('#search-form').show();  $('#id_terms').focus(); });
