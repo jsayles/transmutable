@@ -12,19 +12,18 @@
 .rendered-wrapper a, .rendered-wrapper a:hover { text-decoration: underline; }
 
 .completed-item-li {
-	border-bottom: solid 1px #EEE;
 	margin-bottom: 10px;
+	border: solid 2px #EEE;
+	-moz-border-radius: 2em 0 2em 0;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
 }
 .completed-item-li a { text-decoration: none; }
 .completed-item-li img { float: left; margin-right: 8px; }
 .completed-item-li:hover a { text-decoration: underline; }
-.completed-item-li:hover .completed-item-meta-timestamp { visibility: hidden;}
-
 .completed-item-meta { width: 100%; text-align: right; color: #888; }
 
 .completed-item-meta-button {
-	position: absolute;
-	visibility: hidden;
 	border: solid 1px #999;
 	background-color: #FFF;
 	display: inline;
@@ -32,7 +31,5 @@
 	text-decoration: none;
 }
 .completed-item-li:hover .completed-item-meta-button {
-	position: relative;
-	visibility: visible;
 	text-decoration: none;
 }

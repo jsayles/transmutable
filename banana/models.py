@@ -47,14 +47,16 @@ class MarkedUpModel(models.Model):
 		ordering = ['-created']
 
 class CompletedItemManager(models.Manager):
-	def recent(self, max_count=10, created_after=None):
+	
+	def recent(self, max_count=10, created_after=None, viewer_id=None):
 		results = []
 		users = {}
 		if created_after:
 			items = self.filter(created__gte=created_after)
 		else:
 			items = self.all()
-		for item in items.order_by('-created'):
+
+		for item in items.order_by('-created').select_related():
 			if len(results) >= max_count: break
 			if users.has_key(item.user.id): continue
 			users[item.user.id] = item.user
@@ -66,6 +68,13 @@ class CompletedItem(MarkedUpModel):
 	user = models.ForeignKey(User, related_name='completed_items')
 	objects = CompletedItemManager()
 	def flatten(self): return {'user':self.user.username, 'rendered':self.rendered, 'modified':'%s' % self.modified}
+	
+	def rocked_it(self, user):
+		if not user.is_authenticated(): return False
+		return CompletedItemRock.objects.filter(completed_item=self, user=user).count() == 1
+
+	def rock_count(self): return CompletedItemRock.objects.filter(completed_item=self).count()
+	
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'username':self.user.username, 'id':self.id })
 	def __unicode__(self): return 'CompletedItem for %s' % self.user

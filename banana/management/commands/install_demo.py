@@ -69,6 +69,7 @@ I really wanted the kids to learn:
 		completed_item6 = self.create_completed_item(person2, "Raised the roof.")
 		
 		person3 = self.create_user('amy', '1234', 'Amy', 'Scout', 'Bothell, WA', is_staff=False, is_superuser=False)
+		completed_item7 = self.create_completed_item(person3, "Walked the [dog](http://example.com/), yo!")
 		
 		namespace1 = self.create_namespace('Dev Notes', person1)
 		page1 = self.create_wiki_page(namespace1, 'SplashPage', """#This is the SplashPage

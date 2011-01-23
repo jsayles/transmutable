@@ -12,14 +12,21 @@
 </style>
 
 <script>
-function rockCompletedItem(itemID, callback){
-	$.post(
-		'{% url banana.views.rock_completed_item %}',
-		'completed_item_id=' + itemID,
-		function(data) { if(callback) callback(data); },
-		'json'
-	);
-	return false;
+function rockCompletedItem(itemID, rock_count, element){
+	try {
+		$.post(
+			'{% url banana.views.rock_completed_item %}',
+			'completed_item_id=' + itemID,
+			function(data) { 
+				$(element).html('Rocked! (' + (rock_count + 1) + ')');
+			},
+			'json'
+		);
+		return false;
+	} catch(er) {
+		console.log('error', er);
+		return false;
+	}
 }
 </script>
 {% endblock %}

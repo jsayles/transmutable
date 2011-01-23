@@ -8,6 +8,11 @@ class CompletedItemAdmin(admin.ModelAdmin):
 	list_display = ('user', 'modified')
 admin.site.register(CompletedItem, CompletedItemAdmin)
 
+class CompletedItemRockAdmin(admin.ModelAdmin):
+	pass
+	#list_display = ('user', 'modified')
+admin.site.register(CompletedItemRock, CompletedItemRockAdmin)
+
 class WorkDocAdmin(admin.ModelAdmin):
 	list_display = ('user', 'modified')
 admin.site.register(WorkDoc, WorkDocAdmin)

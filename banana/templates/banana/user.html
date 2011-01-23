@@ -1,6 +1,6 @@
 {% extends "banana/base.html" %}
 {% load imagetags %}
-
+{% load banana %}
 {% block sub-title %}{{ user.get_full_name }} | {% endblock %}
 
 {% block style %}
@@ -96,7 +96,7 @@ $(document).ready(function() {
 	<ul id="completed-list" class="{% if request.user.username == user.username %} editable-section{% endif %}">
 	{% if request.user.username == user.username %}<div id="completed-controls"><button name="edit-completed-button" class="positive">edit</button></div>{% endif %}
 	{% for completed_item in user.completed_items.all|slice:":10" %}
-		{% include "banana/completed_item.frag" %}
+		{% completed_item_widget %}
 	{% endfor %}
 	</ul>
 </div>

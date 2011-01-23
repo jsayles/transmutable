@@ -1,5 +1,6 @@
 {% extends "banana/base.html" %}
 {% load imagetags %}
+{% load banana %}
 
 {% block sub-head %}
 <script>
@@ -40,13 +41,6 @@ $(document).ready(function() {
 #user-list > li a { text-decoration: none; }
 #user-list > li:hover a { text-decoration: underline; }
 
-#completed-list > li {
-	border: solid 2px #EEE;
-	-moz-border-radius: 2em 0 2em 0;
-	border-radius: 2em 0 2em 0;
-	padding: 1em 1em 0.5em 1em;
-	min-height: 60px; 
-}
 #completed-controls { visibility: hidden; float: right; padding: 0px; }
 {% endblock %}
 
@@ -66,7 +60,7 @@ $(document).ready(function() {
 	<h3>Recent to-dones:</h3>
 	<ul id="completed-list">
 		{% for completed_item in completed_items|slice:":10" %}
-			{% with "True" as show_completed_item_user %}{% include "banana/completed_item.frag" %}{% endwith %}
+			{% with "True" as show_completed_item_user %}{% completed_item_widget %}{% endwith %}
 		{% endfor %}
 	</ul>
 </div>
