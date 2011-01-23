@@ -48,7 +48,7 @@ class MarkedUpModel(models.Model):
 
 class CompletedItemManager(models.Manager):
 	
-	def recent(self, max_count=10, created_after=None, viewer_id=None):
+	def recent(self, max_count=10, created_after=None):
 		results = []
 		users = {}
 		if created_after:

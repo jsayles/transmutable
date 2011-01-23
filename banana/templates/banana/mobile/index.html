@@ -1,0 +1,26 @@
+{% extends "banana/mobile/base.html" %}
+{% load imagetags %}
+{% load banana %}
+
+{% block sub-title %}To-do | {% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+	$('button[name="edit-work-doc-button"]').click(function(){
+		document.location.href = "{% url banana.mobile_views.todo_edit %}";
+	});
+});
+</script>
+{% endblock %}
+
+{% block style %}
+#work-doc-controls { float: right; padding: 0px; }
+{% endblock %}
+
+{% block content %}
+<div id="work-doc">
+	<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">edit</button></div>
+	{{ user.work_doc.rendered|safe }}
+</div>
+{% endblock %}

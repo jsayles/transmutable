@@ -1,0 +1,27 @@
+{% extends "banana/mobile/base.html" %}
+{% load imagetags %}
+{% load banana %}
+
+{% block sub-title %}To-done | {% endblock %}
+
+{% block sub-head %}
+<script>
+function log(message){
+	$('#console').prepend('<div>' + message + '</div>');
+}
+
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<ul>
+{% for completed_item in request.user.completed_items.all|slice:":10" %}
+	{% completed_item_widget %}
+{% endfor %}
+</ul>
+{% endblock %}

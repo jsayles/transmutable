@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<meta name="DC.title" content="{{ site.name }}" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
+
+	<link rel="stylesheet" href="{{MEDIA_URL}}base/mobile_base.css?v=1" />
+	<link rel="shortcut icon" href="{{MEDIA_URL}}base/favicon.gif" />
+
+	<script src="{{MEDIA_URL}}js/modernizr-1.5.min.js"></script>
+	<script src="{{MEDIA_URL}}jquery/js/jquery-1.4.2.min.js"></script>
+	<script src="{{MEDIA_URL}}jquery/js/jquery-ui-1.8.4.custom.min.js"></script>
+	<script src="{{MEDIA_URL}}js/plugins.js?v=1"></script>
+	<script src="{{MEDIA_URL}}js/script.js?v=1"></script>
+	<script src="{{MEDIA_URL}}base/base.js?v=2"></script>
+
+	{% block extra-links %}{% endblock %}
+
+	{%block sub-head %}{% endblock %}
+	
+	{% block feed-link %}{% endblock %}
+	
+<style>
+{% if user.is_authenticated %}
+	header nav li { width: 32%; }
+{% else %}
+	header nav li { width: 99%; }
+{% endif %}
+{% block style %}{% endblock %}
+</style>
+</head>
+<body>
+{% block body %}
+{% block header %}<header>
+{% block header-title %}<h1><a href="{% url banana.mobile_views.index %}">{{ site.name }}</a></h1>{% endblock %}
+
+<nav id="nav-tabs"><ul>
+	{% if request.user.is_authenticated %}
+		<li><a href="{% url banana.mobile_views.index %}">To-do</a></li>
+		<li><a href="{% url banana.mobile_views.todone %}">To-done</a></li>
+		<li><a href="{% url banana.mobile_views.index %}">Notes</a></li>
+	{% else %}
+		<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">login</a>{% endblock %}</li>
+	{% endif %}
+</ul></nav>
+
+</header>{% endblock %}
+
+<div id="content">{% block content %}{% endblock %}</div>
+
+{% block footer %}<footer></footer>{% endblock %}
+
+{% endblock %}<!-- end body block -->
+</body>
+</html>
