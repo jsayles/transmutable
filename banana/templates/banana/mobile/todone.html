@@ -6,19 +6,24 @@
 
 {% block sub-head %}
 <script>
-function log(message){
-	$('#console').prepend('<div>' + message + '</div>');
-}
-
 $(document).ready(function() {
+	$('button[name="completed-form-button"]').click(function(){ $('#completed-form').submit(); });
 });
 </script>
 {% endblock %}
 
 {% block style %}
+#completed-form {
+	height: 12em;
+}
+#id_markup { width: 99%; height: 6em; }
 {% endblock %}
 
 {% block content %}
+<form id="completed-form" action="{% url banana.mobile_views.todone %}" method="post">
+	{% for field in completed_form %}{{ field }}{% endfor %}
+	<button name="completed-form-button" type="button" class="positive">to-done!</button>
+</form>
 <ul>
 {% for completed_item in request.user.completed_items.all|slice:":10" %}
 	{% completed_item_widget %}

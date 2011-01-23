@@ -36,8 +36,21 @@ def index(request): #aka to-do
 	return render_to_response('banana/mobile/index.html', { }, context_instance=RequestContext(request))
 
 @login_required
+def notes(request):
+	return render_to_response('banana/mobile/notes.html', { }, context_instance=RequestContext(request))
+
+@login_required
 def todone(request):
-	return render_to_response('banana/mobile/todone.html', { }, context_instance=RequestContext(request))
+	if request.method == 'POST':
+		completed_form = CompletedItemForm(request.POST, instance=CompletedItem(user=request.user))
+		if completed_form.is_valid():
+			item = completed_form.save()
+			completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
+		else:
+			print 'not valid'
+	else:
+		completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
+	return render_to_response('banana/mobile/todone.html', { 'completed_form':completed_form }, context_instance=RequestContext(request))
 
 @login_required
 def todo_edit(request):

@@ -25,7 +25,7 @@
 	
 <style>
 {% if user.is_authenticated %}
-	header nav li { width: 32%; }
+	header nav li { width: 49%; }
 {% else %}
 	header nav li { width: 99%; }
 {% endif %}
@@ -41,7 +41,6 @@
 	{% if request.user.is_authenticated %}
 		<li><a href="{% url banana.mobile_views.index %}">To-do</a></li>
 		<li><a href="{% url banana.mobile_views.todone %}">To-done</a></li>
-		<li><a href="{% url banana.mobile_views.index %}">Notes</a></li>
 	{% else %}
 		<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">login</a>{% endblock %}</li>
 	{% endif %}

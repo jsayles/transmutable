@@ -2,7 +2,7 @@
 {% load imagetags %}
 {% load banana %}
 
-{% block sub-title %}To-do | {% endblock %}
+{% block sub-title %}Notes | {% endblock %}
 
 {% block sub-head %}
 <script>
@@ -19,8 +19,9 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-<div id="work-doc" class="rendered-wrapper">
-	<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">edit</button></div>
-	{{ user.work_doc.rendered|safe }}
-</div>
+<ul id="namespace-list">
+	{% for namespace in user.namespaces.all %}
+	<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
+	{% endfor %}
+</ul>
 {% endblock %}
