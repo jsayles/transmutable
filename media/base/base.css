@@ -16,6 +16,9 @@ h3 { font-size: 1em; }
 
 h1 a, h2 a { text-decoration: none;}
 
+// This places a bit of headroom above headlines in columns of text but (usually) not in widgets
+p + h1, p + h2, p + h3, p + h4 { margin-top: 1.2em;}
+
 a:hover { text-decoration: underline;}
 
 p { margin-bottom: 0.5em; }

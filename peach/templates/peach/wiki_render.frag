@@ -17,7 +17,7 @@
 	{% if not hide_title %}<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; {{ page.name }}:</h1>{% endif %}
 
 	{% if page.rendered %}
-		<div class="rendered-page">{{ page.rendered|include_constants|safe }}</div>
+		<div class="rendered-wrapper">{{ page.rendered|include_constants|safe }}</div>
 	{% endif %}
 
 	{% if page.wikifile_set.all %}
