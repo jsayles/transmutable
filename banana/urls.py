@@ -12,6 +12,7 @@ urlpatterns = patterns('',
 	(r'^m/$', 'banana.mobile_views.index'),
 	(r'^m/to-done/$', 'banana.mobile_views.todone'),
 	(r'^m/to-do/edit/$', 'banana.mobile_views.todo_edit'),
+	(r'^m/activity/$', 'banana.mobile_views.activity'),
 	(r'^m/notes/$', 'banana.mobile_views.notes'),
 )
 

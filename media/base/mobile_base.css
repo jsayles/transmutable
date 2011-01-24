@@ -1,4 +1,4 @@
-@import url("/media/base/base.css?v=2");
+@import url("/media/base/base.css?v=3");
 
 body {
 	border-right: solid 1px #EEE; 
@@ -31,6 +31,7 @@ header nav a { text-decoration: none; }
 	clear: both;
 }
 
+footer a { color: #444; font-size: 0.9em; text-decoration: none; padding-right: 10px; }
 
 button{
     margin:0 7px 0 0;

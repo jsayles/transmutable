@@ -1,0 +1,23 @@
+{% extends "banana/mobile/base.html" %}
+{% load imagetags %}
+{% load banana %}
+
+{% block sub-title %}Activity | {% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<ul id="completed-list">
+{% for completed_item in completed_items|slice:":10" %}
+	{% with "True" as show_completed_item_user %}{% completed_item_widget %}{% endwith %}
+{% endfor %}
+</ul>
+{% endblock %}

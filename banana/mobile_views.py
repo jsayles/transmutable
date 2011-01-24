@@ -36,6 +36,10 @@ def index(request): #aka to-do
 	return render_to_response('banana/mobile/index.html', { }, context_instance=RequestContext(request))
 
 @login_required
+def activity(request):
+	return render_to_response('banana/mobile/activity.html', {  'completed_items':CompletedItem.objects.recent(max_count=10, created_after=datetime.datetime.now() - datetime.timedelta(days=4)) }, context_instance=RequestContext(request))
+
+@login_required
 def notes(request):
 	return render_to_response('banana/mobile/notes.html', { }, context_instance=RequestContext(request))
 
