@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; <a href="{% url peach.views.wiki page.namespace.name page.name %}">{{ page.name }}</a> &raquo; History:</h1>
+<h1><a href="{{ page.namespace.owner.get_absolute_url }}">{{ page.namespace.owner.get_full_name }}</a> &raquo; <a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; <a href="{% url peach.views.wiki page.namespace.name page.name %}">{{ page.name }}</a> &raquo; History:</h1>
 
 {% for log in page.wikipagelog_set.all %}
 {% ifchanged log.created.day %}

@@ -89,6 +89,8 @@ class CompletedItemRock(models.Model):
 class WorkDoc(MarkedUpModel):
 	"""A markdown document displaying a person's current work queue."""
 	user = models.ForeignKey(User, related_name='work_docs', unique=True)
+
+	def flatten(self): return {'user':self.user.username, 'markup':self.markup, 'rendered':self.rendered, 'modified':'%s' % self.modified}
 	def __unicode__(self):
 		return 'WordDoc for %s' % self.user
 

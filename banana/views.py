@@ -36,7 +36,13 @@ def index(request):
 
 def user(request, username):
 	user = get_object_or_404(User, username=username)
-	return render_to_response('banana/user.html', { 'user':user, 'namespace_form':NamespaceForm() }, context_instance=RequestContext(request))
+	if request.user == user:
+		workdoc_form = WorkDocForm(instance=user.work_doc)
+		completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
+	else:
+		workdoc_form = None
+		completed_form = None
+	return render_to_response('banana/user.html', { 'workdoc_form':workdoc_form, 'completed_form':completed_form, 'namespace_form':NamespaceForm(), 'user':user }, context_instance=RequestContext(request))
 
 def completed_item(request, username, id):
 	item = get_object_or_404(CompletedItem, user__username=username, pk=id)
@@ -48,10 +54,6 @@ def completed_item(request, username, id):
 	else:
 		completed_item_form = CompletedItemForm(instance=item)
 	return render_to_response('banana/completed_item.html', { 'completed_item_form':completed_item_form, 'completed_item':item, }, context_instance=RequestContext(request))
-
-@login_required
-def user_edit(request):
-	return render_to_response('banana/user_edit.html', { 'completed_form':CompletedItemForm(instance=CompletedItem(user=request.user)), 'workdoc_form':WorkDocForm(instance=request.user.work_doc) }, context_instance=RequestContext(request))
 
 @login_required
 def rock_completed_item(request):
@@ -78,7 +80,7 @@ def completed_edit(request):
 			if completed_form.is_valid():
 				item = completed_form.save()
 				return HttpResponse(json.dumps(item.flatten()), mimetype='application/json')
-		return HttpResponseRedirect(reverse('banana.views.user_edit'))
+		return HttpResponseRedirect(reverse('banana.views.user'))
 	except:
 		traceback.print_exc()
 		raise HttpResponseServerError('Error')
@@ -89,6 +91,6 @@ def workdoc_edit(request):
 		workdoc_form = WorkDocForm(request.POST)
 		if workdoc_form.is_valid():
 			request.user.work_doc.save_markup(workdoc_form.cleaned_data['markup'])
-	return HttpResponseRedirect(reverse('banana.views.user', kwargs={ 'username':request.user.username }))
+	return HttpResponse(json.dumps(request.user.work_doc.flatten()), mimetype='application/json')
 
 # Copyright 2011 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

@@ -32,10 +32,14 @@ def index(request):
 	if request.method == 'POST' and request.user.is_authenticated():
 		namespace_form = NamespaceForm(request.POST, instance=Namespace(owner=request.user))
 		if namespace_form.is_valid():
+			if Namespace.objects.filter(owner=request.user, display_name=namespace_form.cleaned_data['display_name']).count() > 0:
+				return HttpResponseRedirect(Namespace.objects.get(owner=request.user, display_name=namespace_form.cleaned_data['display_name']).get_absolute_url())
 			namespace = namespace_form.save()
 			return HttpResponseRedirect(namespace.get_absolute_url())
-	else:
+	elif request.user.is_authenticated():
 		namespace_form = NamespaceForm(instance=Namespace(owner=request.user))
+	else:
+		namespace_form = None
 	return render_to_response('peach/index.html', { 'users': User.objects.all(), 'namespace_form':namespace_form }, context_instance=RequestContext(request))
 
 def namespace(request, namespace):
@@ -43,7 +47,7 @@ def namespace(request, namespace):
 	page = WikiPage.objects.get_or_create(namespace__name=namespace, name='SplashPage')[0]
 	if request.method == 'POST' and request.user.is_authenticated() and ns.owner == request.user:
 		create_wiki_page_form = CreateWikiPageForm(request.POST, instance=WikiPage(namespace=ns))
-		if create_wiki_page_form.is_valid():
+		if create_wiki_page_form.is_valid() and WikiPage.objects.filter(namespace=ns, name=create_wiki_page_form.cleaned_data['name']).count() == 0:
 			page = create_wiki_page_form.save()
 			return HttpResponseRedirect(page.get_absolute_url())
 	else:

@@ -33,3 +33,10 @@
 .completed-item-li:hover .completed-item-meta-button {
 	text-decoration: none;
 }
+
+#completed-form textarea {
+	height: 5em;
+	width: 99%;
+}
+button[name="completed-form-button"] { float: right; }
+#completed-form { min-height: 140px;}

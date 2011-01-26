@@ -1,28 +1,31 @@
 {% extends "peach/base.html" %}
 {% load wikitags %}
+{% load imagetags %}
 {% block sub-title %}Wiki | {% endblock %}
 
 {% block sub-style %}
+#main-column {
+	width: 840px;
+	float: right;
+}
 #left-column { 
 	width: 140px; 
 	border-right: solid 1px #DDD;
 }
 #left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
-#main-column {
-	width: 840px;
-	float: right;
-}
 {% endblock %}
 
 {% block content %}
-<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; {{ page.namespace.display_name }}:</h1>
 <div id="main-column">
+	<h1>{{ page.namespace.display_name }}:</h1>
 	{% with "true" as hide_title %}{% include "peach/wiki_render.frag" %}{% endwith %}
 </div>
 <div id="left-column">
+	{% with page.namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
+	{% if wiki_pages %}<h2>Pages:</h2>{% endif %}
 	<ul>
 	{% for page in wiki_pages %}
-	   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name|truncate:"18" }}</a></li>
+	   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
 	{% endfor %}
 	{% if request.user.is_authenticated and request.user.username == namespace.owner.username %}
 		<li>

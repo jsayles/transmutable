@@ -40,7 +40,7 @@ class WikiPageManager(models.Manager):
 	
 class WikiPage(models.Model):
 	"""A named chunk of markdown formatted text."""
-	namespace = models.ForeignKey(Namespace, blank=False, null=False)
+	namespace = models.ForeignKey(Namespace, blank=False, null=False, related_name='pages')
 	name = models.CharField(max_length=255, blank=False, null=False)
 	content = models.TextField(blank=False, null=False, default='')
 	rendered = models.TextField(blank=True, null=True)

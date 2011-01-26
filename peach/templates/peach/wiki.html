@@ -2,6 +2,33 @@
 
 {% block sub-title %}{{ page.name }} | {% endblock %}
 
+{% block sub-style %}
+{% if page.namespace.pages.all or request.user == page.namespace.owner %}
+	#main-column {
+		width: 840px;
+		float: right;
+	}
+	#left-column { 
+		width: 140px; 
+		border-right: solid 1px #DDD;
+	}
+	#left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
+{% endif %}
+{% endblock %}
+
 {% block content %}
-   {% include "peach/wiki_render.frag" %}
+	<div id="main-column">
+   		{% include "peach/wiki_render.frag" %}
+	</div>
+	<div id="left-column">
+		{% with page.namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
+		<h2>Pages:</h2>
+		<ul>
+		{% for page in page.namespace.pages.all %}
+			{% if page.name != 'SplashPage' %}
+				<li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
+	</div>
 {% endblock %}

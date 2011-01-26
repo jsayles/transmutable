@@ -28,6 +28,7 @@ from django.utils import feedgenerator
 from django.utils.encoding import smart_str
 from django.core.mail import send_mail
 
+from banana.models import CompletedItem
 from forms import CreateAccountForm, SendTestEmailForm, EmailEveryoneForm
 
 @staff_member_required
@@ -77,6 +78,7 @@ def create_account(request):
 		create_account_form = CreateAccountForm(request.POST)
 		if create_account_form.is_valid():
 			user, password = create_account_form.save()
+			completed_item = CompletedItem.objects.create(user=user, markup='Joined Transmutable Work')
 			message = render_to_string('apple/email/account_created.txt', { 'user':user, 'password':password, 'admin_name':settings.ADMINS[0][0] }, context_instance=RequestContext(request))
 			if settings.PRODUCTION == True:
 				user.email_user("Account Created", message, settings.DEFAULT_FROM_EMAIL)
