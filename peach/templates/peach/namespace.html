@@ -1,7 +1,7 @@
 {% extends "peach/base.html" %}
 {% load wikitags %}
 {% load imagetags %}
-{% block sub-title %}Wiki | {% endblock %}
+{% block sub-title %}{{ page.namespace.display_name }} | {% endblock %}
 
 {% block sub-style %}
 #main-column {
