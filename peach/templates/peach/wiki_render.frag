@@ -9,6 +9,15 @@ $(document).ready(function() {
 			document.location.href = "{% url peach.mobile_views.wiki_edit page.namespace.name page.name %}";
 		});
 	{% else %}
+		$('button[name="edit-button"]').click(function(){
+			document.location.href = "{% url peach.views.wiki_edit page.namespace.name page.name %}";
+		});
+		$('button[name="print-button"]').click(function(){
+			document.location.href = "{% url peach.views.wiki_print page.namespace.name page.name %}";
+		});
+		$('button[name="history-button"]').click(function(){
+			document.location.href = "{% url peach.views.wiki_history page.namespace.name page.name %}";
+		});
 	{% endif %}
 });
 </script>
@@ -17,11 +26,10 @@ $(document).ready(function() {
 {% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
 	<div class="wiki-control-links">
 	{% if not is_mobile %}
-		<button name="history-button" href="{% url peach.views.wiki_history page.namespace.name page.name %}">history</button>
-		<button name="print-button" href="{% url peach.views.wiki_print page.namespace.name page.name %}">print</button>
-	{% else %}
-		<button name="edit-button" class="positive" href="">edit</button>
+		<button name="history-button">history</button>
+		<button name="print-button">print</button>
 	{% endif %}
+	<button name="edit-button" class="positive">edit</button>
 	</div>
 {% endif %}
 
