@@ -9,7 +9,8 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block style %}
-#namespace-list li { display: inline; padding-right: 20px; padding-bottom: 20px; }
+#namespace-list { clear: both; }
+#namespace-list li { display: block; float: left; padding-right: 30px; padding-bottom: 30px;  }
 {% endblock %}
 
 {% block content %}
@@ -22,3 +23,5 @@ $(document).ready(function() {
 	</li>
 </ul>
 {% endblock %}
+
+{% block footer %}{% endblock %}
