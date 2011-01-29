@@ -50,6 +50,10 @@ class WikiPage(models.Model):
 		if self.name == "SplashPage": return ('peach.views.namespace', [], { 'namespace':self.namespace.name })
 		return ('peach.views.wiki', [], { 'namespace':self.namespace.name, 'name':self.name })
 	@models.permalink
+	def get_mobile_url(self):
+		if self.name == "SplashPage": return ('peach.mobile_views.namespace', [], { 'namespace':self.namespace.name })
+		return ('peach.mobile_views.wiki', [], { 'namespace':self.namespace.name, 'name':self.name })
+	@models.permalink
 	def get_edit_url(self):
 		return ('peach.views.wiki_edit', [], { 'namespace':self.namespace.name, 'name':self.name })
 	def __unicode__(self):

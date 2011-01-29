@@ -1,0 +1,22 @@
+{% extends "peach/mobile/base.html" %}
+{% block sub-title %}Wiki | {% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
+
+{% block style %}
+#content .rendered-wrapper { min-height: 100px; }
+{% endblock %}
+
+{% block content %}
+<h1><a href="{% url peach.mobile_views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; {{ page.name }}:</h1>
+{% with "true" as hide_title %}
+	{% with "true" as is_mobile %}
+		{% include "peach/wiki_render.frag" %}
+	{% endwith %}
+{% endwith %}
+{% endblock %}

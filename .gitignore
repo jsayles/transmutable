@@ -2,6 +2,7 @@
 local_settings.py
 backups
 media/banana
+media/peach
 media/person
 media/resized_image
 media/person_photo

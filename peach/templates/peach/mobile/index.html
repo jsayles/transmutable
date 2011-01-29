@@ -1,0 +1,23 @@
+{% extends "peach/mobile/base.html" %}
+{% block sub-title %}Plans | {% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<ul>
+{% for namespace in request.user.namespaces.all %}
+	<li><a href="{% url peach.mobile_views.namespace namespace.name %}">{{ namespace.display_name }}</a></li>
+{% endfor %}
+	<li>
+		<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+	</li>
+</ul>
+{% endblock %}

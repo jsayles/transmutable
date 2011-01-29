@@ -2,15 +2,26 @@
 {% load wikitags %}
 
 {% block sub-head %}
-<script type="text/javascript">
+<script>
+$(document).ready(function() {
+	{% if is_mobile %}
+		$('button[name="edit-button"]').click(function(){
+			document.location.href = "{% url peach.mobile_views.wiki_edit page.namespace.name page.name %}";
+		});
+	{% else %}
+	{% endif %}
+});
 </script>
 {% endblock %}
 
 {% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
 	<div class="wiki-control-links">
-		[<a href="{% url peach.views.wiki_history page.namespace.name page.name %}">page history</a>]
-		[<a href="{% url peach.views.wiki_print page.namespace.name page.name %}">print version</a>]
-		[<a href="{% url peach.views.wiki_edit page.namespace.name page.name %}">edit this page</a>]
+	{% if not is_mobile %}
+		<button name="history-button" href="{% url peach.views.wiki_history page.namespace.name page.name %}">history</button>
+		<button name="print-button" href="{% url peach.views.wiki_print page.namespace.name page.name %}">print</button>
+	{% else %}
+		<button name="edit-button" class="positive" href="">edit</button>
+	{% endif %}
 	</div>
 {% endif %}
 

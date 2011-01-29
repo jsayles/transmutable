@@ -1,0 +1,37 @@
+{% extends "peach/mobile/base.html" %}
+{% block sub-title %}{{ namespace.display_name }} | {% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
+
+{% block style %}
+.page-li { display: block; float: left; padding-right: 30px; padding-bottom: 30px; }
+#wiki-content { display: block; height: 100px; }
+{% endblock %}
+
+{% block content %}
+<h1>{{ namespace.display_name }}:</h1>
+
+<div id="wiki-content">
+{% with "true" as hide_title %}
+	{% with "true" as is_mobile %}
+		{% include "peach/wiki_render.frag" %}
+	{% endwith %}
+{% endwith %}
+</div>
+<hr />
+
+<h3>Pages:</h3>
+<ul>
+	{% for page in wiki_pages %}
+	<li class="page-li"><a href="{% url peach.mobile_views.wiki namespace.name page.name %}">{{ page.name }}</a></li>
+	{% endfor %}
+	<li>
+		<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
+	</li>
+</ul>
+{% endblock %}

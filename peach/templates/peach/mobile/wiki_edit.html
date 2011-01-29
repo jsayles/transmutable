@@ -1,0 +1,24 @@
+{% extends "peach/mobile/base.html" %}
+{% block sub-title %}Edit | {{ page.name }} | {% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+	$('button[name="save-button"]').click(function(){ $('#page-form').submit(); });
+});
+</script>
+{% endblock %}
+
+{% block style %}
+#page-form textarea { height: 20em; width: 99%; }
+{% endblock %}
+
+{% block content %}
+<form id="page-form" action="." method="post">
+	{% for field in page_form %}{{ field }}{% endfor %}
+	{% csrf_token %}
+</form>
+<div id="buttons">
+	<button name="save-button" type="button" class="positive">save</button>
+</div>
+{% endblock %}
