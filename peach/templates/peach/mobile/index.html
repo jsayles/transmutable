@@ -9,10 +9,11 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block style %}
+#namespace-list li { display: inline; padding-right: 20px; padding-bottom: 20px; }
 {% endblock %}
 
 {% block content %}
-<ul>
+<ul id="namespace-list">
 {% for namespace in request.user.namespaces.all %}
 	<li><a href="{% url peach.mobile_views.namespace namespace.name %}">{{ namespace.display_name }}</a></li>
 {% endfor %}
