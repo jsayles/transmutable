@@ -30,8 +30,6 @@ $(document).ready(function() {
 	{% for page in wiki_pages %}
 	<li class="page-li"><a href="{% url peach.mobile_views.wiki namespace.name page.name %}">{{ page.name }}</a></li>
 	{% endfor %}
-	<li>
-		<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
-	</li>
 </ul>
+<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
 {% endblock %}
