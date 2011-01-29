@@ -30,7 +30,7 @@ $(document).ready(function() {
 		<button name="print-button">print</button>
 	{% endif %}
 	<button name="edit-button" class="positive">edit</button>
-	</div>
+	</div> 
 {% endif %}
 
 	{% if not hide_title %}<h1><a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; {{ page.name }}:</h1>{% endif %}
