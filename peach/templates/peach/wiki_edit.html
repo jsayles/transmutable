@@ -53,7 +53,7 @@ function saveThenAddFile(){
 
 <form id="page-form" action="." method="post">
 	{% for field in page_form %}{{ field }}{% endfor %}
-	<input type="submit" value="save" />
+	<button type="submit">Save</button>
 	{% csrf_token %}
 </form>
 <br clear="all" />

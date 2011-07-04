@@ -13,7 +13,7 @@ class CompletedItemForm(forms.ModelForm):
 	markup = forms.TextInput()
 	class Meta:
 		model = CompletedItem
-		fields = ('markup',)
+		fields = ('markup', 'promoted', 'link')
 
 class RockCompletedItemForm(forms.Form):
 	completed_item_id = forms.IntegerField()

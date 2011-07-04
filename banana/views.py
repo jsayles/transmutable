@@ -81,7 +81,7 @@ def completed_edit(request):
 			if completed_form.is_valid():
 				item = completed_form.save()
 				return HttpResponse(json.dumps(item.flatten()), mimetype='application/json')
-		return HttpResponseRedirect(reverse('banana.views.user'))
+		return HttpResponseRedirect(reverse('banana.views.user', kwargs={'username':request.user}))
 	except:
 		traceback.print_exc()
 		raise HttpResponseServerError('Error')

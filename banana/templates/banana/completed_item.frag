@@ -1,5 +1,5 @@
 {% load imagetags %}
-<li class="completed-item-li rendered-wrapper">
+<li class="completed-item-li rounded-block rendered-wrapper {% if completed_item.promoted %}promoted-completed-item-li{% endif %}">
 	{% if show_completed_item_user %}
 		{% if completed_item.user.get_profile.photo %}
 			<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|fit_image:"50x50" }}" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" /></a>
@@ -11,6 +11,10 @@
 	{{ completed_item.rendered|safe }}
 	<div class="completed-item-meta">
 		<div class="completed-item-meta-timestamp">{{ completed_item.created|timesince }} ago</div>
+		{% if completed_item.link %}
+			<a class="completed-item-meta-button" href="{{ completed_item.link}}">promoted</a>
+		{% endif %}
+
 		{% if not hide_completed_item_info_button %}
 			<a class="completed-item-meta-button completed-item-info-button" href="{{ completed_item.get_absolute_url }}">info</a>
 		{% endif %}

@@ -7,18 +7,6 @@
 #work-doc, #completed-list {
 	min-height: 400px; 	
 }
-#completed-list {
-	-moz-border-radius: 2em 0 2em 0;
-	border-radius: 2em 0 2em 0;
-	padding: 0;
-}
-#completed-list > li {
-	border: solid 2px #EEE;
-	-moz-border-radius: 2em 0 2em 0;
-	border-radius: 2em 0 2em 0;
-	padding: 1em 1em 0.5em 1em;
-}
-
 #right-column {
 	width: 580px;
 	margin-left: 400px;
@@ -26,10 +14,6 @@
 
 #work-doc {
 	width: 99%;
-	border: solid 2px #EEE;
-	-moz-border-radius: 2em 0 2em 0;
-	border-radius: 2em 0 2em 0;
-	padding: 1em 1em 0.5em 1em;
 }
 .editable-section { 
 	position: relative;
@@ -51,10 +35,6 @@
 #top-right-column h3 a { text-decoration: none; }
 #top-right-column:hover h3 a { text-decoration: underline; }
 #notes-list {
-	border: solid 2px #EEE;
-	-moz-border-radius: 2em 0 2em 0;
-	border-radius: 2em 0 2em 0;
-	padding: 1em 1em 0.5em 1em;
 	height: 120px;
 }
 #notes-list li { display: inline; margin-right: 10px; }
@@ -97,6 +77,8 @@ $(document).ready(function() {
 	$('#completed-form').submit(function(){
 		submitCompletedItem($('#completed-form'), $('#completed-list'));
 		$('#completed-form textarea').val('');
+		$('#id_promoted').attr('checked', null);
+		$('#id_link').val('');
 		return false;
 	});
 });
@@ -107,7 +89,7 @@ $(document).ready(function() {
 
 <div id="top-right-column">
 	<h2><a href="{% url peach.views.index %}">Notes</a>:</h2>
-	<div id="notes-list" class="{% if request.user.username == user.username %}editable-section{% endif %}">
+	<div id="notes-list" class="rounded-block{% if request.user.username == user.username %} editable-section{% endif %}">
 		{% if request.user == user and not user.namespaces.all %}
 			<h3>This is your notes section.</h3>
 			<p>Notes are multi-page documents for work info and thoughts.</p>
@@ -155,7 +137,7 @@ $(document).ready(function() {
 			<div id="center-bottom-message">It's all <a target="top" href="http://daringfireball.net/projects/markdown/syntax">markdown</a>, don't cha know.</div>
 		</div>
 	{% endif %}
-	<div id="work-doc" class="rendered-wrapper{% if request.user.username == user.username %} editable-section{% endif %}">
+	<div id="work-doc" class="rendered-wrapper rounded-block{% if request.user.username == user.username %} editable-section{% endif %}">
 		{% if request.user.username == user.username %}<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">edit</button></div>{% endif %}
 		<div id="work-doc-render">
 			{% if request.user.username == user.username and not user.work_doc.rendered %}

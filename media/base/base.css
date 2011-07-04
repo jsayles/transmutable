@@ -37,6 +37,13 @@ footer { text-align: right; }
 
 #content { clear: both; }
 
+.rounded-block {
+	border: solid 2px #EEE;
+	-moz-border-radius: 2em 0 2em 0;
+	border-radius: 2em 0 2em 0;
+	padding: 1em 1em 0.5em 1em;
+}
+
 button {
     display:block;
     float:left;

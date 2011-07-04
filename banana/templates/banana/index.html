@@ -24,10 +24,6 @@ $(document).ready(function() {
 	min-height: 400px;
 }
 #user-list > li {
-	padding: 1em 1em 0.5em 1em;
-	-moz-border-radius: 2em 0 2em 0;
-	border-radius: 2em 0 2em 0;
-	border: solid 2px #DDD;
 	margin-bottom: 20px; 
 }
 
@@ -85,7 +81,7 @@ $(document).ready(function() {
 		</a>
 		<div class="user-info">
 			<h3><a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a></h3>
-			<div class="rendered-wrapper">{{ user.work_doc.rendered|safe|truncatewords_html:20 }}</div>
+			<div class="rendered-wrapper rounded-block">{{ user.work_doc.rendered|safe|truncatewords_html:20 }}</div>
 		</div>
 		<a href="{{ user.get_absolute_url }}" class="time-link" >{{ user.work_doc.modified|timesince }} ago</a>
 	</li>

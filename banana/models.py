@@ -66,8 +66,13 @@ class CompletedItemManager(models.Manager):
 class CompletedItem(MarkedUpModel):
 	"""Something which a user has completed, mostly items taked off of the work doc."""
 	user = models.ForeignKey(User, related_name='completed_items')
+
+	# These are used by promoted links (aka ta-da's)
+	promoted = models.BooleanField(default=False, blank=False, null=False)
+	link = models.URLField(verify_exists=False, max_length=1000, blank=True, null=True)
+	
 	objects = CompletedItemManager()
-	def flatten(self): return {'user':self.user.username, 'rendered':self.rendered, 'modified':'%s' % self.modified}
+	def flatten(self): return {'user':self.user.username, 'promoted':self.promoted, 'link':self.link, 'rendered':self.rendered, 'modified':'%s' % self.modified}
 	
 	def rocked_it(self, user):
 		if not user.is_authenticated(): return False
@@ -96,5 +101,5 @@ class WorkDoc(MarkedUpModel):
 
 User.work_doc = property(lambda u: WorkDoc.objects.get_or_create(user=u)[0])
 User.get_absolute_url = lambda u: reverse('banana.views.user', kwargs={ 'username':u.username })	
-
+User.has_unused_tada = lambda u:  True #CompletedItem.objects.filter(user=u).filter(promoted=True).filter(created__gt=datetime.datetime.now() - datetime.timedelta(days=2)).count() == 0
 # Copyright 2011 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

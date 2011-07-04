@@ -33,6 +33,9 @@ class Namespace(models.Model):
 	def get_absolute_url(self): return ('peach.views.namespace', [], { 'namespace':self.name })
 	def __unicode__(self): return self.name
 
+	class Meta:
+		ordering = ('name',)
+
 class WikiPageManager(models.Manager):
 	def get_or_create(self, **kwargs):
 		namespace = Namespace.objects.get(name=kwargs['namespace__name'])
