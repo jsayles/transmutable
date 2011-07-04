@@ -3,7 +3,7 @@
 {% if profile.photo.image %}
 	<img src="{{ profile.photo.image.url|thumbnail:"150w" }}" />
 {% else %}
-	<img src="{{ MEDIA_URL }}person/BlankIcon150x150.jpg" width="150" height="150" />
+	<img src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" />
 {% endif %}
 
 <h3 style="margin-top: 20px;">Upload a Photo:</h3>

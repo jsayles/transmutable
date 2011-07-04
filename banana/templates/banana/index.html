@@ -71,17 +71,17 @@ $(document).ready(function() {
 <ul id="user-list">
 {% for user in users|slice:":10" %}
 	{% if user.work_doc.rendered %}
-	<li>
+	<li class="rounded-block">
 		<a href="{{ user.get_absolute_url }}">
 			{% if user.get_profile.photo %}
 			<img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"50w" }}" width="50" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" />
 			{% else %}
-			<img class="person-photo" src="{{ MEDIA_URL }}person/BlankIcon150x150.jpg" width="50" height="50" />		
+			<img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="50" height="50" />		
 			{% endif %}
 		</a>
 		<div class="user-info">
 			<h3><a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a></h3>
-			<div class="rendered-wrapper rounded-block">{{ user.work_doc.rendered|safe|truncatewords_html:20 }}</div>
+			<div class="rendered-wrapper">{{ user.work_doc.rendered|safe|truncatewords_html:20 }}</div>
 		</div>
 		<a href="{{ user.get_absolute_url }}" class="time-link" >{{ user.work_doc.modified|timesince }} ago</a>
 	</li>

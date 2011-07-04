@@ -4,7 +4,7 @@
 	{% if profile.photo %}
 	<img class="person-photo" src="{{ profile.photo.image.url|thumbnail:"75w" }}" width="75" title="{{profile.user.get_full_name}}" alt="{{ profile.full_name}}" />
 	{% else %}
-	<img class="person-photo" src="{{ MEDIA_URL }}BlankIcon150x150.jpg" width="75" height="75" />		
+	<img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="75" height="75" />		
 	{% endif %}
 	{% if profile_link %}</a>{% endif %}
 	
