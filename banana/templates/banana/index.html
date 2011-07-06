@@ -19,73 +19,37 @@ $(document).ready(function() {
 
 {% block style %}
 #mobile-ui-header { font-size: 2em; height: 2em; line-height: 2em; }
-#user-list {
-	width: 600px; 
-	min-height: 400px;
-}
-#user-list > li {
-	margin-bottom: 20px; 
-}
 
-#user-list > li img { float: left; }
-
-#user-list > li a.time-link { display: block; text-align: right; }
-
-.user-info {
-	margin-left: 60px;
-}
-
+#left-column { margin-right: 2em; width: 600px; }
 #right-column {
 	float: right;
 	width: 370px;
 }
 
-.last-p { margin-bottom: 30px; }
-
-#user-list > li a { text-decoration: none; }
-#user-list > li:hover a { text-decoration: underline; }
+#left-column p { margin-top: 10px; }
 
 #completed-controls { visibility: hidden; float: right; padding: 0px; }
 {% endblock %}
 
 {% block content %}
 <div id="right-column">
-	<h1>We work in public:</h1>
-	<p class="last-p">People are emerging from their intellectual firewalls and sharing the details of what it takes to do what they do.</p>
-
-	<h2>Everyone will see your stuff. That's crazy!</h2>
-	<p>That's what many people think about sharing the details of their work. Have you heard of Twitter, Facebook, and blogs?</p>
-	<p class="last-p">Yeah. They said that was crazy, too.</p>
-
-	<h2>Can I get in on this?</h2>
-	<p>If you know people using this site (as in really know them) then ask them how they got in.</p>
-	<p class="last-p">Otherwise, use <a href="https://github.com/TrevorFSmith/transmutable">the source</a>, Luke.</p>
-	
-	<h3>Recent to-dones:</h3>
+	<h1>Recent to-dones:</h1>
 	<ul id="completed-list">
 		{% for completed_item in completed_items|slice:":10" %}
 			{% with "True" as show_completed_item_user %}{% completed_item_widget %}{% endwith %}
 		{% endfor %}
 	</ul>
 </div>
-<ul id="user-list">
-{% for user in users|slice:":10" %}
-	{% if user.work_doc.rendered %}
-	<li class="rounded-block">
-		<a href="{{ user.get_absolute_url }}">
-			{% if user.get_profile.photo %}
-			<img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"50w" }}" width="50" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" />
-			{% else %}
-			<img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="50" height="50" />		
-			{% endif %}
-		</a>
-		<div class="user-info">
-			<h3><a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a></h3>
-			<div class="rendered-wrapper">{{ user.work_doc.rendered|safe|truncatewords_html:20 }}</div>
-		</div>
-		<a href="{{ user.get_absolute_url }}" class="time-link" >{{ user.work_doc.modified|timesince }} ago</a>
-	</li>
-	{% endif %}
-{% endfor %}
+<ul id="left-column">
+	<h1>We work in public:</h1>
+	<p class="last-p">People are emerging from their intellectual firewalls and sharing the details of their work.</p>
+
+	<h2>Everyone will see your stuff. That's crazy!</h2>
+	<p>That's what many people think about sharing the details of their work.</p>
+	<p>Have you heard of Twitter, Facebook, and blogs?</p>
+	<p class="last-p">Yeah. They said that was crazy, too.</p>
+
+	<h2>Can I get in on this?</h2>
+	<p class="last-p">Use <a href="https://github.com/TrevorFSmith/transmutable">the source</a>, Luke.</p>
 </ul>
 {% endblock %}
