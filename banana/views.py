@@ -35,6 +35,11 @@ def index(request):
 	day_limit = 4
 	return render_to_response('banana/index.html', { 'completed_items':CompletedItem.objects.recent(max_count=10, created_after=datetime.datetime.now() - datetime.timedelta(days=day_limit)), 'users':User.objects.filter(work_docs__modified__gt=datetime.datetime.now() - datetime.timedelta(days=day_limit)).order_by('-work_docs__modified') }, context_instance=RequestContext(request))
 
+@staff_member_required
+def test(request):
+	if not settings.DEBUG: raise Http404
+	return render_to_response('banana/tests.html', { }, context_instance=RequestContext(request))
+
 def user(request, username):
 	user = get_object_or_404(User, username=username)
 	if request.user == user:

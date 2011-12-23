@@ -1,0 +1,9 @@
+django
+pil
+south
+ipython
+markdown
+psycopg2
+beautifulsoup
+simplejson
+django-dynamicresponse

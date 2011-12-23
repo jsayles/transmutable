@@ -1,0 +1,77 @@
+{% extends "banana/base.html" %}
+{% block sub-title %}Backbone Tests | {% endblock %}
+{% block sub-head %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/qunit.css" />
+<script src="{{STATIC_URL}}js/qunit.js"></script>
+<script>
+$(document).ready(runTests);
+
+// Make the backbone calls synchronous so that we don't have to mess with async tests
+var superSync = Backbone.sync;
+Backbone.sync = function(method, model, options) {
+	options = options || {};
+	options['async'] = false;
+	superSync(method, model, options);
+};
+
+function runTests(){
+	module("API Tests");
+
+	test("Site model", function(){
+		var site = new transmutable.Site();
+		ok(canDo(site, "fetch"), "Fetch the current site");
+		ok(site.attributes.name == 'Transmutable Work', "Got the right site name: " + site.attributes.name);
+		ok(typeof site.attributes.domain != 'undefined')
+		ok(site.attributes.domain != '', "Got a domain: " + site.attributes.domain);
+	});
+	
+	test("Namespace model", function(){
+		var nameSpaces = new transmutable.NamespaceCollection();
+		ok(canDo(nameSpaces, "fetch"), "Fetched " + nameSpaces.length + " namespaces");
+		var originalSpaces = nameSpaces.length;
+		var nameSpace = new transmutable.Namespace({display_name:('Test Space ' + Math.random())});
+		ok(canSave(nameSpace), "Created a namespace");
+		ok(!nameSpace.isNew(), "No longer new");
+	});
+
+}
+
+function canDo(model, func){
+	var success = false;
+	model[func]({
+		error: function(model, response) {
+			success = false;
+			console.log("Error", model, response);
+		},
+		success: function(model, response) { success = true; }
+	});
+	return success;
+}
+
+function canSave(model){
+	var success = false;
+	model.save(null, {
+		error: function(model, response) {
+			success = false;
+			console.log("Error", model, response);
+		},
+		success: function(model, response) { success = true; }
+	});
+	return success;
+}
+
+</script>
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<h1 id="qunit-header">Backbone Tests</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture">test markup, will be hidden</div>
+
+{% endblock %}

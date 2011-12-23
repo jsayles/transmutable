@@ -32,7 +32,7 @@ USE_I18N = True
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
-ADMIN_MEDIA_PREFIX = '/admin-media/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 AUTH_PROFILE_MODULE = "person.UserProfile"
 
@@ -45,7 +45,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.doc.XViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'dynamicresponse.middleware.api.APIMiddleware',
+    'dynamicresponse.middleware.dynamicformat.DynamicFormatMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -75,6 +77,7 @@ INSTALLED_APPS = (
 	'banana',
 	'apple',
 	'peach',
+	'backbone'
 )
 
 from local_settings import *

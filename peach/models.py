@@ -29,6 +29,13 @@ class Namespace(models.Model):
 		self.name = slugify(self.display_name)
 		super(Namespace, self).save(*args, **kwargs)
 		
+
+	@staticmethod
+	def can_create(user): return user.is_authenticated()
+	def can_read(self, user): return true
+	def can_update(self, user): return self.owner == user
+	def can_delete(self, user): return self.owner == user
+
 	@models.permalink
 	def get_absolute_url(self): return ('peach.views.namespace', [], { 'namespace':self.name })
 	def __unicode__(self): return self.name
@@ -48,6 +55,9 @@ class WikiPage(models.Model):
 	content = models.TextField(blank=False, null=False, default='')
 	rendered = models.TextField(blank=True, null=True)
 	objects = WikiPageManager()
+
+	def serialize_fields(self): return ['id', 'namespace', 'name', 'content', 'renderer']
+
 	@models.permalink
 	def get_absolute_url(self):
 		if self.name == "SplashPage": return ('peach.views.namespace', [], { 'namespace':self.namespace.name })

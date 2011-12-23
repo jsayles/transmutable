@@ -7,16 +7,21 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 	(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/media/base/favicon.gif'}),
-    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^admin/', include(admin.site.urls)),
+	(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+	(r'^admin/', include(admin.site.urls)),
+
+	(r'^backbone/', include('backbone.urls')),
+
+	(r'^api/backbone/', include('backbone.api_urls')),
+	(r'^api/notes/', include('peach.api_urls')),
 
 	(r'^accounts/profile/$', 'django.views.generic.simple.redirect_to', {'url': '/'}),
 	(r'^accounts/login/$', 'django.views.generic.simple.redirect_to', {'url': '/p/login/'}),
 
-    (r'^p/', include('person.urls')),
-    (r'^notes/', include('peach.urls')),
-    (r'^staff/', include('apple.urls')),
-    (r'^', include('banana.urls')),
+	(r'^p/', include('person.urls')),
+	(r'^notes/', include('peach.urls')),
+	(r'^staff/', include('apple.urls')),
+	(r'^', include('banana.urls')),
 )
 
 if settings.DEBUG:
