@@ -10,13 +10,13 @@ transmutable.{{api_form.form_name}} = Backbone.Model.extend({
 	{% if api_form.url_id_field %}urlIdField: "{{ api_form.url_id_field }}",{% endif %}
 	url: function(){
 		if(this.isNew()) return this.collectionUrl();
-		var urlToken = this.id;
+		var urlToken = 'id';
 		if(typeof this.urlIdField != 'undefined') urlToken = this.urlIdField;
 		return transmutable.replaceID("{{api_form.resource_url}}", "1234", this.get(urlToken));
 	},
 	
 	collectionUrl: function(){
-		return transmutable.replaceID("{{api_form.collection_url}}", "1234", this.urlID);
+		return transmutable.replaceID("{{api_form.collection_url}}", "1234", this.urlId);
 	},
 {% endif %}
 });
@@ -25,7 +25,7 @@ transmutable.{{api_form.form_name}} = Backbone.Model.extend({
 transmutable.{{api_form.form_name}}Collection = Backbone.Collection.extend({
 {% if api_form.collection_url %}
 	url: function(){
-		return transmutable.replaceID("{{api_form.collection_url}}", "1234", this.urlID);
+		return transmutable.replaceID("{{api_form.collection_url}}", "1234", this.urlId);
 	}
 {% endif %}
 });

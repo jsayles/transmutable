@@ -29,10 +29,14 @@ class Namespace(models.Model):
 		self.name = slugify(self.display_name)
 		super(Namespace, self).save(*args, **kwargs)
 		
+	def serialize_fields(self): return ['id', 'name', 'display_name', 'owner_username']
+
+	@property
+	def owner_username(self): return self.owner.username
 
 	@staticmethod
 	def can_create(user): return user.is_authenticated()
-	def can_read(self, user): return true
+	def can_read(self, user): return True
 	def can_update(self, user): return self.owner == user
 	def can_delete(self, user): return self.owner == user
 
@@ -50,13 +54,13 @@ class WikiPageManager(models.Manager):
 	
 class WikiPage(models.Model):
 	"""A named chunk of markdown formatted text."""
-	namespace = models.ForeignKey(Namespace, blank=False, null=False, related_name='pages')
+	namespace = models.ForeignKey(Namespace, blank=False, null=False, related_name='pages', editable=False)
 	name = models.CharField(max_length=255, blank=False, null=False)
 	content = models.TextField(blank=False, null=False, default='')
-	rendered = models.TextField(blank=True, null=True)
+	rendered = models.TextField(blank=True, null=True, editable=False)
 	objects = WikiPageManager()
 
-	def serialize_fields(self): return ['id', 'namespace', 'name', 'content', 'renderer']
+	def serialize_fields(self): return ['id', 'namespace_id', 'name', 'content', 'rendered', 'get_absolute_url']
 
 	@models.permalink
 	def get_absolute_url(self):

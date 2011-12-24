@@ -32,8 +32,23 @@ function runTests(){
 		var nameSpace = new transmutable.Namespace({display_name:('Test Space ' + Math.random())});
 		ok(canSave(nameSpace), "Created a namespace");
 		ok(!nameSpace.isNew(), "No longer new");
+		console.log('name space', nameSpace);
+		ok(canDo(nameSpace, "destroy"), "Deleted the namespace");
 	});
 
+	test("WikiPage model", function(){
+		var nameSpace = new transmutable.Namespace({display_name:('Test Space ' + Math.random())});
+		ok(canSave(nameSpace), "Created a namespace");
+		var page1 = new transmutable.WikiPage({name:'Test page 1'});
+		page1.urlId = nameSpace.attributes.name;
+		ok(canSave(page1), "Saving the page");
+		ok(!page1.isNew(), "The page is not new");
+		page1.set({content:'I like *traffic lights*.'});
+		ok(canSave(page1), "Saving the page");
+		ok(page1.attributes.rendered != null && page1.attributes.rendered.indexOf('<em>traffic') != -1, "We received the rendered text: " + page1.attributes.rendered);
+		ok(canDo(page1, "destroy"), "Deleted the page");
+		ok(canDo(nameSpace, "destroy"), "Deleted the namespace");
+	});
 }
 
 function canDo(model, func){

@@ -19,7 +19,7 @@ class APIForm(object):
 
 		Return a string.
 		
-		If the collection has an identifier in it, use 1234 and set collection.urlID in JS.
+		If the collection has an identifier in it, use 1234 and set collection.urlId in JS.
 		"""
 		return None
 

@@ -19,7 +19,6 @@ from dynamicresponse.json_response import JsonResponse
 from discovery import discover_api_forms
 discover_api_forms()
 from discovery import API_FORMS
-print API_FORMS
 def backbone_js(request):
 	return render_to_response('backbone/backbone.js', {'api_forms':API_FORMS}, context_instance=RequestContext(request), mimetype='application/javascript')
 
