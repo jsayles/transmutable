@@ -34,10 +34,12 @@ transmutable.{{api_form.form_name}}Collection = Backbone.Collection.extend({
 {% endfor %}
 
 
-transmutable.URLGenerator = function(){
-	var self = this;
+transmutable.urls = {};
+
+transmutable.urls.wikiPage = function(namespace, name){
+	var url = transmutable.replaceID("{% url peach.views.wiki 666 999 %}", 666, namespace);
+	return transmutable.replaceID(url, 999, name);
 }
-URL_GENERATOR = new transmutable.URLGenerator();
 
 transmutable.replaceID = function(data, id, newValue){ return data.replace(new RegExp(id, "g"), newValue); }
 

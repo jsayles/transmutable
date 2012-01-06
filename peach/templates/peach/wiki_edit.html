@@ -12,7 +12,18 @@
 {% endblock %}
 
 {% block sub-head %}
-<script type="text/javascript">
+<script src="{{STATIC_URL}}peach/wiki_page_views.js"></script>
+<script>
+$(document).ready(function(){
+    window.wikiPageEditView = new transmutable.WikiPageEditView({
+		wikiPageId: {{ page.id }},
+		namespace: '{{ page.namespace.name }}',
+		name: '{{ page.name }}',
+		el: $("#wiki-page-editor")
+	});
+});
+
+
 function saveThenAddFile(){
 	$("#page-form").attr('action', '.?next={% url peach.views.wiki_add page.namespace.name page.name %}');
 	$("#page-form").submit();
@@ -51,11 +62,10 @@ function saveThenAddFile(){
 	***
 </div>
 
-<form id="page-form" action="." method="post">
-	{% for field in page_form %}{{ field }}{% endfor %}
-	<button type="submit">Save</button>
-	{% csrf_token %}
-</form>
+<div id="wiki-page-editor">
+	
+</div>
+
 <br clear="all" />
 <div class="wiki-control-links">
 	<!-- [<a onclick="saveThenAddFile(); return false;" href="{% url peach.views.wiki_add page.namespace.name page.name %}">add file or photo</a>]</div> -->
