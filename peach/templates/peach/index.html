@@ -10,31 +10,23 @@
 
 {% block content %}
 <h1>Notes:</h1>
-<p>Information we use while working.</p>
 
-{% for user in users %}
-{% if user.namespaces.all or request.user.username == user.username %}
-	{% if user.get_profile.photo %}
-	<a href="{{ user.get_absolute_url }}"><img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"50w" }}" width="50" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" /></a>
-	{% else %}
-	<a href="{{ user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="50" height="50" /></a>
-	{% endif %}
-	<h2><a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a>:</h2>
-	<ul class="namespace-list">
-		{% for namespace in user.namespaces.all %}
-		<li>
-			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-		</li>
-		{% endfor %}
-		{% if request.user.is_authenticated and request.user.username == user.username %}
-			<li>
-				<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
-			</li>
-		{% endif %}
-	</ul>
+{% if request.user.get_profile.photo %}
+<a href="{{ request.user.get_absolute_url }}"><img class="person-photo" src="{{ request.user.get_profile.photo.image.url|thumbnail:"50w" }}" width="50" title="{{ request.user.get_full_name}}" alt="{{ request.user.get_full_name}}" /></a>
+{% else %}
+<a href="{{ request.user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="50" height="50" /></a>
 {% endif %}
-{% endfor %}
-
+<h2><a href="{{ request.user.get_absolute_url }}">{{ request.user.get_full_name }}</a>:</h2>
+<ul class="namespace-list">
+	{% for namespace in request.user.namespaces.all %}
+	<li>
+		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+	</li>
+	{% endfor %}
+	<li>
+		<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+	</li>
+</ul>
 
 {% endblock %}
 

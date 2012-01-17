@@ -12,7 +12,7 @@ class StyledModelAdmin(admin.ModelAdmin):
 
 class NamespaceAdmin(StyledModelAdmin):
 	search_fields = ('name',)
-	list_display = ('name',)
+	list_display = ('name', 'public')
 admin.site.register(Namespace, NamespaceAdmin)	
 
 class WikiConstantAdmin(StyledModelAdmin):

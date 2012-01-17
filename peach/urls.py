@@ -4,7 +4,6 @@ from django.conf import settings
  
 urlpatterns = patterns('',
 	(r'^$', 'peach.views.index'),
-	(r'^print-all/$' , 'peach.views.wiki_print_all'),
 	(r'^photo/(?P<id>[\d]+)/$' , 'peach.views.photo_redirect'),
 	(r'^photo-detail/(?P<id>[\d]+)/$' , 'peach.views.photo_detail_redirect'),
 	(r'^m/$', 'peach.mobile_views.index'),

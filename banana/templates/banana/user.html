@@ -97,7 +97,9 @@ $(document).ready(function() {
 		{% endif %}
 		<ul>
 			{% for namespace in user.namespaces.all %}
-			<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
+				{% if request.user == user or namespace.public %}
+					<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
+				{% endif %}
 			{% endfor %}
 		</ul>
 		{% if request.user.is_authenticated and request.user.username == user.username %}

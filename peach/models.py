@@ -24,6 +24,7 @@ class Namespace(models.Model):
 	name = models.CharField(max_length=1000, unique=True, blank=False, null=False)
 	display_name = models.CharField(max_length=1000, blank=False, null=False)
 	owner = models.ForeignKey(User, blank=False, null=False, related_name='namespaces')
+	public = models.BooleanField(default=True)
 
 	def save(self, *args, **kwargs):
 		self.name = slugify(self.display_name)
@@ -36,7 +37,10 @@ class Namespace(models.Model):
 
 	@staticmethod
 	def can_create(user): return user.is_authenticated()
-	def can_read(self, user): return True
+	def can_read(self, user):
+		if self.public: return True
+		if self.owner == user: return True
+		return False
 	def can_update(self, user): return self.owner == user
 	def can_delete(self, user): return self.owner == user
 

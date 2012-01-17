@@ -7,6 +7,9 @@ from django.utils.html import strip_tags
 
 from models import WikiPage, WikiFile, WikiPhoto, Namespace
 
+class ToggleNamespacePublicForm(forms.Form):
+	toggle_namespace_public_action = forms.BooleanField(required=True, initial=True, widget=forms.HiddenInput())
+
 class WikiPageForm(forms.ModelForm):
 	class Meta:
 		model = WikiPage
