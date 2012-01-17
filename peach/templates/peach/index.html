@@ -21,6 +21,7 @@
 	{% for namespace in request.user.namespaces.all %}
 	<li>
 		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+		{% if not namespace.public %}(private){% endif %}
 	</li>
 	{% endfor %}
 	<li>
