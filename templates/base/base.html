@@ -13,9 +13,9 @@
 
 	<script src="{{STATIC_URL}}js/modernizr-1.5.min.js"></script>
 
-	<link rel="stylesheet" href="{{STATIC_URL}}jquery/css/ui-lightness/jquery-ui-1.8.16.custom.css" />
-	<script src="{{STATIC_URL}}jquery/js/jquery-1.6.2.min.js"></script>
-	<script src="{{STATIC_URL}}jquery/js/jquery-ui-1.8.16.custom.min.js"></script>
+	<link rel="stylesheet" href="{{STATIC_URL}}jquery/css/ui-lightness/jquery-ui-1.8.17.custom.css" />
+	<script src="{{STATIC_URL}}jquery/js/jquery-1.7.1.min.js"></script>
+	<script src="{{STATIC_URL}}jquery/js/jquery-ui-1.8.17.custom.min.js"></script>
 
     <script src="{{STATIC_URL}}backbone/underscore-min.js"></script>
     <script src="{{STATIC_URL}}backbone/json/json2.js"></script>
@@ -56,6 +56,7 @@
 	<li><a href="{% url banana.views.index %}">front</a></li>
 	{% if request.user.is_authenticated %}
 		<li><a href="{% url banana.views.user request.user.username %}">home</a></li>
+		<li><a href="{% url peach.views.index %}">notes</a></li>
 		<li><a href="{% url person.views.profile request.user.username %}">account</a></li>
 		{% if request.user.is_staff %}
 		<li><a href="{% url apple.views.index %}">staff</a></li>

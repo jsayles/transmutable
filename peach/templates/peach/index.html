@@ -3,30 +3,48 @@
 {% block sub-title %}Notes | {% endblock %}
 
 {% block sub-style %}
+#namespace-form { display: inline; }
 #namespace-form input[type=text] { width: 10em; }
 .namespace-list li { margin-left: 20px; list-style-type: disc; margin-bottom: 8px; }
-.person-photo { margin-top: 20px; }
+.namespace-list a { text-decoration: none; }
+.namespace-list {
+	width: 20%;
+}
+#content { position: relative; }
+#private-list {
+	position: absolute;
+	top: 3em;
+	left: 23%;	
+}
 {% endblock %}
 
 {% block content %}
-<h1>Notes:</h1>
+<h1>
+	Notes:
+	<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+</h1>
 
-{% if request.user.get_profile.photo %}
-<a href="{{ request.user.get_absolute_url }}"><img class="person-photo" src="{{ request.user.get_profile.photo.image.url|thumbnail:"50w" }}" width="50" title="{{ request.user.get_full_name}}" alt="{{ request.user.get_full_name}}" /></a>
-{% else %}
-<a href="{{ request.user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="50" height="50" /></a>
-{% endif %}
-<h2><a href="{{ request.user.get_absolute_url }}">{{ request.user.get_full_name }}</a>:</h2>
-<ul class="namespace-list">
+
+<ul id="public-list" class="namespace-list">
+	<h2>Public:</h2>
 	{% for namespace in request.user.namespaces.all %}
+	{% if namespace.public %}
 	<li>
 		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-		{% if not namespace.public %}(private){% endif %}
 	</li>
+	{% endif %}
 	{% endfor %}
+</ul>
+
+<ul id="private-list" class="namespace-list">
+	<h2>Private:</h2>
+	{% for namespace in request.user.namespaces.all %}
+	{% if not namespace.public %}
 	<li>
-		<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
 	</li>
+	{% endif %}
+	{% endfor %}
 </ul>
 
 {% endblock %}
