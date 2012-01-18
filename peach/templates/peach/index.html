@@ -34,7 +34,7 @@
 <ul id="public-list" class="namespace-list">
 	<h2>Public:</h2>
 	{% for namespace in request.user.namespaces.all %}
-	{% if namespace.public %}
+	{% if namespace.public and not namespace.archive %}
 	<li>
 		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
 	</li>
@@ -45,7 +45,7 @@
 <ul id="private-list" class="namespace-list">
 	<h2>Private:</h2>
 	{% for namespace in request.user.namespaces.all %}
-	{% if not namespace.public %}
+	{% if not namespace.public and not namespace.archive %}
 	<li>
 		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
 	</li>
