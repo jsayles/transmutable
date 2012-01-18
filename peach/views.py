@@ -94,7 +94,7 @@ def wiki(request, namespace, name):
 			page = get_object_or_404(WikiPage, namespace__name=namespace, name=name)
 	else:
 		page = get_object_or_404(WikiPage, namespace__name=namespace, name=name)
-	if not ns.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
+	if not page.namespace.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
 	return render_to_response('peach/wiki.html', { 'page':page }, context_instance=RequestContext(request))
 
 def wiki_print(request, namespace, name):

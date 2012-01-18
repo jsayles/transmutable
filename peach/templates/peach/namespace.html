@@ -52,27 +52,29 @@ function toggleArchive(){
 
 {% block content %}
 <div id="main-column">
-	<h1><a href="{% url peach.views.index %}">Notes</a> &raquo; {{ namespace.display_name }}:</h1>
+	<h1>{% if request.user.is_authenticated %}<a href="{% url peach.views.index %}">Notes</a> &raquo; {% endif %}{{ namespace.display_name }}:</h1>
 	{% with "true" as hide_title %}{% include "peach/wiki_render.frag" %}{% endwith %}
 </div>
 <div id="left-column">
 	{% with namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
 
-	<button type="button" class="positive" id="toggle-public">
-	{% if namespace.public %}
-		Make private
-	{% else %}
-		Make public
+	{% if request.user == namespace.owner %}
+		<button type="button" class="positive" id="toggle-public">
+		{% if namespace.public %}
+			Make private
+		{% else %}
+			Make public
+		{% endif %}
+		</button>
+	
+		<button type="button" class="positive" id="toggle-archive">
+		{% if namespace.archive %}
+			Unarchive
+		{% else %}
+			Archive
+		{% endif %}
+		</button>
 	{% endif %}
-	</button>
-
-	<button type="button" class="positive" id="toggle-archive">
-	{% if namespace.archive %}
-		Unarchive
-	{% else %}
-		Archive
-	{% endif %}
-	</button>
 
 	<h2>Pages:</h2>
 	<ul>
