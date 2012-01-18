@@ -25,7 +25,8 @@ class Namespace(models.Model):
 	display_name = models.CharField(max_length=1000, blank=False, null=False)
 	owner = models.ForeignKey(User, blank=False, null=False, related_name='namespaces')
 	public = models.BooleanField(default=True)
-
+	archive = models.BooleanField(default=False)
+	
 	def save(self, *args, **kwargs):
 		self.name = slugify(self.display_name)
 		super(Namespace, self).save(*args, **kwargs)

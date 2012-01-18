@@ -48,11 +48,16 @@ def namespace(request, namespace):
 	if request.method == 'POST' and ns.can_update(request.user):
 		create_wiki_page_form = CreateWikiPageForm(request.POST, instance=WikiPage(namespace=ns))
 		toggle_namespace_public_form = ToggleNamespacePublicForm(request.POST)
+		toggle_namespace_archive_form = ToggleNamespaceArchiveForm(request.POST)
 		if create_wiki_page_form.is_valid() and WikiPage.objects.filter(namespace=ns, name=create_wiki_page_form.cleaned_data['name']).count() == 0:
 			page = create_wiki_page_form.save()
 			return HttpResponseRedirect(page.get_absolute_url())
 		elif toggle_namespace_public_form.is_valid():
 			ns.public = not ns.public
+			ns.save()
+			return HttpResponse()
+		elif toggle_namespace_archive_form.is_valid():
+			ns.archive = not ns.archive
 			ns.save()
 			return HttpResponse()
 		else:

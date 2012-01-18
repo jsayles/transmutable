@@ -16,6 +16,12 @@
 	top: 3em;
 	left: 23%;	
 }
+#archive-list {
+	position: absolute;
+	top: 3em;
+	left: 46%;	
+}
+#archive-list a, #archive-list li, #archive-list h2 { color: #777; }
 {% endblock %}
 
 {% block content %}
@@ -40,6 +46,17 @@
 	<h2>Private:</h2>
 	{% for namespace in request.user.namespaces.all %}
 	{% if not namespace.public %}
+	<li>
+		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+
+<ul id="archive-list" class="namespace-list">
+	<h2>Archive:</h2>
+	{% for namespace in request.user.namespaces.all %}
+	{% if namespace.archive %}
 	<li>
 		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
 	</li>

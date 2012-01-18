@@ -16,7 +16,9 @@ $(document).ready(function() {
 {% block content %}
 <ul id="namespace-list">
 {% for namespace in request.user.namespaces.all %}
-	<li><a href="{% url peach.mobile_views.namespace namespace.name %}">{{ namespace.display_name }}</a></li>
+	{% if not namespace.archive %}
+		<li><a href="{% url peach.mobile_views.namespace namespace.name %}">{{ namespace.display_name }}</a></li>
+	{% endif %}
 {% endfor %}
 	<li>
 		<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>

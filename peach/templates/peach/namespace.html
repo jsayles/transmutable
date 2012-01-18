@@ -21,13 +21,12 @@
 <script>
 $(document).ready(function(){
 	$('#toggle-public').click(function(){ togglePublicity(); });
+	$('#toggle-archive').click(function(){ toggleArchive(); });
 });
 
 function togglePublicity(){
 	$.ajax({
-		url: '.',
-		type:'POST',
-		data: {'toggle_namespace_public_action':'True'},
+		url: '.', type:'POST', data: {'toggle_namespace_public_action':'True'},
 		error: function(){
 			document.location.href = '{% url peach.views.namespace namespace.name %}';
 		},
@@ -37,6 +36,17 @@ function togglePublicity(){
 	});
 }
 
+function toggleArchive(){
+	$.ajax({
+		url: '.', type:'POST', data: {'toggle_namespace_archive_action':'True'},
+		error: function(){
+			document.location.href = '{% url peach.views.namespace namespace.name %}';
+		},
+		success: function(){
+			document.location.href = '{% url peach.views.namespace namespace.name %}';
+		}
+	});
+}
 </script>
 {% endblock %}
 
@@ -55,6 +65,15 @@ function togglePublicity(){
 		Make public
 	{% endif %}
 	</button>
+
+	<button type="button" class="positive" id="toggle-archive">
+	{% if namespace.archive %}
+		Unarchive
+	{% else %}
+		Archive
+	{% endif %}
+	</button>
+
 	<h2>Pages:</h2>
 	<ul>
 	{% for page in namespace.pages.all %}

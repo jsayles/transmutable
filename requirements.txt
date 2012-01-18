@@ -3,7 +3,7 @@ pil
 south
 ipython
 markdown
-psycopg2
+psycopg2==2.4.1
 beautifulsoup
 simplejson
 django-dynamicresponse
