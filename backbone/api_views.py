@@ -16,12 +16,27 @@ from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResp
 
 from dynamicresponse.json_response import JsonResponse
 
-from discovery import discover_api_forms
-discover_api_forms()
-from discovery import API_FORMS
-def backbone_js(request):
-	return render_to_response('backbone/backbone.js', {'api_forms':API_FORMS}, context_instance=RequestContext(request), mimetype='application/javascript')
+from api_forms import SearchForm
 
+from discovery import discover_api_forms, discover_search_providers
+
+api_forms = discover_api_forms()
+discover_search_providers()
+
+def backbone_js(request):
+	return render_to_response('backbone/backbone.js', {'api_forms':api_forms}, context_instance=RequestContext(request), mimetype='application/javascript')
+
+def search(request):
+	try:
+		if request.method == 'POST':
+			search_form = SearchForm(request.POST)
+			if search_form.is_valid():
+				results = search_form.search()
+				return JsonResponse({'search_results':results})
+		return JsonResponse([])
+	except:
+		traceback.print_exc()
+		
 def site(request): return JsonResponse(Site.objects.get_current())
 	
 def site_serialize_fields(site): return ['domain', 'name']

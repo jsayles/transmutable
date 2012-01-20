@@ -49,6 +49,14 @@ function runTests(){
 		ok(canDo(page1, "destroy"), "Deleted the page");
 		ok(canDo(nameSpace, "destroy"), "Deleted the namespace");
 	});
+	
+	module("Search Tests");
+
+	test("Search users", function(){
+		var searchRequest = new transmutable.Search({search_terms:'trevor amy'});
+		ok(canSave(searchRequest), "Fetched search");
+		console.log(searchRequest);
+	});
 }
 
 function canDo(model, func){

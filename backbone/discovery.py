@@ -25,3 +25,29 @@ def discover_api_forms():
 				if not issubclass(attribute, APIForm): continue
 				if attribute in API_FORMS: continue
 				API_FORMS.append(attribute)
+	return API_FORMS
+
+SEARCH_PROVIDERS = []
+
+def discover_search_providers():
+	"""Find the classes in each app's search module which extend SearchProvider"""
+	from django.conf import settings
+	from backbone.search import SearchProvider
+
+	for app_module_name in settings.INSTALLED_APPS:
+		try:
+			app = __import__(app_module_name)
+			__import__('%s.search' % app_module_name)
+			search_module = sys.modules['%s.search' % app_module_name]
+		except:
+			continue
+		for key in dir(search_module):
+			attribute = getattr(search_module, key)
+			try:
+				if issubclass(attribute, SearchProvider):
+					if attribute == SearchProvider: continue
+					if attribute in SEARCH_PROVIDERS: continue
+					SEARCH_PROVIDERS.append(attribute)
+			except:
+				pass
+	return SEARCH_PROVIDERS

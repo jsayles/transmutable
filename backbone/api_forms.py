@@ -43,6 +43,21 @@ class APIForm(object):
 	@classmethod
 	def dict(cls): return cls().__dict__
 
+class SearchForm(forms.Form, APIForm):
+	search_terms = forms.CharField()
+	search_types = forms.CharField(required=False) # a space separated list of SearchProvider.type_name strings to search
+	excluded_types = forms.CharField(required=False) # a space separated list of SearchProvider.type_name string to avoid
+
+	def url(self): return reverse('backbone.api_views.search')
+
+	def search(self):
+		from backbone.discovery import SEARCH_PROVIDERS
+		results = []
+		for provider_class in SEARCH_PROVIDERS:
+			provider = provider_class()
+			results.extend(provider.search(self.cleaned_data['search_terms']))
+		return results
+		
 class SiteForm(forms.Form, APIForm):
 	"""Wraps the Django site object"""
 	def url(self): return reverse('backbone.api_views.site')
