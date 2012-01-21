@@ -22,10 +22,11 @@
     <script src="{{STATIC_URL}}backbone/backbone-min.js"></script>
     <script src="{% url backbone.api_views.backbone_js %}"></script>
 
+    <script src="{{STATIC_URL}}backbone/search.js"></script>
+
 	<script src="{{STATIC_URL}}js/plugins.js?v=1"></script>
 	<script src="{{STATIC_URL}}js/script.js?v=1"></script>
 	<script src="{{STATIC_URL}}base/base.js?v=2"></script>
-	
 	
 	<!--[if lt IE 7 ]>
 	  <script src="{{STATIC_URL}}js/dd_belatedpng.js?v=1"></script>
@@ -74,6 +75,8 @@
 <div id="content">{% block content %}{% endblock %}</div>
 
 {% block footer %}<footer></footer>{% endblock %}
+
+{% include "backbone/search.frag" %}
 
 {% endblock %}<!-- end body block -->
 </body>

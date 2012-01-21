@@ -45,8 +45,8 @@ class APIForm(object):
 
 class SearchForm(forms.Form, APIForm):
 	search_terms = forms.CharField()
-	search_types = forms.CharField(required=False) # a space separated list of SearchProvider.type_name strings to search
-	excluded_types = forms.CharField(required=False) # a space separated list of SearchProvider.type_name string to avoid
+	search_types = forms.CharField(required=False, widget=forms.HiddenInput()) # a space separated list of SearchProvider.type_name strings to search
+	excluded_types = forms.CharField(required=False, widget=forms.HiddenInput()) # a space separated list of SearchProvider.type_name string to avoid
 
 	def url(self): return reverse('backbone.api_views.search')
 
