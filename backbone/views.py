@@ -18,6 +18,11 @@ from api_forms import SearchForm
 def search(request):
 	if request.method == 'POST':
 		search_form = SearchForm(request.POST)
+		if search_form.is_valid():
+			results = search_form.search()
+		else:
+			results = None
 	else:
 		search_form = SearchForm()
-	return render_to_response('backbone/search.html', { 'search_form':search_form }, context_instance=RequestContext(request))
+		results = None
+	return render_to_response('backbone/search.html', {'results':results, 'search_form':search_form }, context_instance=RequestContext(request))

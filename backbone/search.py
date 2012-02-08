@@ -7,8 +7,16 @@ from dynamicresponse.emitters import JSONEmitter
 class SearchProvider(object):
 	"""A base class for all apps to use to provide search results from the common search API"""
 	
-	@property
-	def type_name(self):
+	@classmethod
+	def display_name(cls):
+		"""
+		The human readable, singular description for the results that this provider provides.
+		For example, a provider of to-do items would offer up "To-do" and a provider of user accounts would offer "User"
+		"""
+		raise NotImplementedError()
+
+	@classmethod
+	def type_name(cls):
 		"""
 		Should return a string with a unique id for this type of search result.
 		For example, if returning to-do's from the apple app, you might return "apple.to-do".
@@ -25,10 +33,19 @@ class SearchProvider(object):
 class SearchResult(object):
 	"""A base class for cross app wrapping of search results"""
 
-	def __init__(self, content=None, source_url=None):
+	def __init__(self, title=None, content=None, source_url=None):
+		self._title = title
 		self._content = content
 		self._source_url = source_url
 	
+	@property
+	def title(self):
+		"""
+		The plaintext, possibly None title of the result.
+		For example, a to-do title might be None but a User title might be the Full Name and email.
+		"""
+		return self._title
+
 	@property
 	def content(self):
 		"""
@@ -49,8 +66,11 @@ class SearchResult(object):
 
 class UserSearchProvider(SearchProvider):
 	"""Searches the user accounts"""
-	@property
-	def type_name(self): return "backbone.user"
+	@classmethod
+	def display_name(cls): return "User"
+
+	@classmethod
+	def type_name(cls): return "backbone.user"
 	
 	def search(self, search_terms=[], slice_start=0, slice_end=None):
 		terms = search_terms.split()
@@ -66,4 +86,4 @@ class UserSearchProvider(SearchProvider):
 			username_query = username_query | Q(username__icontains=term)
 		query = User.objects.filter(fname_query | lname_query | email_query | username_query)
 		if slice_end != None: query = query[slice_start:slice_end]
-		return [SearchResult('%s <%s>' % (user.get_full_name(), user.username), user.get_absolute_url()) for user in query]
+		return [SearchResult('%s <%s>' % (user.get_full_name(), user.username), user.get_profile().bio, user.get_absolute_url()) for user in query]

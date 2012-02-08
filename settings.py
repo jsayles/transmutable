@@ -59,6 +59,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.contrib.messages.context_processors.messages',
 	'person.context_processors.person_context',
 	'context_processors.site',
+	'backbone.context_processors.search_form',
 )
 
 ROOT_URLCONF = 'urls'

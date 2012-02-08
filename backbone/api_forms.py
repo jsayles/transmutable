@@ -3,6 +3,9 @@ from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.forms.widgets import CheckboxSelectMultiple
+
+import backbone.discovery
 
 class APIForm(object):
 	"""An abstract base class which should be mixed in to resources wrapped by backbone"""
@@ -43,17 +46,23 @@ class APIForm(object):
 	@classmethod
 	def dict(cls): return cls().__dict__
 
+backbone.discovery.discover_search_providers()
+PROVIDER_CHOICES = [(provider.type_name(), provider.display_name()) for provider in backbone.discovery.SEARCH_PROVIDERS]
+
 class SearchForm(forms.Form, APIForm):
 	search_terms = forms.CharField()
-	search_types = forms.CharField(required=False, widget=forms.HiddenInput()) # a space separated list of SearchProvider.type_name strings to search
-	excluded_types = forms.CharField(required=False, widget=forms.HiddenInput()) # a space separated list of SearchProvider.type_name string to avoid
+	search_types = forms.MultipleChoiceField(required=False, widget=CheckboxSelectMultiple, choices=PROVIDER_CHOICES)
 
 	def url(self): return reverse('backbone.api_views.search')
 
+	@property
+	def selected_providers(self):
+		if not self.cleaned_data['search_types']: return backbone.discovery.SEARCH_PROVIDERS
+		return [provider for provider in backbone.discovery.SEARCH_PROVIDERS if provider.type_name() in self.cleaned_data['search_types']]
+
 	def search(self):
-		from backbone.discovery import SEARCH_PROVIDERS
 		results = []
-		for provider_class in SEARCH_PROVIDERS:
+		for provider_class in self.selected_providers:
 			provider = provider_class()
 			results.extend(provider.search(self.cleaned_data['search_terms']))
 		return results

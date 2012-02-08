@@ -1,6 +1,13 @@
 {% extends "base/base.html" %}
 
 {% block sub-head %}
+<style>
+h1 + .search-form{
+	width: 30%;
+	margin-bottom: 2em;
+}
+
+</style>
 <script>
 $(document).ready(function() {
 });
@@ -12,8 +19,24 @@ $(document).ready(function() {
 
 {% block content %}
 <h1>Search:</h1>
-<form action="." method="post">
-	{% for field in search_form %}{{ field }}{% endfor %}
-	<button type="submit">Search</button>
-</form>
+{% include "backbone/search_form.frag" %}
+
+{% if results != None and not results %}
+<p>Nothing matched those search terms.</p>
+{% endif %}
+
+<ul>
+{% for result in results %}
+	<li>
+	{% if result.title %}
+		<a href="{{ result.source_url}}">{{ result.title }}</a>
+		{% if result.content %}
+			<p>{{ result.content }}</p>
+		{% endif %}
+	{% else %}
+		<a href="{{ result.source_url}}">{{ result.content }}</a>
+	{% endif %}
+	</li>
+{% endfor %}
+</ul>
 {% endblock %}
