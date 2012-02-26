@@ -23,7 +23,7 @@ class SearchProvider(object):
 		"""
 		raise NotImplementedError()
 	
-	def search(self, search_terms=[], slice_start=0, slice_end=None):
+	def search(self, user, search_terms=[], slice_start=0, slice_end=None):
 		"""
 		Returns a list of SearchResult instances matching the search_terms.
 		search_terms is a list of strings
@@ -33,7 +33,8 @@ class SearchProvider(object):
 class SearchResult(object):
 	"""A base class for cross app wrapping of search results"""
 
-	def __init__(self, title=None, content=None, source_url=None):
+	def __init__(self, provider, title=None, content=None, source_url=None):
+		self.provider = provider
 		self._title = title
 		self._content = content
 		self._source_url = source_url
@@ -72,7 +73,7 @@ class UserSearchProvider(SearchProvider):
 	@classmethod
 	def type_name(cls): return "backbone.user"
 	
-	def search(self, search_terms=[], slice_start=0, slice_end=None):
+	def search(self, user, search_terms=[], slice_start=0, slice_end=None):
 		terms = search_terms.split()
 		if len(terms) == 0: return None;
 		fname_query = Q(first_name__icontains=terms[0]) 
@@ -86,4 +87,6 @@ class UserSearchProvider(SearchProvider):
 			username_query = username_query | Q(username__icontains=term)
 		query = User.objects.filter(fname_query | lname_query | email_query | username_query)
 		if slice_end != None: query = query[slice_start:slice_end]
-		return [SearchResult('%s <%s>' % (user.get_full_name(), user.username), user.get_profile().bio, user.get_absolute_url()) for user in query]
+		return [SearchResult(self, '%s <%s>' % (user.get_full_name(), user.username), user.get_profile().bio, user.get_absolute_url()) for user in query]
+
+# Copyright 2012 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

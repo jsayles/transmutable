@@ -1,5 +1,7 @@
 import datetime
 import traceback
+import logging
+logger = logging.getLogger(__name__)
 
 from django.db.models import Q
 from django.contrib import auth
@@ -31,13 +33,16 @@ def search(request):
 		if request.method == 'POST':
 			search_form = SearchForm(request.POST)
 			if search_form.is_valid():
-				results = search_form.search()
+				results = search_form.search(request.user)
 				return JsonResponse({'search_results':results})
 		return JsonResponse([])
 	except:
+		logger.exception("Could not search")
 		traceback.print_exc()
 		
 def site(request): return JsonResponse(Site.objects.get_current())
 	
 def site_serialize_fields(site): return ['domain', 'name']
 Site.serialize_fields = site_serialize_fields
+
+# Copyright 2012 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

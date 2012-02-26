@@ -10,6 +10,7 @@ h1 + .search-form{
 </style>
 <script>
 $(document).ready(function() {
+	$('#id_search_terms').focus();
 });
 </script>
 {% endblock %}
@@ -27,16 +28,20 @@ $(document).ready(function() {
 
 <ul>
 {% for result in results %}
-	<li>
-	{% if result.title %}
-		<a href="{{ result.source_url}}">{{ result.title }}</a>
-		{% if result.content %}
-			<p>{{ result.content }}</p>
+	{% ifchanged result.provider %}
+	</ul>
+	<h4>{{ result.provider.display_name }}</h4>
+	<ul>
+	{% endifchanged %}
+		<li>
+		{% if result.title %}
+			<a href="{{ result.source_url}}">{{ result.title }}</a>
+			{% if result.content %}
+				<p>{{ result.content }}</p>
+			{% endif %}
+		{% else %}
+			<a href="{{ result.source_url}}">{{ result.content }}</a>
 		{% endif %}
-	{% else %}
-		<a href="{{ result.source_url}}">{{ result.content }}</a>
-	{% endif %}
-	</li>
+		</li>
 {% endfor %}
-</ul>
 {% endblock %}
