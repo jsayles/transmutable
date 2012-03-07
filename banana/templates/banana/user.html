@@ -11,17 +11,14 @@
 
 .editable-section {  position: relative; }
 .editable-section:hover { background-color: #EEE; }
-.editable-section:hover #work-doc-controls, #notes-list:hover form { visibility: visible; }
+.editable-section:hover #work-doc-controls, #top-right-column:hover form { visibility: visible; }
 
-#top-right-column h3 a { text-decoration: none; }
-#top-right-column:hover h3 a { text-decoration: underline; }
-
-#notes-list { height: 120px; }
+#notes-list { min-height: 80px; }
 #notes-list li { display: inline; margin-right: 10px; }
-#notes-list form { text-align: left; visibility: hidden; }
+#top-right-column form { display: inline; text-align: left; visibility: hidden; }
 
-#user-info { min-height: 170px; }
-#user-info h1 { line-height: 5em; }
+#user-info { }
+#user-info h1 {  }
 #left-column { margin-right: 8%; }
 
 .user-prompt-heading { text-shadow: #DDD 3px 3px 0px; }
@@ -81,9 +78,11 @@ $(document).ready(function() {
 
 	<div class="span5" id="top-right-column">
 		<h2>
-			{% if request.user == user %}<a href="{% url peach.views.index %}">{% endif %}
-				Notes:
-			{% if request.user == user %}</a>{% endif %}
+			{% if request.user == user %}<a href="{% url peach.views.index %}">{% endif %}Notes{% if request.user == user %}</a>{% endif %}
+			{% if request.user.is_authenticated and request.user.username == user.username %}
+				<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+			{% endif %}
+
 		</h2>
 		<div id="notes-list" class="rounded-block{% if request.user.username == user.username %} editable-section{% endif %}">
 			{% if request.user == user and not user.namespaces.all %}
@@ -98,9 +97,6 @@ $(document).ready(function() {
 					{% endif %}{% endif %}
 				{% endfor %}
 			</ul>
-			{% if request.user.is_authenticated and request.user.username == user.username %}
-				<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
-			{% endif %}
 		</div>
 	</div>
 </div>
