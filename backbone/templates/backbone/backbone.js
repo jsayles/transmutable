@@ -48,7 +48,7 @@ function getCookie(name) {
     if (document.cookie && document.cookie != '') {
         var cookies = document.cookie.split(';');
         for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
+            var cookie = cookies[i].trim();
             // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) == (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -77,7 +77,7 @@ function safeMethod(method) {
 }
 
 // Make all jQuery ajax send the XCSRF token
-$(document).ajaxSend(function(event, xhr, settings) {
+$(document).on('ajaxSend', function(event, xhr, settings) {
 	if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
 		xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
 	}

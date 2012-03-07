@@ -2,6 +2,9 @@
 
 {% block extra-links %}
 	<link rel="stylesheet" href="{{STATIC_URL}}banana/banana.css?v=5" />
+{% endblock %}
+
+{% block app-head %}
 <script>
 $(document).ready(function(){
 	$('#id_promoted').click(function(){

@@ -23,7 +23,7 @@ transmutable.WikiPageEditView = Backbone.View.extend({
 				console.log("Error", model, response);
 			},
 			success: function(model, response) {
-				this.$('.save-button').fadeOut(100).fadeIn(1000);
+				//this.$('.save-button').fadeOut(100).fadeIn(1000);
 			}
 		});
 	},

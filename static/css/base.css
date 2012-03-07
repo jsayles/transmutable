@@ -1,0 +1,39 @@
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+.rendered-wrapper h1 {
+  font-size: 24px;
+  line-height: 36px;
+}
+.rendered-wrapper h1 small {
+  font-size: 18px;
+}
+.rendered-wrapper h2 {
+  line-height: 27px;
+  font-size: 18px;
+}
+.rendered-wrapper h2 small {
+  font-size: 14px;
+}
+.rendered-wrapper h3, h4, h5, h6 {
+  line-height: 18px;
+}
+.rendered-wrapper h3 {
+  font-size: 14px;
+}
+.rendered-wrapper h3 small {
+  font-size: 12px;
+}
+.rendered-wrapper h4 {
+  font-size: 12px;
+}
+.rendered-wrapper h5, .rendered-wrapper h6 {
+  font-size: 11px;
+  color: #999999;
+  text-transform: uppercase;
+}

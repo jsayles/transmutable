@@ -1,22 +1,12 @@
 /* Banana CSS */
 
-#completed-list {
-	padding: 0;
+.completed-list {
+	padding: 0; margin: 0;
+	list-style-type: none;
 }
-#completed-list > li {
+.completed-list li {
+
 }
-
-.rendered-wrapper li { 	padding-left: 0em; margin-left: 1.6em;}
-
-.rendered-wrapper ul > li {
-	list-style-type: disc;
-}
-
-.rendered-wrapper ol > li {
-	list-style-type: decimal;
-}
-
-.rendered-wrapper a, .rendered-wrapper a:hover { text-decoration: underline; }
 
 .completed-item-li {
 	margin-bottom: 10px;

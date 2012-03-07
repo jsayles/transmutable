@@ -7,7 +7,7 @@
 $(document).ready(function() {
 	$('#edit-widget').hide();
 	$('button[name="edit-completed-button"]').click(function(){
-		$('#completed-list ul').hide();
+		$('.completed-list ul').hide();
 		$('#completed-controls').remove();
 		$('#edit-widget').show();
 	})
@@ -18,7 +18,7 @@ $(document).ready(function() {
 
 {% block style %}
 #user-info { float: left; }
-#completed-list {
+.completed-list {
 	position: absolute;
 	left: 300px;
 	width: 400px;
@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 
 {% if request.user == completed_item.user %}
-	#completed-list:hover #completed-controls { visibility: visible; }
+	.completed-list:hover #completed-controls { visibility: visible; }
 {% endif %}
 
 .completed-item-li:hover .completed-item-meta-timestamp { visibility: visible; }
@@ -47,7 +47,7 @@ $(document).ready(function() {
 	</h1>
 </div>
 
-<div id="completed-list">
+<div class="completed-list">
 	{% if request.user.username == user.username %}<div id="completed-controls"><button name="edit-completed-button" class="positive">edit</button></div>{% endif %}
 	<ul class="{% if request.user.username == completed_item.user.username %}editable-section{% endif %}">
 		{% with "True" as hide_completed_item_info_button %}

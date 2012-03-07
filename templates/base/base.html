@@ -1,84 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="DC.title" content="{{ site.name }}" />
+		<meta name="description" content="Emerge from behind your intellectual firewall and work in public." />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="{{STATIC_URL}}favicon.gif" rel="shortcut icon" />
 
-	<meta name="DC.title" content="{{ site.name }}" />
-	<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
+		<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
 
-	<link rel="stylesheet" href="{{STATIC_URL}}base/desktop_base.css?v=5" />
+		<link href="{{STATIC_URL}}bootstrap/css/bootstrap.css" rel="stylesheet" />
+		<link href="{{STATIC_URL}}backbone/backbone.css" rel="stylesheet" />
+		<link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
+		<link href="{{STATIC_URL}}css/base.css" rel="stylesheet" />
+		{% block extra-links %}{% endblock %}
 
-	<link rel="shortcut icon" href="{{STATIC_URL}}base/favicon.gif" />
+		<script src="{{STATIC_URL}}zepto-0.8/zepto.js"></script>
+		<script src="{{STATIC_URL}}backbone/underscore-min.js"></script>
+		<script src="{{STATIC_URL}}backbone/json/json2.js"></script>
+		<script src="{{STATIC_URL}}backbone/backbone-min.js"></script>
+		<script src="{% url backbone.api_views.backbone_js %}"></script>
+		<script src="{{STATIC_URL}}backbone/search.js"></script>
+		<script src="{{STATIC_URL}}js/base.js"></script>
 
-	<script src="{{STATIC_URL}}js/modernizr-1.5.min.js"></script>
+		<style type="text/css">
+			.completed-item-meta { float: right; }
+			{% block app-style %}{% endblock %}
+			{% block sub-style%}{% endblock %}
+		</style>
+		<!--[if lt IE 9]>
+			<script src="{{STATIC_URL}}js/ie_html5.js"></script>
+		<![endif]-->
 
-	<link rel="stylesheet" href="{{STATIC_URL}}jquery/css/ui-lightness/jquery-ui-1.8.17.custom.css" />
-	<script src="{{STATIC_URL}}jquery/js/jquery-1.7.1.min.js"></script>
-	<script src="{{STATIC_URL}}jquery/js/jquery-ui-1.8.17.custom.min.js"></script>
+		{% block feed-link %}{% endblock %}
+		{% block app-head %}{% endblock %}
+		{% block sub-head %}{% endblock %}
+	</head>
 
-	<link rel="stylesheet" href="{{STATIC_URL}}backbone/backbone.css" />
-    <script src="{{STATIC_URL}}backbone/underscore-min.js"></script>
-    <script src="{{STATIC_URL}}backbone/json/json2.js"></script>
-    <script src="{{STATIC_URL}}backbone/backbone-min.js"></script>
-    <script src="{% url backbone.api_views.backbone_js %}"></script>
+	<body>{% block body %}
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="{% url banana.views.index %}">{{ site.name }}</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+							{% if request.user.is_authenticated %}
+								<li><a href="{% url banana.views.user request.user.username %}">Home</a></li>
+								<li><a href="{% url peach.views.index %}">Notes</a></li>
+							{% endif %}
+							{% if request.user.is_staff %}
+								<li><a href="{% url apple.views.index %}">Staff</a></li>
+							{% endif %}
+						</ul>
+						{% if request.user.is_authenticated %}
+							<p class="navbar-text pull-right">/ <a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></p>
+							<p class="navbar-text pull-right">Logged in as <a href="{% url person.views.profile request.user.username %}">{{ request.user.username }}</a>&nbsp;</p>
+						{% else %}
+							<p class="navbar-text pull-right"><a href="{% url django.contrib.auth.views.login %}">login</a></p>
+						{% endif %}
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
 
-    <script src="{{STATIC_URL}}backbone/search.js"></script>
+		<div id="content" class="container-fluid">
+			{% block content %}{% endblock %}
+			<hr>
 
-	<script src="{{STATIC_URL}}js/plugins.js?v=1"></script>
-	<script src="{{STATIC_URL}}js/script.js?v=1"></script>
-	<script src="{{STATIC_URL}}base/base.js?v=2"></script>
-	
-	<!--[if lt IE 7 ]>
-	  <script src="{{STATIC_URL}}js/dd_belatedpng.js?v=1"></script>
-	<![endif]-->
+			{% block footer %}<footer>
+				{% block sub-footer %}{% endblock %}
+			</footer>{% endblock %}
+		</div><!--/.fluid-container-->
 
-	{% block extra-links %}{% endblock %}
 
-	{%block sub-head %}{% endblock %}
-	
-	{% block feed-link %}{% endblock %}
-	
-	<style>
-	{% block style %}
-	{% block sub-style%}{% endblock %}
-	{% endblock %}
-	</style>
-
-</head>
-<!--[if lt IE 7 ]> <body class="ie6"> <![endif]-->
-<!--[if IE 7 ]>    <body class="ie7"> <![endif]-->
-<!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
-<!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
-{% block body %}
-{% block header %}<header>
-
-<nav id="nav-tabs"><ul>
-	<li><a href="{% url banana.views.index %}">front</a></li>
-	{% if request.user.is_authenticated %}
-		<li><a href="{% url banana.views.user request.user.username %}">home</a></li>
-		<li><a href="{% url peach.views.index %}">notes</a></li>
-		<li><a href="{% url person.views.profile request.user.username %}">account</a></li>
-		{% if request.user.is_staff %}
-		<li><a href="{% url apple.views.index %}">staff</a></li>
-		{% endif %}
-		<li><a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></li>
-	{% else %}
-		<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">login</a>{% endblock %}</li>
-	{% endif %}
-</ul></nav>
-
-{% block header-title %}<h1><a href="{% url banana.views.index %}">{{ site.name }}</a></h1>{% endblock %}
-
-</header>{% endblock %}
-
-<div id="content">{% block content %}{% endblock %}</div>
-
-{% block footer %}<footer></footer>{% endblock %}
-
-{% include "backbone/search.frag" %}
-
-{% endblock %}<!-- end body block -->
-</body>
+	{% endblock %}</body>
 </html>

@@ -19,6 +19,7 @@ function runTests(){
 
 	test("Site model", function(){
 		var site = new transmutable.Site();
+		console.log('Site', site);
 		ok(canDo(site, "fetch"), "Fetch the current site");
 		ok(site.attributes.name == 'Transmutable Work', "Got the right site name: " + site.attributes.name);
 		ok(typeof site.attributes.domain != 'undefined')

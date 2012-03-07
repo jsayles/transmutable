@@ -1,5 +1,6 @@
 {% load imagetags %}
-<li class="completed-item-li rounded-block rendered-wrapper {% if completed_item.promoted %}promoted-completed-item-li{% endif %}">
+<li class="row-fluid completed-item-li rendered-wrapper {% if completed_item.promoted %}promoted-completed-item-li{% endif %}">
+
 	{% if show_completed_item_user %}
 		{% if completed_item.user.get_profile.photo %}
 			<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|fit_image:"50x50" }}" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" /></a>
@@ -41,4 +42,5 @@
 		{% endif %}
 
 	</div>
-</li>
+</li> <!--/completed-item-->
+

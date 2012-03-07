@@ -1,5 +1,5 @@
 <form id="completed-form" action="." method="post">
-	<h2 class="completed-form-heading">So, what'd you do?</h2>
+	<h2 class="completed-form-heading user-prompt-heading">What'd you do?</h2>
 	{{ completed_form.markup }}
 	<br clear="all" />
 	<button name="completed-form-button" type="button" class="positive">to-done!</button>
