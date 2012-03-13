@@ -15,7 +15,7 @@
 .completed-item-li img { float: left; margin-right: 8px; }
 .completed-item-li:hover a { text-decoration: underline; }
 .completed-item-meta { width: 100%; text-align: right; color: #888; }
-.promoted-completed-item-li { border: solid 2px #AFA; }
+.promoted-completed-item-li { border: dashed 1px #ddd; padding: 0.5em 0; }
 
 .completed-item-meta-button {
 	border: solid 1px #999;

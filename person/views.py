@@ -8,7 +8,6 @@ from time import time
 import logging 
 
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import auth
 from django.db.models import Q
 from django.template import Context, loader

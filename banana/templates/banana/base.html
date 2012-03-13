@@ -43,9 +43,11 @@ function submitCompletedItem(form, completedList){
                 if(data.promoted){
                     cls += " promoted-completed-item-li";
                 }
-			    var li = $('<li/>', {'class':cls});
+			    var li = $('<li/>');
+			    li.attr('class', cls);
 			    li.append(data.rendered);
-			    var meta_div = $('<div/>', {'class':'completed-item-meta'});
+			    var meta_div = $('<div/>');
+			    meta_div.attr('class', 'completed-item-meta');
 			    if(data.link != null && data.link != ''){
 			        meta_div.html('<a class="completed-item-meta-button" href="' + data.link + '">promoted</a>');
 			    } else {

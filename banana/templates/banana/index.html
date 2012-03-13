@@ -4,8 +4,6 @@
 
 {% block sub-head %}
 	<script>
-	//TODO let mobile users opt into the main site
-
 	$(document).ready(function() {
 		{% if request.user.is_authenticated %}
 			if($.isMobile()){
@@ -18,17 +16,9 @@
 {% endblock %}
 
 {% block sub-style %}
-	#mobile-ui-header { font-size: 2em; height: 2em; line-height: 2em; }
-
-	#left-column { margin-right: 2em; width: 600px; }
-	#right-column {
-		float: right;
-		width: 370px;
-	}
-
-	#left-column p { margin-top: 10px; }
-
-	#completed-controls { visibility: hidden; float: right; padding: 0px; }
+#mobile-ui-header { font-size: 2em; height: 2em; line-height: 2em; }
+#registration-form span.helptext { display: none; }
+#registration-form input[type=text], #registration-form input[type=password] { width: 195px; }
 {% endblock %}
 
 {% block content %}
@@ -41,20 +31,19 @@
 			<p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 		  </div>
 		  <div class="row-fluid">
+		  	{% for user in promoted_users|slice:":2" %}
+				<div class="span4">
+					<h2>{{ user.get_full_name }}</h2>
+					<p>{{ user.get_profile.bio|striptags|truncatewords:"30" }}</p>
+					<p><a href="{{ user.get_absolute_url }}" class="btn" href="#">Track {{ user.first_name }}'s work &raquo;</a></p>
+				</div><!--/span-->
+			{% endfor %}
 			<div class="span4">
-			  <h2>Amy Leigh Morgan</h2>
-			  <p>I started a round-robin fairy tale exchange via email to pass the time at our dull day jobs. This workshop is one of the more delicious fruits of that happy experiment.</p>
-			  <p><a class="btn" href="#">Track Amy's work &raquo;</a></p>
-			</div><!--/span-->
-			<div class="span4">
-			  <h2>Trevor F. Smith</h2>
-			  <p>I'm a technical leader, web engineer and communicator extraordinaire.  I lead, learn, and convert pies in the sky into birds in the hand.</p>
-			  <p><a class="btn" href="#">Track Trevor's work &raquo;</a></p>
-			</div><!--/span-->
-			<div class="span4">
-			  <h2>Alexander Bell</h2>
-			  <p>I was working on my telephonic device when I dumped a beaker of acid in my lap.  By calling for my co-worker I accidentally made the first phone call.</p>
-			  <p><a class="btn" href="#">Track Alex's work &raquo;</a></p>
+				{% if open_registration %}
+				<h2>You?</h2>
+					<p>If your job is your stage and you'd like to share your performance, give us a whirl.</p>
+					<a href="{% url person.views.register %}" class="btn">Sign up &raquo;</a>
+				{% endif %}
 			</div><!--/span-->
 		  </div><!--/row-->
 		</div><!--/span-->

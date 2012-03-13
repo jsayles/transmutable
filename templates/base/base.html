@@ -59,7 +59,7 @@
 						</ul>
 						{% if request.user.is_authenticated %}
 							<p class="navbar-text pull-right">/ <a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></p>
-							<p class="navbar-text pull-right">Logged in as <a href="{% url person.views.profile request.user.username %}">{{ request.user.username }}</a>&nbsp;</p>
+							<p class="navbar-text pull-right"><a href="{% url person.views.profile request.user.username %}">account</a>&nbsp;</p>
 						{% else %}
 							<p class="navbar-text pull-right"><a href="{% url django.contrib.auth.views.login %}">login</a></p>
 						{% endif %}

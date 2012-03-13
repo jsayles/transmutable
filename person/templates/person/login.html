@@ -3,7 +3,6 @@
 {% block sub-head %}
 <style type="text/css">
 #login-form th { padding-right: 5px; }
-#login-form td { padding-bottom: 10px; }
 </style>
 {% endblock %}
 	
@@ -16,8 +15,8 @@
 
 <form id="login-form" method="post" action=".">
 <table>
-<tr><th>{{ form.username.label_tag }}:</th><td>{{ form.username }}</td></tr>
-<tr><th>{{ form.password.label_tag }}:</th><td>{{ form.password }}</td></tr>
+<tr><th>{{ form.username.label_tag }}</th><td>{{ form.username }}</td></tr>
+<tr><th>{{ form.password.label_tag }}</th><td>{{ form.password }}</td></tr>
 <tr><td colspan="2" style="text-align: right;">
 	<button type="submit">login</button>
 	<input type="hidden" name="next" value="{{ next }}" />

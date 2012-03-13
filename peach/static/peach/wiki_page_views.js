@@ -45,7 +45,7 @@ transmutable.WikiPageEditView = Backbone.View.extend({
 		var el = $(this.el);
 		el.empty();
 		var form = $('<form id="page-form" action="." method="post">');
-		var textArea = $('<textarea id="id_content" rows="10" cols="40" name="content"></textarea>');
+		var textArea = $('<textarea id="id_content" name="content"></textarea>');
 		textArea.text(this.model.attributes.content);
 		form.append(textArea);
 		el.append(form);

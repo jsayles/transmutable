@@ -3,24 +3,13 @@
 {% block sub-title %}{{ page.name }} | {% endblock %}
 
 {% block sub-style %}
-{% if page.namespace.pages.all or request.user == page.namespace.owner %}
-	#main-column {
-		width: 840px;
-		float: right;
-	}
-	#left-column { 
-		width: 140px; 
-		border-right: solid 1px #DDD;
-	}
-	#left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
-{% endif %}
+#left-column ul { margin: 0; }
+#left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
 {% endblock %}
 
 {% block content %}
-	<div id="main-column">
-   		{% include "peach/wiki_render.frag" %}
-	</div>
-	<div id="left-column">
+<div class="row-fluid">
+	<div id="left-column" class="span2">
 		{% with page.namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
 		<h2>Pages:</h2>
 		<ul>
@@ -31,4 +20,8 @@
 		{% endfor %}
 		</ul>
 	</div>
+	<div id="main-column" class="span10">
+   		{% include "peach/wiki_render.frag" %}
+	</div>
+</div>
 {% endblock %}

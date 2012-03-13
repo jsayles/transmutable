@@ -114,7 +114,7 @@ class UserProfileManager(models.Manager):
 
 class UserProfile(ThumbnailedModel):
 	"""Extends the django.contrib.auth User model"""
-	user = models.ForeignKey(User, unique=True)
+	user = models.ForeignKey(User, unique=True, related_name='profile')
 	photo = models.ForeignKey(Photo, blank=True, null=True)
 	location = models.CharField(max_length=1024, blank=True, null=True, help_text="Where you are, for example 'Seattle' or 'Home'")
 	bio = models.TextField(null=True, blank=True)

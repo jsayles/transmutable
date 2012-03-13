@@ -1,7 +1,5 @@
 {% load imagetags %}
 {% load wikitags %}
-
-{% block sub-head %}
 <script>
 $(document).ready(function() {
 	{% if is_mobile %}
@@ -21,15 +19,14 @@ $(document).ready(function() {
 	{% endif %}
 });
 </script>
-{% endblock %}
 
 {% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
 	<div class="wiki-control-links">
 	{% if not is_mobile %}
-		<button name="history-button">history</button>
-		<button name="print-button">print</button>
+		<button type="button" name="history-button">history</button>
+		<button type="button" name="print-button">print</button>
 	{% endif %}
-	<button name="edit-button" class="positive">edit</button>
+	<button type="button" name="edit-button">edit</button>
 	</div> 
 {% endif %}
 

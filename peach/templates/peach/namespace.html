@@ -4,17 +4,10 @@
 {% block sub-title %}{{ namespace.display_name }} | {% endblock %}
 
 {% block sub-style %}
-#main-column {
-	width: 840px;
-	float: right;
-}
-#left-column { 
-	width: 140px; 
-	border-right: solid 1px #DDD;
-}
-#left-column button { display: block; width: 95%; margin: 1em 0; }
+#left-column button { display: block; width: 99%; margin: 1em 0; }
+#left-column ul { margin: 0px; }
 #left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
-#left-column input { width: 95%; }
+#left-column input { width: 94%; }
 {% endblock %}
 
 {% block sub-head %}
@@ -51,43 +44,45 @@ function toggleArchive(){
 {% endblock %}
 
 {% block content %}
-<div id="main-column">
-	<h1>{% if request.user.is_authenticated %}<a href="{% url peach.views.index %}">Notes</a> &raquo; {% endif %}{{ namespace.display_name }}:</h1>
-	{% with "true" as hide_title %}{% include "peach/wiki_render.frag" %}{% endwith %}
-</div>
-<div id="left-column">
-	{% with namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
+<div class="row-fluid">
+	<div id="left-column" class="span2">
+		{% with namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
 
-	{% if request.user == namespace.owner %}
-		<button type="button" class="positive" id="toggle-public">
-		{% if namespace.public %}
-			Make private
-		{% else %}
-			Make public
+		{% if request.user == namespace.owner %}
+			<button type="button" class="positive" id="toggle-public">
+			{% if namespace.public %}
+				Make private
+			{% else %}
+				Make public
+			{% endif %}
+			</button>
+		
+			<button type="button" class="positive" id="toggle-archive">
+			{% if namespace.archive %}
+				Unarchive
+			{% else %}
+				Archive
+			{% endif %}
+			</button>
 		{% endif %}
-		</button>
-	
-		<button type="button" class="positive" id="toggle-archive">
-		{% if namespace.archive %}
-			Unarchive
-		{% else %}
-			Archive
-		{% endif %}
-		</button>
-	{% endif %}
 
-	<h2>Pages:</h2>
-	<ul>
-	{% for page in namespace.pages.all %}
-		{% if page.name != 'SplashPage' %}
-		   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
+		<h2>Pages</h2>
+		<ul>
+		{% for page in namespace.pages.all %}
+			{% if page.name != 'SplashPage' %}
+			   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
+			{% endif %}
+		{% endfor %}
+		{% if request.user == namespace.owner %}
+			<li>
+				<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
+			</li>
 		{% endif %}
-	{% endfor %}
-	{% if request.user == namespace.owner %}
-		<li>
-			<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
-		</li>
-	{% endif %}
-	</ul>
+		</ul>
+	</div>
+	<div id="main-column" class="span10">
+		<h1>{% if request.user.is_authenticated %}<a href="{% url peach.views.index %}">Notes</a> &raquo; {% endif %}{{ namespace.display_name }}</h1>
+		{% with "true" as hide_title %}{% include "peach/wiki_render.frag" %}{% endwith %}
+	</div>
 </div>
 {% endblock %}

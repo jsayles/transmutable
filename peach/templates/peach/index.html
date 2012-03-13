@@ -6,22 +6,6 @@
 #namespace-form { display: inline; }
 #namespace-form input[type=text] { width: 10em; }
 .namespace-list li { margin-left: 20px; list-style-type: disc; margin-bottom: 8px; }
-.namespace-list a { text-decoration: none; }
-.namespace-list {
-	width: 20%;
-}
-#content { position: relative; }
-#private-list {
-	position: absolute;
-	top: 3em;
-	left: 23%;	
-}
-#archive-list {
-	position: absolute;
-	top: 3em;
-	left: 46%;	
-}
-#archive-list a, #archive-list li, #archive-list h2 { color: #777; }
 {% endblock %}
 
 {% block content %}
@@ -30,39 +14,39 @@
 	<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
 </h1>
 
+<div class="row-fluid">
+	<ul id="public-list" class="namespace-list span2">
+		<h2>Public</h2>
+		{% for namespace in request.user.namespaces.all %}
+		{% if namespace.public and not namespace.archive %}
+		<li>
+			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+	</ul>
 
-<ul id="public-list" class="namespace-list">
-	<h2>Public:</h2>
-	{% for namespace in request.user.namespaces.all %}
-	{% if namespace.public and not namespace.archive %}
-	<li>
-		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-	</li>
-	{% endif %}
-	{% endfor %}
-</ul>
+	<ul id="private-list" class="namespace-list span2">
+		<h2>Private</h2>
+		{% for namespace in request.user.namespaces.all %}
+		{% if not namespace.public and not namespace.archive %}
+		<li>
+			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+	</ul>
 
-<ul id="private-list" class="namespace-list">
-	<h2>Private:</h2>
-	{% for namespace in request.user.namespaces.all %}
-	{% if not namespace.public and not namespace.archive %}
-	<li>
-		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-	</li>
-	{% endif %}
-	{% endfor %}
-</ul>
-
-<ul id="archive-list" class="namespace-list">
-	<h2>Archive:</h2>
-	{% for namespace in request.user.namespaces.all %}
-	{% if namespace.archive %}
-	<li>
-		<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-	</li>
-	{% endif %}
-	{% endfor %}
-</ul>
-
+	<ul id="archive-list" class="namespace-list span2">
+		<h2>Archive</h2>
+		{% for namespace in request.user.namespaces.all %}
+		{% if namespace.archive %}
+		<li>
+			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+	</ul>
+</div>
 {% endblock %}
 
