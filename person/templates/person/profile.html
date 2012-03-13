@@ -3,50 +3,50 @@
 {% block sub-title %}Profile for {{ profile.user.get_full_name }} | {% endblock %}
 
 {% block sub-head %}
-<link rel="stylesheet" href="{{STATIC_URL}}jquery/css/ui-lightness/jquery-ui-1.8.17.custom.css" />
-
 <script>
-function profileInitialize(){
-	$("#profile-tabs").tabs();
+$(document).ready(function(){
+	if(document.location.hash){
+		$('a[href=' + document.location.hash.split('?')[0] + ']').tab('show')
+	} else {
+		$('a[href=#edit-view]').tab('show')
+	}
 	setTimeout("hideMessage();", 5000);
 	if($.urlVar("message")){
-		$('body').prepend('<h2 id="message">' + $.urlVar("message") + '</h2>');
+		$('#content').prepend('<h2 id="message">' + $.urlVar("message") + '</h2>');
 	}
-}
-$(document).ready(profileInitialize);
+});
 
 function hideMessage(){
-	$("#message").hide("slide", { direction: "down" }, 1000);
+	$("#message").hide();
 }
 </script>
 {% endblock %}
 
-{% block style %}
-#profile-form th { vertical-align:top; }
-#profile-form td { padding-bottom: 20px; }
-#message { background-color: #ff7a00; padding: 10px 10px; }
+{% block sub-style %}
 {% endblock %}
 
 {% block content%}
-{% if message %}<h2 id="message">{{ message|safe }}</h2>{% endif %}
-{% ifequal request.user.username profile.user.username %}
-	<div id="profile-tabs">
-	    <ul>
-	        <li><a href="#edit-view"><span>Edit Profile</span></a></li>
-	        <li><a href="#edit-photo"><span>Edit Photo</span></a></li>
-	        <li><a href="#change-password"><span>Change Password</span></a></li>
-	    </ul>
-		<div id="edit-view">
+
+<div class="row-fluid">
+	{% ifequal request.user.username profile.user.username %}
+		<ul class="nav nav-tabs">
+			<li><a href="#edit-view" data-toggle="tab">Edit Profile</a></li>
+			<li><a href="#edit-photo" data-toggle="tab">Edit Photo</a></li>
+			<li><a href="#change-password" data-toggle="tab">Change Password</a></li>
+		</ul>
+		<div id="profile-tabs" class="tab-content">
+			<div id="edit-view" class="tab-pane">
 			{% include "person/profile_form.frag" %}
-		</div>
-		<div id="edit-photo">
+			</div>
+			<div id="edit-photo" class="tab-pane">
 			{% include "person/photo_form.frag" %}
-		</div>
-	    <div id="change-password">
+			</div>
+			<div id="change-password" class="tab-pane">
 			{% include "person/password_change.frag" %}
+			</div>
 		</div>
-	</div>
-{% else %}
-	{% include "person/person_info_large.frag" %}
-{% endifequal %}
+	{% else %}
+		{% include "person/person_info_large.frag" %}
+	{% endifequal %}
+</div>
 {% endblock %}

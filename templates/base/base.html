@@ -15,7 +15,8 @@
 		<link href="{{STATIC_URL}}css/base.css" rel="stylesheet" />
 		{% block extra-links %}{% endblock %}
 
-		<script src="{{STATIC_URL}}zepto-0.8/zepto.js"></script>
+		<script src="{{STATIC_URL}}js/jquery-1.7.1.js"></script>
+    	<script src="{{STATIC_URL}}bootstrap/js/bootstrap-tab.js"></script>
 		<script src="{{STATIC_URL}}backbone/underscore-min.js"></script>
 		<script src="{{STATIC_URL}}backbone/json/json2.js"></script>
 		<script src="{{STATIC_URL}}backbone/backbone-min.js"></script>
@@ -76,7 +77,5 @@
 				{% block sub-footer %}{% endblock %}
 			</footer>{% endblock %}
 		</div><!--/.fluid-container-->
-
-
 	{% endblock %}</body>
 </html>

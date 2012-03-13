@@ -3,7 +3,7 @@
 <table>
 {{ password_change_form }}
 <tr>
-	<td colspan="2" style="text-align: right;">
+	<td colspan="2">
 		<input type="hidden" name="password_change_form" value="True" />
 		<input type="submit" value="change your password" />
 	</td>
