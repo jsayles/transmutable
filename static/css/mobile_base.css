@@ -2,6 +2,7 @@
 @import url("base.css");
 
 body {
+  padding-top: 0px;
   border-right: solid 1px #EEE; 
   max-width: 100%;
 }
