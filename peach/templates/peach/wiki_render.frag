@@ -24,7 +24,7 @@ $(document).ready(function() {
 		<ul class="breadcrumb">
 			{% if request.user.is_authenticated %}
 			<li>
-				<a href="{% url peach.views.index %}">Notes <span class="divider">/</span></a>
+				<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
 			</li>
 			{% endif %}			
 			<li><a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>

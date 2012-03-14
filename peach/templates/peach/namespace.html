@@ -84,7 +84,7 @@ function toggleArchive(){
 		<ul class="breadcrumb">
 			{% if request.user.is_authenticated %}
 			<li>
-				<a href="{% url peach.views.index %}">Notes <span class="divider">/</span></a>
+				<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
 			</li>
 			{% endif %}			
 			<li class="active">{{ namespace.display_name }}</li>
