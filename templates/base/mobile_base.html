@@ -7,18 +7,12 @@
 
 	<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
 
-	<link rel="stylesheet" href="{{STATIC_URL}}base/mobile_base.css?v=5" />
-	<link rel="shortcut icon" href="{{STATIC_URL}}base/favicon.gif" />
+	<link rel="stylesheet" href="{{STATIC_URL}}css/mobile_base.css" />
+	<link rel="shortcut icon" href="{{STATIC_URL}}favicon.gif" />
 
-	<script src="{{STATIC_URL}}js/modernizr-1.5.min.js"></script>
+	<script src="{{STATIC_URL}}js/jquery-1.7.1.js"></script>
 
-	<script src="{{STATIC_URL}}jquery/js/jquery-1.7.1.min.js"></script>
-	<script src="{{STATIC_URL}}jquery/js/jquery-ui-1.8.17.custom.min.js"></script>
-
-
-	<script src="{{STATIC_URL}}js/plugins.js?v=1"></script>
-	<script src="{{STATIC_URL}}js/script.js?v=1"></script>
-	<script src="{{STATIC_URL}}base/base.js?v=2"></script>
+	<script src="{{STATIC_URL}}js/base.js"></script>
 
 	{% block extra-links %}{% endblock %}
 

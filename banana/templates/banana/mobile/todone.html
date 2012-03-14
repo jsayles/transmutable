@@ -13,6 +13,7 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block style %}
+.completed-items { list-style: none; margin: 0; padding: 0;}
 #completed-form {
 	height: 12em;
 }
@@ -26,7 +27,7 @@ $(document).ready(function() {
 	{% for field in completed_form %}{{ field }}{% endfor %}
 	<button name="completed-form-button" type="button" class="positive">to-done!</button>
 </form>
-<ul>
+<ul class="completed-items">
 {% for completed_item in request.user.completed_items.all|slice:":10" %}
 	{% completed_item_widget %}
 {% endfor %}

@@ -1,0 +1,56 @@
+@import url("../bootstrap/css/bootstrap.css");
+@import url("base.css");
+
+body {
+  border-right: solid 1px #EEE; 
+  max-width: 100%;
+}
+
+header h1 {
+  padding: 5px 10px 5px 10px;
+  background-color: #EEE;
+  margin: 0 0 2px 0;
+}
+header nav ul { 
+  height: 3em;
+  padding-left: 1em;
+}
+header nav li {
+  background-color: #DDD;
+  margin: 0 1px 0 1px;
+  text-align: center;
+  float: left;
+  display: inline;
+  height: 3em;
+  line-height: 3em;
+  font-weight: bold;
+}
+header nav a { text-decoration: none; }
+
+#content {
+  margin: 0 10px 0 10px;
+  clear: both;
+}
+
+footer a { color: #444; font-size: 0.9em; text-decoration: none; padding-right: 10px; }
+
+button{
+    margin:0 7px 0 0;
+    font-size:100%;
+    line-height:130%;
+    padding:10px 15px 11px 12px; /* Links */
+}
+button[type]{
+    padding:10px 15px 10px 12px; /* Firefox */
+    line-height:17px; /* Safari */
+}
+*:first-child+html button[type]{
+    padding:4px 10px 3px 7px; /* IE7 */
+}
+button img, button a img{
+    margin:0 3px -3px 0 !important;
+    padding:0;
+    border:none;
+    width:16px;
+    height:16px;
+}
