@@ -81,7 +81,14 @@ function toggleArchive(){
 		</ul>
 	</div>
 	<div id="main-column" class="span10">
-		<h1>{% if request.user.is_authenticated %}<a href="{% url peach.views.index %}">Notes</a> &raquo; {% endif %}{{ namespace.display_name }}</h1>
+		<ul class="breadcrumb">
+			{% if request.user.is_authenticated %}
+			<li>
+				<a href="{% url peach.views.index %}">Notes <span class="divider">/</span></a>
+			</li>
+			{% endif %}			
+			<li class="active">{{ namespace.display_name }}</li>
+		</ul>
 		{% with "true" as hide_title %}{% include "peach/wiki_render.frag" %}{% endwith %}
 	</div>
 </div>

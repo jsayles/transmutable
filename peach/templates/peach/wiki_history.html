@@ -7,7 +7,14 @@
 {% endblock %}
 
 {% block content %}
-<h1><a href="{{ page.namespace.owner.get_absolute_url }}">{{ page.namespace.owner.get_full_name }}</a> &raquo; <a href="{% url peach.views.index %}">Notes</a> &raquo; <a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; <a href="{% url peach.views.wiki page.namespace.name page.name %}">{{ page.name }}</a> &raquo; History:</h1>
+	<ul class="breadcrumb">
+		<li>
+			<a href="{% url peach.views.index %}">Notes <span class="divider">/</span></a>
+		</li>
+		<li><a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
+		<li><a href="{% url peach.views.wiki page.namespace.name page.name %}">{{ page.name }}</a> <span class="divider">/</span></li>
+		<li class="active">history</li>
+	</ul>
 
 {% for log in page.wikipagelog_set.all %}
 {% ifchanged log.created.day %}

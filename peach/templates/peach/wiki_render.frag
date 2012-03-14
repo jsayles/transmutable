@@ -20,17 +20,27 @@ $(document).ready(function() {
 });
 </script>
 
-{% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
-	<div class="wiki-control-links">
-	{% if not is_mobile %}
-		<button type="button" name="history-button">history</button>
-		<button type="button" name="print-button">print</button>
+	{% if not hide_title %}
+		<ul class="breadcrumb">
+			{% if request.user.is_authenticated %}
+			<li>
+				<a href="{% url peach.views.index %}">Notes <span class="divider">/</span></a>
+			</li>
+			{% endif %}			
+			<li><a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
+			<li class="active">{{ page.name }}</li>
+		</ul>
 	{% endif %}
-	<button type="button" name="edit-button">edit</button>
-	</div> 
-{% endif %}
 
-	{% if not hide_title %}<h1>{% if request.user.is_authenticated %}<a href="{% url peach.views.index %}">Notes</a> &raquo; {% endif %}<a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; {{ page.name }}:</h1>{% endif %}
+	{% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
+		<div class="wiki-control-links">
+		{% if not is_mobile %}
+			<button type="button" name="history-button">history</button>
+			<button type="button" name="print-button">print</button>
+		{% endif %}
+		<button type="button" name="edit-button">edit</button>
+		</div> 
+	{% endif %}
 
 	{% if page.rendered %}
 		<div class="rendered-wrapper">{{ page.rendered|include_constants|safe }}</div>
