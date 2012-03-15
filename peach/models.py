@@ -1,24 +1,27 @@
 # Copyright 2009 GORBET + BANERJEE (http://www.gorbetbanerjee.com/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-import os
-import os.path
-import urllib
-import datetime, calendar
 import re
-import unicodedata
-import traceback
+import os
+import urllib
 import logging
-import pprint
+import os.path
+import traceback
+import unicodedata
 
-from django.template.defaultfilters import slugify
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.db import models
 from django.conf import settings
+from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.template.defaultfilters import slugify
+from django.template.loader import render_to_string
 
-from person.models import ThumbnailedModel
 from templatetags.wikitags import wiki
+from person.models import ThumbnailedModel
+
+def clean_url_element(element):
+	"""Removes undesireables like forwards slashes from url elements"""
+	if not element: return element
+	return element.replace('/','-').replace('&', '-').replace('#', '-')
 
 class Namespace(models.Model):
 	name = models.CharField(max_length=1000, unique=True, blank=False, null=False)
@@ -71,20 +74,25 @@ class WikiPage(models.Model):
 	def get_absolute_url(self):
 		if self.name == "SplashPage": return ('peach.views.namespace', [], { 'namespace':self.namespace.name })
 		return ('peach.views.wiki', [], { 'namespace':self.namespace.name, 'name':self.name })
+
 	@models.permalink
 	def get_mobile_url(self):
 		if self.name == "SplashPage": return ('peach.mobile_views.namespace', [], { 'namespace':self.namespace.name })
 		return ('peach.mobile_views.wiki', [], { 'namespace':self.namespace.name, 'name':self.name })
+
 	@models.permalink
 	def get_edit_url(self):
 		return ('peach.views.wiki_edit', [], { 'namespace':self.namespace.name, 'name':self.name })
-	def __unicode__(self):
-		return self.name
+
+	def __unicode__(self): return self.name
+
 	def save(self, *args, **kwargs):
 		"""When saving the content, render via markdown and save to self.rendered"""
 		self.rendered = wiki(self.content, self.namespace.name)
+		self.name = clean_url_element(self.name)
 		super(WikiPage, self).save(*args, **kwargs)
 		WikiPageLog.objects.create(wiki_page=self, content=self.content)
+
 	class Meta:
 		ordering = ('name',)
 		unique_together = ('namespace', 'name')

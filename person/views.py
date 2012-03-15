@@ -197,9 +197,9 @@ def password_reset(request):
 					wait_for_it = True
 					logging.debug("Sent password reset to %s", user.username)
 			except:
-				print  pprint.pformat(traceback.format_exc())
-				logging.debug("Could not find account: %s", pprint.pformat(traceback.format_exc()))
-				error_message = "That email address could not be found."
+				traceback.print_exc()
+				logging.debug("Error generating a password reset: %s", pprint.pformat(traceback.format_exc()))
+				error_message = "There was an error resetting that account."
 	else:
 		password_reset_form = PasswordResetForm()
 	return render_to_response('person/password_reset.html', {'wait_for_it': wait_for_it, 'error_message': error_message, 'password_reset_form': password_reset_form }, context_instance=RequestContext(request))
