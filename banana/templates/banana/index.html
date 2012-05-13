@@ -19,6 +19,17 @@
 #mobile-ui-header { font-size: 2em; height: 2em; line-height: 2em; }
 #registration-form span.helptext { display: none; }
 #registration-form input[type=text], #registration-form input[type=password] { width: 195px; }
+.hero-unit {
+	padding: 20px;
+	height: 355px;
+	background-image: url('{{STATIC_URL}}banana/logo.svg');
+	background-repeat: no-repeat;
+	background-position: 98% 50%;
+	text-shadow: 2px 1px 0px whiteSmoke;
+}
+.hero-unit h1 {
+	margin-top: 20%;
+}
 {% endblock %}
 
 {% block content %}
