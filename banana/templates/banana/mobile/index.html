@@ -14,7 +14,7 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 
-{% block style %}
+{% block sub-style %}
 #work-doc-controls { float: right; padding: 0px; }
 #work-doc {
 	min-height: 300px;
@@ -23,7 +23,9 @@ $(document).ready(function() {
 
 {% block content %}
 <div id="work-doc" class="rendered-wrapper">
-	<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">edit</button></div>
+	<div id="work-doc-controls">
+		<button name="edit-work-doc-button" class="positive">edit</button>
+	</div>
 	{{ user.work_doc.rendered|safe }}
 </div>
 {% endblock %}

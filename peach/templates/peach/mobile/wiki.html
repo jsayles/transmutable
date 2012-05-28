@@ -8,15 +8,24 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 
-{% block style %}
+{% block sub-style %}
 #content .rendered-wrapper { min-height: 100px; }
 {% endblock %}
 
 {% block content %}
-<h1><a href="{% url peach.mobile_views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> &raquo; {{ page.name }}:</h1>
-{% with "true" as hide_title %}
-	{% with "true" as is_mobile %}
-		{% include "peach/wiki_render.frag" %}
+	<ul class="breadcrumb">
+		<li>
+			<a href="{% url peach.mobile_views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> 
+			<span class="divider">/</span>
+		</li>
+		<li>
+			{{ page.name }}
+		</li>
+	</ul>
+
+	{% with "true" as hide_title %}
+		{% with "true" as is_mobile %}
+			{% include "peach/wiki_render.frag" %}
+		{% endwith %}
 	{% endwith %}
-{% endwith %}
 {% endblock %}

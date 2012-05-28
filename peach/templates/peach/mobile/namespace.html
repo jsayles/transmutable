@@ -8,13 +8,17 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 
-{% block style %}
+{% block sub-style %}
 .page-li { display: block; float: left; padding-right: 30px; padding-bottom: 30px; }
 #wiki-content { display: block; min-height: 100px; }
 {% endblock %}
 
 {% block content %}
-<h1>{{ namespace.display_name }}:</h1>
+	<ul class="breadcrumb">
+		<li>
+			{{ namespace.display_name }}
+		</li>
+	</ul>
 
 <div id="wiki-content">
 {% with "true" as hide_title %}

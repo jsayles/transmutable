@@ -1,57 +1,72 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
-<head>
-	<meta charset="utf-8" />
-	<meta name="DC.title" content="{{ site.name }}" />
-	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="DC.title" content="{{ site.name }}" />
+		<meta name="description" content="Emerge from behind your intellectual firewall and work in public." />
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+		<link rel="shortcut icon" href="{{STATIC_URL}}favicon.png" />
+		<link rel="apple-touch-icon" href="{{STATIC_URL}}favicon.png" />
 
-	<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
 
-	<link rel="stylesheet" href="{{STATIC_URL}}css/mobile_base.css" />
-	<link rel="shortcut icon" href="{{STATIC_URL}}favicon.png" />
-	<link rel="apple-touch-icon" href="{{STATIC_URL}}favicon.png" />
+		<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
 
-	<script src="{{STATIC_URL}}js/jquery-1.7.1.js"></script>
+		{% include 'base/common_styles.frag' %}
+		<link href="{{STATIC_URL}}css/mobile_base.css" rel="stylesheet" />
+		{% block extra-links %}{% endblock %}
 
-	<script src="{{STATIC_URL}}js/base.js"></script>
+		{% include 'base/common_scripts.frag' %}
+		<script src="{{STATIC_URL}}js/base.js"></script>
 
-	{% block extra-links %}{% endblock %}
+		<style type="text/css">
+			{% block app-style %}{% endblock %}
+			{% block sub-style%}{% endblock %}
+		</style>
+		<!--[if lt IE 9]>
+			<script src="{{STATIC_URL}}js/ie_html5.js"></script>
+		<![endif]-->
 
-	{%block sub-head %}{% endblock %}
-	
-	{% block feed-link %}{% endblock %}
-	
-<style>
-{% if user.is_authenticated %}
-	header nav li { width: 24%; }
-{% else %}
-	header nav li { width: 99%; }
-{% endif %}
-{% block style %}{% endblock %}
-</style>
-</head>
-<body>
-{% block body %}
-{% block header %}<header>
-{% block header-title %}<h1><a href="{% url banana.mobile_views.index %}">{{ site.name }}</a></h1>{% endblock %}
+		{% block feed-link %}{% endblock %}
+		{% block app-head %}{% endblock %}
+		{% block sub-head %}{% endblock %}
+	</head>
 
-<nav id="nav-tabs"><ul>
-	{% if request.user.is_authenticated %}
-		<li><a href="{% url banana.mobile_views.index %}">To-do</a></li>
-		<li><a href="{% url banana.mobile_views.todone %}">To-done</a></li>
-		<li><a href="{% url peach.mobile_views.index %}">Notes</a></li>
-		<li><a href="{% url banana.mobile_views.activity %}">Activity</a></li>
-	{% else %}
-		<li>{% block nav-login %}<a href="{% url django.contrib.auth.views.login %}">login</a>{% endblock %}</li>
-	{% endif %}
-</ul></nav>
+	<body data-spy="scroll" data-target=".subnav" data-offset="50">{% block body %}
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="{% url banana.mobile_views.index %}">{{ site.name }}</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+							<li><a class="" href="{% url banana.mobile_views.index %}">To-do</a></li>
+							<li><a href="{% url banana.mobile_views.todone %}">To-done</a></li>
+							<li><a href="{% url peach.mobile_views.index %}">Notes</a></li>
+							<li><a href="{% url banana.mobile_views.activity %}">Activity</a></li>
+						</ul>
+						{% if request.user.is_authenticated %}
+							<p class="navbar-text pull-right">/ <a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></p>
+						{% else %}
+							<p class="navbar-text pull-right"><a href="{% url django.contrib.auth.views.login %}">login</a></p>
+						{% endif %}
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
 
-</header>{% endblock %}
+		<div id="content" class="container-fluid">
+			{% block content %}{% endblock %}
+			<hr>
 
-<div id="content">{% block content %}{% endblock %}</div>
+			{% block footer %}<footer>
+				<a href="{% url banana.views.index %}">full site</a>
+				{% block sub-footer %}{% endblock %}
+			</footer>{% endblock %}
+		</div><!--/.fluid-container-->
+	{% endblock %}</body>
 
-{% block footer %}<footer><a href="{% url banana.views.index %}">full site</footer>{% endblock %}
-
-{% endblock %}<!-- end body block -->
-</body>
 </html>

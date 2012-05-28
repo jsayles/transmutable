@@ -1,0 +1,10 @@
+<script src="{{STATIC_URL}}js/jquery-1.7.1.js"></script>
+<script src="{{STATIC_URL}}bootstrap/js/bootstrap-tab.js"></script>
+<script src="{{STATIC_URL}}bootstrap/js/bootstrap-scrollspy.js"></script>
+<script src="{{STATIC_URL}}bootstrap/js/bootstrap-dropdown.js"></script>
+<script src="{{STATIC_URL}}bootstrap/js/bootstrap-collapse.js"></script>
+<script src="{{STATIC_URL}}backbone/underscore-min-1.3.1.js"></script>
+<script src="{{STATIC_URL}}backbone/json/json2.js"></script>
+<script src="{{STATIC_URL}}backbone/backbone-0.9.1.js"></script>
+<script src="{% url backbone.api_views.backbone_js %}"></script>
+<script src="{{STATIC_URL}}backbone/search.js"></script>
