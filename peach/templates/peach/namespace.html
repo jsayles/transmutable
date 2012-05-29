@@ -21,10 +21,10 @@ function togglePublicity(){
 	$.ajax({
 		url: '.', type:'POST', data: {'toggle_namespace_public_action':'True'},
 		error: function(){
-			document.location.href = '{% url peach.views.namespace namespace.name %}';
+			document.location.href = '{{namespace.get_absolute_url}}';
 		},
 		success: function(){
-			document.location.href = '{% url peach.views.namespace namespace.name %}';
+			document.location.href = '{{namespace.get_absolute_url}}';
 		}
 	});
 }
@@ -33,10 +33,10 @@ function toggleArchive(){
 	$.ajax({
 		url: '.', type:'POST', data: {'toggle_namespace_archive_action':'True'},
 		error: function(){
-			document.location.href = '{% url peach.views.namespace namespace.name %}';
+			document.location.href = '{{namespace.get_absolute_url}}';
 		},
 		success: function(){
-			document.location.href = '{% url peach.views.namespace namespace.name %}';
+			document.location.href = '{{namespace.get_absolute_url}}';
 		}
 	});
 }

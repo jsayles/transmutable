@@ -24,7 +24,7 @@ def clean_url_element(element):
 	return element.replace('/','-').replace('&', '-').replace('#', '-')
 
 class Namespace(models.Model):
-	name = models.CharField(max_length=1000, unique=True, blank=False, null=False)
+	name = models.CharField(max_length=1000, blank=False, null=False)
 	display_name = models.CharField(max_length=1000, blank=False, null=False)
 	owner = models.ForeignKey(User, blank=False, null=False, related_name='namespaces')
 	public = models.BooleanField(default=True)
@@ -49,15 +49,16 @@ class Namespace(models.Model):
 	def can_delete(self, user): return self.owner == user
 
 	@models.permalink
-	def get_absolute_url(self): return ('peach.views.namespace', [], { 'namespace':self.name })
+	def get_absolute_url(self): return ('peach.views.namespace', [], { 'username':self.owner.username, 'namespace':self.name })
 	def __unicode__(self): return self.name
 
 	class Meta:
+		unique_together = ('owner', 'name')
 		ordering = ('name',)
 
 class WikiPageManager(models.Manager):
 	def get_or_create(self, **kwargs):
-		namespace = Namespace.objects.get(name=kwargs['namespace__name'])
+		namespace = kwargs['namespace']
 		return super(WikiPageManager, self).get_or_create(namespace=namespace, name=kwargs['name'])
 	
 class WikiPage(models.Model):
@@ -72,8 +73,8 @@ class WikiPage(models.Model):
 
 	@models.permalink
 	def get_absolute_url(self):
-		if self.name == "SplashPage": return ('peach.views.namespace', [], { 'namespace':self.namespace.name })
-		return ('peach.views.wiki', [], { 'namespace':self.namespace.name, 'name':self.name })
+		if self.name == "SplashPage": return ('peach.views.namespace', [], {'username':self.namespace.owner.username, 'namespace':self.namespace.name })
+		return ('peach.views.wiki', [], { 'username':self.namespace.owner.username, 'namespace':self.namespace.name, 'name':self.name })
 
 	@models.permalink
 	def get_mobile_url(self):
@@ -82,7 +83,7 @@ class WikiPage(models.Model):
 
 	@models.permalink
 	def get_edit_url(self):
-		return ('peach.views.wiki_edit', [], { 'namespace':self.namespace.name, 'name':self.name })
+		return ('peach.views.wiki_edit', [], { 'username':self.namespace.owner.username, 'namespace':self.namespace.name, 'name':self.name })
 
 	def __unicode__(self): return self.name
 
@@ -105,7 +106,7 @@ class WikiPageLog(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	@models.permalink
 	def get_absolute_url(self):
-		return ('peach.views.wiki_page_log', [], { 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
+		return ('peach.views.wiki_page_log', [], { 'username':self.wiki_page.namespace.owner.username, 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
 	def __unicode__(self):
 		return '%s: %s' % (self.wiki_page.name, self.created)
 	class Meta:
@@ -132,7 +133,7 @@ class WikiFile(models.Model):
 		return os.path.basename(self.file.name)
 	@models.permalink
 	def get_absolute_url(self):
-		return ('peach.views.file', (), { 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
+		return ('peach.views.file', (), { 'username':self.owner.username, 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
 	class Meta:
 		ordering = ['-created']
 	def __unicode__(self):
@@ -151,7 +152,7 @@ class WikiPhoto(ThumbnailedModel):
 		return os.path.basename(self.image.name)
 	@models.permalink
 	def get_absolute_url(self):
-		return ('peach.views.photo', (), { 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
+		return ('peach.views.photo', (), { 'username':self.owner.username, 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
 	class Meta:
 		ordering = ['-created']
 	def __unicode__(self):

@@ -41,10 +41,10 @@ def index(request):
 		namespace_form = NamespaceForm(instance=Namespace(owner=request.user))
 	return render_to_response('peach/index.html', { 'namespace_form':namespace_form }, context_instance=RequestContext(request))
 
-def namespace(request, namespace):
-	ns = get_object_or_404(Namespace, name=namespace)
+def namespace(request, username, namespace):
+	ns = get_object_or_404(Namespace, owner__username=username, name=namespace)
 	if not ns.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
-	page = WikiPage.objects.get_or_create(namespace__name=namespace, name='SplashPage')[0]
+	page = WikiPage.objects.get_or_create(namespace=ns, name='SplashPage')[0]
 	if request.method == 'POST' and ns.can_update(request.user):
 		create_wiki_page_form = CreateWikiPageForm(request.POST, instance=WikiPage(namespace=ns))
 		toggle_namespace_public_form = ToggleNamespacePublicForm(request.POST)
@@ -64,7 +64,7 @@ def namespace(request, namespace):
 			print request.POST, toggle_namespace_public_form
 	else:
 		create_wiki_page_form = CreateWikiPageForm(instance=WikiPage(namespace=ns))
-	return render_to_response('peach/namespace.html', { 'namespace':ns, 'create_wiki_page_form':create_wiki_page_form, 'wiki_pages':WikiPage.objects.filter(namespace__name=namespace).exclude(name='SplashPage'), 'page':page }, context_instance=RequestContext(request))
+	return render_to_response('peach/namespace.html', { 'namespace':ns, 'create_wiki_page_form':create_wiki_page_form, 'wiki_pages':WikiPage.objects.filter(namespace=ns).exclude(name='SplashPage'), 'page':page }, context_instance=RequestContext(request))
 		
 def photo_redirect(request, id):
 	photo = get_object_or_404(WikiPhoto, pk=id)
@@ -84,30 +84,31 @@ def file(request, namespace, name, id):
 	if not file.wiki_page.namespace.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
 	return render_to_response('peach/file.html', { 'file':file }, context_instance=RequestContext(request))
 
-def wiki(request, namespace, name):
+def wiki(request, username, namespace, name):
 	if request.user.is_authenticated():
-		ns = get_object_or_404(Namespace, name=namespace)
+		ns = get_object_or_404(Namespace, name=namespace, owner__username=username)
 		if ns.can_update(request.user):
-			page, created = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)
+			page, created = WikiPage.objects.get_or_create(namespace=ns, name=name)
 			if created or page.content == '': return HttpResponseRedirect(page.get_edit_url())
 		else:
-			page = get_object_or_404(WikiPage, namespace__name=namespace, name=name)
+			page = get_object_or_404(WikiPage, namespace=ns, name=name)
 	else:
-		page = get_object_or_404(WikiPage, namespace__name=namespace, name=name)
+		page = get_object_or_404(WikiPage, namespace=ns, name=name)
 	if not page.namespace.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
 	return render_to_response('peach/wiki.html', { 'page':page }, context_instance=RequestContext(request))
 
-def wiki_print(request, namespace, name):
-	page = get_object_or_404(WikiPage, namespace__name=namespace, name=name)
+def wiki_print(request, username, namespace, name):
+	namespace = get_object_or_404(Namespace, name=namespace, owner__username=username)
+	page = get_object_or_404(WikiPage, namespace=namespace, name=name)
 	if not page.namespace.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
 	return render_to_response('peach/wiki_print.html', { 'page':page }, context_instance=RequestContext(request))
 
 @login_required
-def wiki_add(request, namespace, name):
+def wiki_add(request, username, namespace, name):
 	"""Provide the user with forms to add files or photos to a wiki page"""
-	ns = get_object_or_404(Namespace, name=namespace)
+	ns = get_object_or_404(Namespace, name=namespace, owner__username=username)
 	if ns.can_update(request.user): return HttpResponseRedirect('peaches.views.wiki', kwargs={'namespace':namespace, 'name':name})
-	page = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)[0]
+	page = WikiPage.objects.get_or_create(namespace=ns, name=name)[0]
 	if request.method == 'POST':
 		if request.user != ns.owner: return HttpResponseRedirect('peaches.views.index')
 		wiki_photo_form = WikiPhotoForm(request.POST, request.FILES)
@@ -138,16 +139,16 @@ def wiki_add(request, namespace, name):
 	return render_to_response('peach/wiki_add.html', { 'page':page, 'wiki_photo_form':wiki_photo_form, 'wiki_file_form':wiki_file_form }, context_instance=RequestContext(request))
 
 @login_required
-def wiki_history(request, namespace, name):
-	ns = get_object_or_404(Namespace, name=namespace)
+def wiki_history(request, username, namespace, name):
+	ns = get_object_or_404(Namespace, name=namespace, owner__username=username)
 	if not ns.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
 	page = get_object_or_404(WikiPage, namespace=ns, name=name)
 	return render_to_response('peach/wiki_history.html', { 'page':page }, context_instance=RequestContext(request))
 
 @login_required
-def wiki_page_log(request, namespace, name, id):
+def wiki_page_log(request, username, namespace, name, id):
 	page_log = get_object_or_404(WikiPageLog, wiki_page__name=name, pk=id)
-	ns = get_object_or_404(Namespace, name=namespace)
+	ns = get_object_or_404(Namespace, name=namespace, owner__username=username)
 	if request.method == 'POST' and request.POST.get('revert', None):
 		if not ns.can_update(request.user): return HttpResponseRedirect(page_log.get_absolute_url())
 		page_log.wiki_page.content = page_log.content
@@ -157,11 +158,11 @@ def wiki_page_log(request, namespace, name, id):
 	return render_to_response('peach/wiki_page_log.html', { 'page_log':page_log  }, context_instance=RequestContext(request))
 
 @login_required
-def wiki_edit(request, namespace, name):
+def wiki_edit(request, username, namespace, name):
 	"""Edit a WikiPage's text"""
-	ns = get_object_or_404(Namespace, name=namespace)
+	ns = get_object_or_404(Namespace, name=namespace, owner__username=username)
 	if not ns.can_update(request.user): return HttpResponseRedirect(page_log.get_absolute_url())
-	page = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)[0]
+	page = WikiPage.objects.get_or_create(namespace=ns, name=name)[0]
 	if request.method == 'POST':
 		if not ns.can_update(request.user): return HttpResponseRedirect(page_log.get_absolute_url())
 		page_form = WikiPageForm(request.POST, instance=page)

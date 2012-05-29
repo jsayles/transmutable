@@ -6,25 +6,10 @@ from django.utils.html import strip_tags, linebreaks, urlize
 from django.contrib.markup.templatetags.markup import markdown
 register = template.Library()
 
-WIKI_NAME = r'(?:[A-Z]+[a-z]+){2,}'
-WIKIREGEX = re.compile(r'([^/])\b(%s)\b([^/])' % WIKI_NAME)
-
-WIKI_HARD_NAME = r'(?:Link:([A-Z|a-z|_|-]+))'
-WIKI_HARD_NAME_REGEX = re.compile(r'\b(%s)\b' % WIKI_HARD_NAME)
-
-
-WIKI_PHOTO = r'(?:Photo([\d]+))'
-WIKI_PHOTO_REGEX = re.compile(r'\b(%s)\b' % WIKI_PHOTO)
-
 @register.filter
 def wiki(text, namespace):
 	"""Convert the text into HTML using markdown and image name replacement."""
-	#text = strip_tags(text)
-	#text = urlize(text)
 	text = markdown(text)
-	text = WIKI_PHOTO_REGEX.sub(r'<a href="%sphoto-detail/\2/"><img src="%sphoto/\2/" width="150" /></a>' % (reverse('peach.views.index', args=[], kwargs={}), reverse('peach.views.index', args=[], kwargs={})), text)
-	text = WIKIREGEX.sub(r' \1<a href="%s%s/\2/">\2</a>\3' % (reverse('peach.views.index', args=[], kwargs={}), namespace), text)
-	text = WIKI_HARD_NAME_REGEX.sub(r'<a href="%s%s/\2/">\2</a>' % (reverse('peach.views.index', args=[], kwargs={}), namespace), text)
 	return text
 
 @register.filter

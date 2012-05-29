@@ -24,7 +24,7 @@ $(document).ready(function(){
 
 
 function saveThenAddFile(){
-	$("#page-form").attr('action', '.?next={% url peach.views.wiki_add page.namespace.name page.name %}');
+	$("#page-form").attr('action', '.?next={% url peach.views.wiki_add page.namespace.owner.username page.namespace.name page.name %}');
 	$("#page-form").submit();
 }
 </script>
@@ -35,8 +35,8 @@ function saveThenAddFile(){
 		<li>
 			<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
 		</li>
-		<li><a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
-		<li><a href="{% url peach.views.wiki page.namespace.name page.name %}">{{ page.name }}</a> <span class="divider">/</span></li>
+		<li><a href="{{ page.namespace.get_absolute_url }}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
+		<li><a href="{{ page.get_absolute_url }}">{{ page.name }}</a> <span class="divider">/</span></li>
 		<li class="active">edit</li>
 	</ul>
 
@@ -77,7 +77,7 @@ function saveThenAddFile(){
 
 <div class="row-fluid">
 	<div class="wiki-control-links">
-		<!-- [<a onclick="saveThenAddFile(); return false;" href="{% url peach.views.wiki_add page.namespace.name page.name %}">add file or photo</a>]</div> -->
+		<!-- [<a onclick="saveThenAddFile(); return false;" href="{% url peach.views.wiki_add page.namespace.owner.username page.namespace.name page.name %}">add file or photo</a>]</div> -->
 
 	{% if page.wikiphoto_set.all %}
 	<h3>Photos:</h3>

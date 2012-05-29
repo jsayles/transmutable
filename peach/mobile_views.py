@@ -46,8 +46,8 @@ def index(request):
 
 @login_required
 def namespace(request, namespace):
-	ns = get_object_or_404(Namespace, name=namespace)
-	page = WikiPage.objects.get_or_create(namespace__name=namespace, name='SplashPage')[0]
+	ns = get_object_or_404(Namespace, owner=request.user, name=namespace)
+	page = WikiPage.objects.get_or_create(namespace=ns, name='SplashPage')[0]
 	if request.method == 'POST' and ns.can_update(request.user):
 		create_wiki_page_form = CreateWikiPageForm(request.POST, instance=WikiPage(namespace=ns))
 		if create_wiki_page_form.is_valid() and WikiPage.objects.filter(namespace=ns, name=create_wiki_page_form.cleaned_data['name']).count() == 0:
@@ -56,23 +56,22 @@ def namespace(request, namespace):
 	else:
 		create_wiki_page_form = CreateWikiPageForm(instance=WikiPage(namespace=ns))
 	if not ns.can_read(request.user): return HttpResponseRedirect(reverse('peach.mobile_views.index'))
-	return render_to_response('peach/mobile/namespace.html', { 'namespace':ns, 'page':page, 'create_wiki_page_form':create_wiki_page_form, 'wiki_pages':WikiPage.objects.filter(namespace__name=namespace).exclude(name='SplashPage') }, context_instance=RequestContext(request))
+	return render_to_response('peach/mobile/namespace.html', { 'namespace':ns, 'page':page, 'create_wiki_page_form':create_wiki_page_form, 'wiki_pages':WikiPage.objects.filter(namespace=ns).exclude(name='SplashPage') }, context_instance=RequestContext(request))
 
 @login_required
 def wiki(request, namespace, name):
-	ns = get_object_or_404(Namespace, name=namespace)
+	ns = get_object_or_404(Namespace, owner=request.user, name=namespace)
 	if not ns.can_read(request.user): return HttpResponseRedirect(reverse('peach.mobile_views.index'))
-		
-	page, created = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)
+	page, created = WikiPage.objects.get_or_create(namespace=ns, name=name)
 	if created or page.content == '': return HttpResponseRedirect(reverse('peach.mobile_views.wiki_edit', kwargs={'namespace':namespace, 'name':name}))
 	return render_to_response('peach/mobile/wiki.html', { 'page':page }, context_instance=RequestContext(request))
 
 
 @login_required
 def wiki_edit(request, namespace, name):
-	ns = get_object_or_404(Namespace, name=namespace)
+	ns = get_object_or_404(Namespace, owner=request.user, name=namespace)
 	if not ns.can_update(request.user): return HttpResponseRedirect(reverse('peach.mobile_views.namespace', kwargs={'namespace':namespace}))
-	page = WikiPage.objects.get_or_create(namespace__name=namespace, name=name)[0]
+	page = WikiPage.objects.get_or_create(namespace=ns, name=name)[0]
 	if request.method == 'POST':
 		page_form = WikiPageForm(request.POST, instance=page)
 		if page_form.is_valid():

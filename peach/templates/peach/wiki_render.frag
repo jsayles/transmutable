@@ -8,13 +8,13 @@ $(document).ready(function() {
 		});
 	{% else %}
 		$('button[name="edit-button"]').click(function(){
-			document.location.href = "{% url peach.views.wiki_edit page.namespace.name page.name %}";
+			document.location.href = "{% url peach.views.wiki_edit page.namespace.owner.username page.namespace.name page.name %}";
 		});
 		$('button[name="print-button"]').click(function(){
-			document.location.href = "{% url peach.views.wiki_print page.namespace.name page.name %}";
+			document.location.href = "{% url peach.views.wiki_print page.namespace.owner.username page.namespace.name page.name %}";
 		});
 		$('button[name="history-button"]').click(function(){
-			document.location.href = "{% url peach.views.wiki_history page.namespace.name page.name %}";
+			document.location.href = "{% url peach.views.wiki_history page.namespace.owner.username page.namespace.name page.name %}";
 		});
 	{% endif %}
 });
@@ -27,7 +27,7 @@ $(document).ready(function() {
 				<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
 			</li>
 			{% endif %}			
-			<li><a href="{% url peach.views.namespace page.namespace.name %}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
+			<li><a href="{{page.namespace.get_absolute_url}}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
 			<li class="active">{{ page.name }}</li>
 		</ul>
 	{% endif %}

@@ -22,7 +22,7 @@ admin.site.register(WikiConstant, WikiConstantAdmin)
 
 class WikiPageAdmin(StyledModelAdmin):
 	search_fields = ('name','content')
-	list_display = ('name', )
+	list_display = ('name', 'namespace')
 	readonly_fields = ('rendered',)
 admin.site.register(WikiPage, WikiPageAdmin)	
 

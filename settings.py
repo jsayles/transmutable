@@ -46,6 +46,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
     'dynamicresponse.middleware.api.APIMiddleware',
     'dynamicresponse.middleware.dynamicformat.DynamicFormatMiddleware',
 )
