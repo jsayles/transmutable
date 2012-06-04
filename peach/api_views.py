@@ -19,6 +19,7 @@ from dynamicresponse.json_response import JsonResponse
 from api_forms import NamespaceForm, CreateNamespaceForm, CreateWikiPageForm, WikiPageForm
 from models import Namespace, WikiPage
 
+@login_required
 def namespaces(request):
 	if request.method == 'POST':
 		if not Namespace.can_create(request.user): return HttpResponse(status=403)
@@ -31,8 +32,9 @@ def namespaces(request):
 	if request.method != 'GET': return HttpResponseServerError()
 	return JsonResponse(Namespace.objects.all())
 
+@login_required
 def namespace(request, name):
-	namespace = get_object_or_404(Namespace, name=name)
+	namespace = get_object_or_404(Namespace, owner=request.user, name=name)
 	if not namespace.can_read(request.user): return HttpResponse(status=403)
 	if request.method == 'DELETE':
 		if not namespace.can_delete(request.user): return HttpResponse(status=403)
@@ -41,8 +43,9 @@ def namespace(request, name):
 	if request.method != 'GET': return HttpResponseServerError()
 	return JsonResponse(namespace)
 
+@login_required
 def pages(request, name):
-	namespace = get_object_or_404(Namespace, name=name)
+	namespace = get_object_or_404(Namespace, owner=request.user, name=name)
 	if not namespace.can_read(request.user): return HttpResponse(status=403)
 
 	if request.method == 'POST':
@@ -58,6 +61,7 @@ def pages(request, name):
 	if request.method != 'GET': return HttpResponseServerError()
 	return JsonResponse(namespace.pages.all())
 
+@login_required
 def page(request, id):
 	page = get_object_or_404(WikiPage, pk=id)
 	if not page.namespace.can_read(request.user): return HttpResponse(status=403)

@@ -36,7 +36,7 @@ transmutable.WikiPageEditView = Backbone.View.extend({
 				console.log("Error", model, response);
 			},
 			success: function(model, response) {
-				document.location.href = transmutable.urls.wikiPage(self.options.namespace, self.options.name);
+				document.location.href = transmutable.urls.wikiPage(self.options.username, self.options.namespace, self.options.name);
 			}
 		});
 	},

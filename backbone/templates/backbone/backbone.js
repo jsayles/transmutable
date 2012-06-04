@@ -36,8 +36,9 @@ transmutable.{{api_form.form_name}}Collection = Backbone.Collection.extend({
 
 transmutable.urls = {};
 
-transmutable.urls.wikiPage = function(namespace, name){
-	var url = transmutable.replaceID("{% url peach.views.wiki 666 999 %}", 666, namespace);
+transmutable.urls.wikiPage = function(username, namespace, name){
+	var url = transmutable.replaceID("{% url peach.views.wiki 333 666 999 %}", 333, username);
+    url = transmutable.replaceID(url, 666, namespace);
 	return transmutable.replaceID(url, 999, name);
 }
 

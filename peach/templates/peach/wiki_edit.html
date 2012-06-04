@@ -18,6 +18,7 @@ $(document).ready(function(){
 		wikiPageId: {{ page.id }},
 		namespace: '{{ page.namespace.name }}',
 		name: '{{ page.name }}',
+		username: '{{ request.user.username }}',
 		el: $("#wiki-page-editor")
 	});
 });
