@@ -8,6 +8,8 @@
 #page-form { width: 100%; margin-bottom: 10px;}
 #wiki-page-editor button { margin-left: 10px; float: right; }
 .wiki-photo-item { margin-top: 10px; }
+#cheat-sheet, #cheat-sheet h3, #cheat-sheet h4 { color: #666; }
+#cheat-sheet h4 { margin-top: 1.5em; }
 {% endblock %}
 
 {% block sub-head %}
@@ -49,30 +51,22 @@ function saveThenAddFile(){
 
 	<div id="cheat-sheet" class="span2">
 		<h3>Cheat Sheet:</h3>
-		<h4>WikiLinks:</h4>
-		CamelCase to link to a wiki page.
+		<p>Format your text like so:</p>
+
+		<h4>Use # for headings</h4>
+		# Biggest<br/>
+		## Second Biggest<br/>
+		### Third Biggest<br/>
 		
-		<h4>Lists:</h4>
+		<h4>Use - for lists</h4>
 		- Apples<br/>
 		- Oranges<br/>
 		- Aesthetics<br/>
-		<br/>
-		or<br/>
-		<br/>
-		1. Apples<br/>
-		2. Oranges<br/>
-		3. Handcarts<br/>
 
-		<h4>Headings:</h4>
-		#Biggest<br/>
-		##Second Biggest<br/>
-		###Third Biggest<br/>
-		
-		<h4>Links:</h4>
-		[text](address "title")
-		
-		<h4>Horizontal Rules:</h4>
-		***
+		<h4>Create links</h4>
+		[Example](http://exa.com)
+
+		<p style="margin-top: 2em;">See the <a target="_new" href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> page for more formatting options.</p>
 	</div>
 </div>
 
