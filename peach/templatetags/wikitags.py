@@ -8,11 +8,10 @@ from django.utils.html import strip_tags, linebreaks, urlize
 register = template.Library()
 
 @register.filter
-def wiki(text, namespace):
+def wiki(text):
 	"""Convert the text into HTML using markdown and image name replacement."""
 	md = markdown.Markdown(safe_mode="escape", extensions=['nofollow'])
-	text = md.convert(text)
-	return text
+	return md.convert(text)
 
 @register.filter
 def include_constants(text):

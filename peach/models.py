@@ -89,7 +89,7 @@ class WikiPage(models.Model):
 
 	def save(self, *args, **kwargs):
 		"""When saving the content, render via markdown and save to self.rendered"""
-		self.rendered = wiki(self.content, self.namespace.name)
+		self.rendered = wiki(self.content)
 		self.name = clean_url_element(self.name)
 		super(WikiPage, self).save(*args, **kwargs)
 		WikiPageLog.objects.create(wiki_page=self, content=self.content)

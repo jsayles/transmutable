@@ -25,7 +25,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.markup.templatetags.markup import markdown
 
-from person import sanitizeHtml
+from peach.templatetags.wikitags import wiki
 
 class MarkedUpModel(models.Model):
 	markup = models.TextField(blank=False, null=False, default='')
@@ -39,7 +39,7 @@ class MarkedUpModel(models.Model):
 
 	def save(self, *args, **kwargs):
 		"""When saving the markup, render via markdown and save to self.rendered"""
-		self.rendered = markdown(urlize(sanitizeHtml(self.markup)))
+		self.rendered = wiki(self.markup)
 		super(MarkedUpModel, self).save(*args, **kwargs)
 	
 	class Meta:
