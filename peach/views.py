@@ -85,8 +85,8 @@ def file(request, namespace, name, id):
 	return render_to_response('peach/file.html', { 'file':file }, context_instance=RequestContext(request))
 
 def wiki(request, username, namespace, name):
+	ns = get_object_or_404(Namespace, name=namespace, owner__username=username)
 	if request.user.is_authenticated():
-		ns = get_object_or_404(Namespace, name=namespace, owner__username=username)
 		if ns.can_update(request.user):
 			page, created = WikiPage.objects.get_or_create(namespace=ns, name=name)
 			if created or page.content == '': return HttpResponseRedirect(page.get_edit_url())
