@@ -90,6 +90,7 @@ def wiki(request, username, namespace, name):
 		if ns.can_update(request.user):
 			page, created = WikiPage.objects.get_or_create(namespace=ns, name=name)
 			if created or page.content == '': return HttpResponseRedirect(page.get_edit_url())
+			if page.name == 'SplashPage': return HttpResponseRedirect(ns.get_absolute_url())
 		else:
 			page = get_object_or_404(WikiPage, namespace=ns, name=name)
 	else:

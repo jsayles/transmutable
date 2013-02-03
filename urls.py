@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 	(r'^api/backbone/', include('backbone.api_urls')),
 	(r'^api/notes/', include('peach.api_urls')),
 
-	(r'^accounts/profile/$', 'django.views.generic.simple.redirect_to', {'url': '/'}),
+	(r'^accounts/profile/$', 'django.views.generic.simple.redirect_to', {'url': '/p/profile/'}),
 	(r'^accounts/login/$', 'django.views.generic.simple.redirect_to', {'url': '/p/login/'}),
 
 	(r'^p/', include('person.urls')),

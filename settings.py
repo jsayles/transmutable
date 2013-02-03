@@ -17,6 +17,7 @@ STATICFILES_FINDERS = (
 	'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+LOGIN_REDIRECT_URL = '/u/'
 SOUTH_AUTO_FREEZE_APP = True
 
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

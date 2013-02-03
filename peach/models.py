@@ -12,6 +12,7 @@ from django.conf import settings
 from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 

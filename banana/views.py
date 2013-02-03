@@ -41,6 +41,10 @@ def test(request):
 	if not settings.DEBUG: raise Http404
 	return render_to_response('banana/tests.html', { }, context_instance=RequestContext(request))
 
+@login_required
+def user_redirect(request):
+	return HttpResponseRedirect(request.user.get_absolute_url())
+
 def user(request, username):
 	user = get_object_or_404(User, username=username)
 	if request.user == user:
