@@ -30,6 +30,10 @@
 .hero-unit h1 {
 	margin-top: 20%;
 }
+#recent-todones-title {
+	margin: 0 0 0.5em 0;
+	line-height: 1em;
+}
 {% endblock %}
 
 {% block content %}
@@ -59,7 +63,7 @@
 		  </div><!--/row-->
 		</div><!--/span-->
 		<div class="span3">
-			<h3>Recent to&ndash;dones</h3>
+			<h3 id="recent-todones-title">Recent to&ndash;dones</h3>
 			<ul class="completed-list">
 			{% with "True" as show_completed_item_user %}
 				{% for completed_item in completed_items|slice:":10" %}

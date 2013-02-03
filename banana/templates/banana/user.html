@@ -7,7 +7,7 @@
 #work-doc, .completed-list { min-height: 400px; }
 #work-doc { width: 99%; }
 #work-doc-controls { visibility: hidden; float: right; padding: 0px; }
-#work-doc-form textarea { width: 580px; height: 40em; }
+#work-doc-form textarea { width: 98%; height: 30em; }
 #work-doc-editor { position: relative; }
 #formatting-help-link {
 	position: absolute;
@@ -21,15 +21,14 @@
 .editable-section:hover { background-color: #EEE; }
 .editable-section:hover #work-doc-controls, #top-right-column:hover form { visibility: visible; }
 
-#notes-list { min-height: 80px; }
+#notes-list { min-height: 3em; }
+#notes-list ul { margin: 0; }
 #notes-list li { display: inline; margin-right: 10px; }
 #top-right-column form { display: inline; text-align: left; visibility: hidden; }
 
 #user-info { }
-#user-info h1 {  }
-#left-column { margin-right: 8%; }
+#user-info h1, #top-right-column h2 { margin-top: 0; }
 
-.user-prompt-heading { text-shadow: #DDD 3px 3px 0px; }
 {% endblock %}
 
 {% block sub-head %}
@@ -78,7 +77,7 @@ $(document).ready(function() {
 {% block content %}
 
 <div class="row-fluid">
-	<div class="span7" id="user-info">
+	<div class="span4" id="user-info">
 		<div class="row-fluid">
 			<div class="span2">
 				{% if user.get_profile.photo %}
@@ -91,9 +90,11 @@ $(document).ready(function() {
 		</div>
 	</div>
 
-	<div class="span5" id="top-right-column">
+	<div class="span1"></div>
+
+	<div class="span7" id="top-right-column">
 		<h2>
-			{% if request.user == user %}<a href="{% url peach.views.index %}">{% endif %}Notes{% if request.user == user %}</a>{% endif %}
+			{% if request.user == user %}<a href="{% url peach.views.index %}">{% endif %}Notes:{% if request.user == user %}</a>{% endif %}
 			{% if request.user.is_authenticated and request.user.username == user.username %}
 				<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
 			{% endif %}
@@ -128,6 +129,7 @@ $(document).ready(function() {
 		{% endfor %}
 		</ul>
 	</div>
+	<div class="span1"></div>
 	<div class="span7" id="right-column">
 		<h2 class="user-prompt-heading">
 			{% if request.user == user %}
