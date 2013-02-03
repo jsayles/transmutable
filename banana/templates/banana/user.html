@@ -8,7 +8,15 @@
 #work-doc { width: 99%; }
 #work-doc-controls { visibility: hidden; float: right; padding: 0px; }
 #work-doc-form textarea { width: 580px; height: 40em; }
-
+#work-doc-editor { position: relative; }
+#formatting-help-link {
+	position: absolute;
+	top: -1.6em;
+	right: -0px;
+}
+.formatting-help {
+	width: 100%;
+}
 .editable-section {  position: relative; }
 .editable-section:hover { background-color: #EEE; }
 .editable-section:hover #work-doc-controls, #top-right-column:hover form { visibility: visible; }
@@ -30,7 +38,14 @@ var oldWorkDoc = null;
 
 $(document).ready(function() {
 	$('#work-doc-editor').hide();
-	
+
+	$('#formatting-help-link').click(function(){
+		if($('.formatting-help').length > 0) return false;
+		var formattingHelpView = new transmutable.views.FormattingHelpView();
+		$('.completed-form-heading').after(formattingHelpView.render().el);
+		return false;
+	});
+
 	$('button[name="work-doc-form-button"]').click(function(){
 		$('#work-doc-editor').hide();
 		$('#work-doc-render').html('Submitting...');
@@ -123,12 +138,13 @@ $(document).ready(function() {
 		</h2>
 		{% if request.user == user %}
 			<div id="work-doc-editor">
+				<a id='formatting-help-link' href=".">formatting help</a>
+
 				<form id="work-doc-form" action="." method="post">
 					{% for field in workdoc_form %}{{ field }}{% endfor %}
 				</form>
 				<button accesskey="s" name="work-doc-form-button" type="button" class="positive">save</button>
 				<button name="work-doc-reset-button" type="button" class="negative">cancel</button>
-				<div id="center-bottom-message">It's all <a target="top" href="http://daringfireball.net/projects/markdown/syntax">markdown</a>, don't cha know.</div>
 			</div>
 		{% endif %}
 		<div id="work-doc" class="rendered-wrapper rounded-block{% if request.user.username == user.username %} editable-section{% endif %}">
@@ -145,4 +161,5 @@ $(document).ready(function() {
 		</div>
 	</div>
 </div>
+
 {% endblock %}

@@ -39,9 +39,9 @@ $(document).ready(function() {
 		{% else %}
 		<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" /></a>
 		{% endif %}
-		<h3>
+		<h4>
 			<a href="{{ completed_item.user.get_absolute_url }}">{{ completed_item.user.get_full_name }}</a>
-		</h3>
+		</h4>
 	</div>
 
 	<div class="span4">
