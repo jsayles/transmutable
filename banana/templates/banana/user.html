@@ -149,7 +149,7 @@ $(document).ready(function() {
 		{% endif %}
 		<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">
 			{% for field in namespace_form %}{{ field }}{% endfor %}
-			<button type='submit'>create note</button>
+			<button type='submit'>create</button>
 		</form>
 		<div id="notes-list" class="rounded-block editable-section">
 			<ul>
