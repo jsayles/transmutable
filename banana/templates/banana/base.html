@@ -8,12 +8,10 @@
 <script>
 $(document).ready(function(){
 	$('#id_promoted').click(function(){
-		if(this.value == 'on'){
-			$('#promoted-extended-ui').css('visibility', 'visible');
-			$('#promoted-extended-ui').css('position', 'relative');
+		if($(this).attr('checked') == 'checked'){
+			$('#promoted-extended-ui').show();
 		} else {
-			$('#promoted-extended-ui').css('visibility', 'hidden');
-			$('#promoted-extended-ui').css('position', 'absolute');
+			$('#promoted-extended-ui').hide();
 		}
 	});
 });
@@ -56,9 +54,8 @@ function submitCompletedItem(form, completedList){
 		        li.append(meta_div);
 				completedList.prepend(li);
 				if(data.promoted){
-                    $('#promoted-ui').css('visibility', 'hidden');
-                    $('#promoted-extended-ui').css('visibility', 'hidden');
-                    $('#promoted-extended-ui').css('position', 'absolute');
+                    $('#promoted-ui').hide();
+                    $('#promoted-extended-ui').hide();
 				}
 			}
 		},

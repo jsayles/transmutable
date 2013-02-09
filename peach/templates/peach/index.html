@@ -4,47 +4,78 @@
 
 {% block sub-style %}
 #namespace-form { display: inline; }
-#namespace-form input[type=text] { width: 10em; }
+#namespace-form input[type=text] { width: 20em; }
 .namespace-list li { margin-left: 20px; list-style-type: disc; margin-bottom: 8px; }
+.namespace-list .alert {
+	padding-right: 8px;
+	min-height: 8em;
+}
+{% endblock %}
+
+{% block sub-head %}
+<script>
+$(document).ready(function(){
+	$('#notes-nav').addClass('active');
+	$('#id_display_name').focus();
+
+});
+</script>
 {% endblock %}
 
 {% block content %}
+{% if not request.user.namespaces.all %}
+	<div class="row-fluid">
+		<div class="span9 alert alert-info">
+			<h2>This is the place for your ideas, Thinker of Thoughts!</h2>
+		</div>
+	</div>
+
+{% endif %}
+
 <h1>
 	Notes
 	<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
 </h1>
 
 <div class="row-fluid">
-	<ul id="public-list" class="namespace-list span2">
+	<ul id="public-list" class="namespace-list span3">
 		<h2>Public</h2>
-		{% for namespace in request.user.namespaces.all %}
-		{% if namespace.public and not namespace.archive %}
-		<li>
-			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-		</li>
+		{% if not request.user.namespaces.public_not_archived %}
+			<div class='alert alert-info'>
+				Notes which are visible to anyone.
+			</div>
 		{% endif %}
+		{% for namespace in request.user.namespaces.public_not_archived %}
+			<li>
+				<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+			</li>
 		{% endfor %}
 	</ul>
-
-	<ul id="private-list" class="namespace-list span2">
+	<ul id="private-list" class="namespace-list span3">
 		<h2>Private</h2>
-		{% for namespace in request.user.namespaces.all %}
-		{% if not namespace.public and not namespace.archive %}
-		<li>
-			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-		</li>
+		{% if not request.user.namespaces.private_not_archived %}
+			<div class='alert alert-info'>
+				Notes which are visible only to you.
+			</div>
 		{% endif %}
+		{% for namespace in request.user.namespaces.private_not_archived %}
+			<li>
+				<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+			</li>
 		{% endfor %}
 	</ul>
-
-	<ul id="archive-list" class="namespace-list span2">
+	<ul id="archive-list" class="namespace-list span3">
 		<h2>Archive</h2>
-		{% for namespace in request.user.namespaces.all %}
-		{% if namespace.archive %}
-		<li>
-			<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-		</li>
+		{% if not request.user.namespaces.archived %}
+			<div class='alert alert-info'>
+				<p>Archived notes (public or private) don't show up in your list of notes.</p>
+				<p>Public notes are still public, regardless of whether they are archived.</p>
+			</div>
 		{% endif %}
+		{% for namespace in request.user.namespaces.archived %}
+			<li>
+				<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+			</li>
 		{% endfor %}
 	</ul>
 </div>

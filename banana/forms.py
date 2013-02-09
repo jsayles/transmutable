@@ -10,7 +10,8 @@ class WorkDocForm(forms.ModelForm):
 		fields = ('markup',)
 
 class CompletedItemForm(forms.ModelForm):
-	markup = forms.TextInput()
+	markup = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Some awesome thing you did.'}))
+	link = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'optional link to promote'}))
 	class Meta:
 		model = CompletedItem
 		fields = ('markup', 'promoted', 'link')

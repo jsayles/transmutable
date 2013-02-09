@@ -1,5 +1,4 @@
 <form id="completed-form" action="." method="post">
-	<h2 class="completed-form-heading user-prompt-heading">What'd you do?</h2>
 	{{ completed_form.markup }}
 	<br clear="all" />
 	<button name="completed-form-button" type="button" class="positive">to-done!</button>
@@ -8,7 +7,6 @@
 			{{ completed_form.promoted }} ta-da!
 		</div>
 		<div id="promoted-extended-ui">
-			<span>Enter a link to promote your achievement!</span>
 			{{ completed_form.link }}
 		</div>
 	{% endif %}

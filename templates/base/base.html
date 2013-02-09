@@ -44,14 +44,14 @@
 					<div class="nav-collapse">
 						<ul class="nav">
 							{% if request.user.is_authenticated %}
-								<li class=""><a href="{% url banana.views.user request.user.username %}">Home</a></li>
-								<li class=""><a href="{% url peach.views.index %}">Notes</a></li>
+								<li id="home-nav"><a href="{% url banana.views.user request.user.username %}">Home</a></li>
+								<li id="notes-nav"><a href="{% url peach.views.index %}">Notes</a></li>
 							{% endif %}
 							{% if default_help_url %}
-								<li class=""><a href="{{ default_help_url }}">Help</a></li>
+								<li id="help-nav"><a href="{{ default_help_url }}">Help</a></li>
 							{% endif %}
 							{% if request.user.is_staff %}
-								<li class=""><a href="{% url apple.views.index %}">Staff</a></li>
+								<li id="staff-nav"><a href="{% url apple.views.index %}">Staff</a></li>
 							{% endif %}
 						</ul>
 						{% if request.user.is_authenticated %}

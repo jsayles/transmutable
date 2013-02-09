@@ -47,13 +47,12 @@ def user_redirect(request):
 
 def user(request, username):
 	user = get_object_or_404(User, username=username)
-	if request.user == user:
+	if request.user == user and not request.GET.get('public') == 'true':
 		workdoc_form = WorkDocForm(instance=user.work_doc)
 		completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
+		return render_to_response('banana/user.html', { 'workdoc_form':workdoc_form, 'completed_form':completed_form, 'namespace_form':NamespaceForm(), 'user':user }, context_instance=RequestContext(request))
 	else:
-		workdoc_form = None
-		completed_form = None
-	return render_to_response('banana/user.html', { 'workdoc_form':workdoc_form, 'completed_form':completed_form, 'namespace_form':NamespaceForm(), 'user':user }, context_instance=RequestContext(request))
+		return render_to_response('banana/user_public.html', { 'user':user }, context_instance=RequestContext(request))
 
 def completed_item(request, username, id):
 	item = get_object_or_404(CompletedItem, user__username=username, pk=id)

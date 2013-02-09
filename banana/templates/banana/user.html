@@ -4,31 +4,27 @@
 {% block sub-title %}{{ user.get_full_name }} | {% endblock %}
 
 {% block sub-style %}
-#work-doc, .completed-list { min-height: 400px; }
-#work-doc { width: 99%; }
-#work-doc-controls { visibility: hidden; float: right; padding: 0px; }
-#work-doc-form textarea { width: 98%; height: 30em; }
-#work-doc-editor { position: relative; }
-#formatting-help-link {
-	position: absolute;
-	top: -1.6em;
-	right: -0px;
-}
-.formatting-help {
-	width: 100%;
-}
-.editable-section {  position: relative; }
-.editable-section:hover { background-color: #EEE; }
-.editable-section:hover #work-doc-controls, #top-right-column:hover form { visibility: visible; }
+	#work-doc, .completed-list { min-height: 400px; }
 
-#notes-list { min-height: 3em; }
-#notes-list ul { margin: 0; }
-#notes-list li { display: inline; margin-right: 10px; }
-#top-right-column form { display: inline; text-align: left; visibility: hidden; }
+	#promoted-ui { margin: 0; }
+	#promoted-ui input[type=checkbox] { margin: 0; }
+	#promoted-extended-ui input[type=text] { margin-top: 1em; }
 
-#user-info { }
-#user-info h1, #top-right-column h2 { margin-top: 0; }
+	#work-doc { width: 99%; }
+	#work-doc-controls { float: right; padding: 0px; }
+	#work-doc-form { margin: 0; }
+	#work-doc-form textarea { width: 95%; height: 30em; }
+	#work-doc-editor { position: relative; }
+	#formatting-help-link {
+		float: right;
+	}
 
+	#notes-title a { color: #444; }
+	#notes-title a:hover { color: rgb(0, 136, 204); }
+	#create-namespace-form input { width: 95%; }
+	#notes-list { min-height: 3em; }
+
+	.alert-info { min-height: 5em; }
 {% endblock %}
 
 {% block sub-head %}
@@ -36,6 +32,8 @@
 var oldWorkDoc = null;
 
 $(document).ready(function() {
+	$('#home-nav').addClass('active');
+
 	$('#work-doc-editor').hide();
 
 	$('#formatting-help-link').click(function(){
@@ -49,16 +47,20 @@ $(document).ready(function() {
 		$('#work-doc-editor').hide();
 		$('#work-doc-render').html('Submitting...');
 		$('#work-doc').show();
+		$('#work-doc-controls').show();
+		$('#work-doc-welcome').hide();
 		submitWorkdoc($('#work-doc-form'), $('#work-doc-render'));
 	});
 	$('button[name="work-doc-reset-button"]').click(function(){
 		$('#work-doc-editor').hide();
 		$('#work-doc').show();
+		$('#work-doc-controls').show();
 		$('#work-doc-form textarea').val(oldWorkDoc);
 	});
 	$('button[name="edit-work-doc-button"]').click(function(){
 		oldWorkDoc = $('#work-doc-form textarea').val();
 		$('#work-doc').hide();
+		$('#work-doc-controls').hide();
 		$('#work-doc-editor').show();
 	})
 
@@ -68,61 +70,39 @@ $(document).ready(function() {
 		$('#completed-form textarea').val('');
 		$('#id_promoted').attr('checked', null);
 		$('#id_link').val('');
+		$('#completed-welcome').hide();
 		return false;
 	});
+
+	{% if user.work_doc.rendered == ' ' or not user.work_doc.rendered %}
+		$('button[name="edit-work-doc-button"]').click();
+	{% endif %}
+
+	$('#id_markup').focus();
 });
 </script>
 {% endblock %}
 
 {% block content %}
 
-<div class="row-fluid">
-	<div class="span4" id="user-info">
-		<div class="row-fluid">
-			<div class="span2">
-				{% if user.get_profile.photo %}
-				<img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" />
-				{% else %}
-				<img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" />		
-				{% endif %}
-			</div>
-			<div class="span10"><h1>{{ user.get_full_name }}</h1></div>
-		</div>
-	</div>
-
-	<div class="span1"></div>
-
-	<div class="span7" id="top-right-column">
-		<h2>
-			{% if request.user == user %}<a href="{% url peach.views.index %}">{% endif %}Notes:{% if request.user == user %}</a>{% endif %}
-			{% if request.user.is_authenticated and request.user.username == user.username %}
-				<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
-			{% endif %}
-
-		</h2>
-		<div id="notes-list" class="rounded-block{% if request.user.username == user.username %} editable-section{% endif %}">
-			{% if request.user == user and not user.namespaces.all %}
-				<h3>This is your notes section.</h3>
-				<p>Notes are multi-page documents for work info and thoughts.</p>
-				<p>To create a note, hover your mouse over this section, enter a document name in the field that appears, and press "Enter".</p>
-			{% endif %}
-			<ul>
-				{% for namespace in user.namespaces.all %}
-					{% if request.user == user or namespace.public %}{% if not namespace.archive %}
-						<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
-					{% endif %}{% endif %}
-				{% endfor %}
-			</ul>
-		</div>
+{% if not user.completed_items.all and not user.work_doc.rendered and not user.namespaces.all %}
+<div class="row-fluid" id="welcome-row">
+	<div class="span12 alert alert-info">
+		<h2>Welcome to {{ site.name}}, Smarty Pants!</h2>
 	</div>
 </div>
+
+{% endif %}
+
 <div class="row-fluid">
-	<div class="span4" id="left-column">
-		{% if request.user == user %}
-			{% include "banana/completed_form.frag" %}
-		{% else %}
-			<h2>What I did:</h2>
+	<div class="span3">
+		<h3 class="completed-form-heading user-prompt-heading">What did you do?</h3>
+		{% if not user.completed_items.all %}
+			<div id="completed-welcome" class="alert alert-info">
+				<p><strong>Celebrate the tasks you complete</strong> and occasionally promote your work.</p>
+			</div>
 		{% endif %}
+		{% include "banana/completed_form.frag" %}
 		<ul class="completed-list">
 		{% for completed_item in user.completed_items.all|slice:":10" %}
 			{% completed_item_widget %}
@@ -130,36 +110,53 @@ $(document).ready(function() {
 		</ul>
 	</div>
 	<div class="span1"></div>
-	<div class="span7" id="right-column">
-		<h2 class="user-prompt-heading">
-			{% if request.user == user %}
-				What're you doing?
-			{% else %}
-				What I'm doing:
-			{% endif %}
-		</h2>
-		{% if request.user == user %}
-			<div id="work-doc-editor">
-				<a id='formatting-help-link' href=".">formatting help</a>
-
-				<form id="work-doc-form" action="." method="post">
-					{% for field in workdoc_form %}{{ field }}{% endfor %}
-				</form>
-				<button accesskey="s" name="work-doc-form-button" type="button" class="positive">save</button>
-				<button name="work-doc-reset-button" type="button" class="negative">cancel</button>
+	<div class="span4">
+		<h3 class="user-prompt-heading">
+				What are you doing?
+				<div id="work-doc-controls">
+					<button name="edit-work-doc-button" class="positive">edit</button>
+				</div>
+		</h3>
+		{% if not user.work_doc.rendered %}
+			<div id="work-doc-welcome" class="alert alert-info">
+				<p><strong>Offload your upcoming <nobr>to-do's</nobr></strong> and relevent info in this handy editor.</p>
 			</div>
 		{% endif %}
-		<div id="work-doc" class="rendered-wrapper rounded-block{% if request.user.username == user.username %} editable-section{% endif %}">
-			{% if request.user.username == user.username %}<div id="work-doc-controls"><button name="edit-work-doc-button" class="positive">edit</button></div>{% endif %}
+		<div id="work-doc-editor">
+			<form id="work-doc-form" action="." method="post">
+				{% for field in workdoc_form %}{{ field }}{% endfor %}
+			</form>
+			<a id='formatting-help-link' href=".">formatting help</a>
+			<button accesskey="s" name="work-doc-form-button" type="button" class="positive">save</button>
+			<button name="work-doc-reset-button" type="button" class="negative">cancel</button>
+		</div>
+		<div id="work-doc" class="rendered-wrapper rounded-block editable-section">
 			<div id="work-doc-render">
-				{% if request.user.username == user.username and not user.work_doc.rendered %}
-					<h3>This is your workdoc.</h3>
-					<p>Most people use this space to record to-do's and work notes.</p>
-					<p>To make changes, hover your mouse over the workdoc and click "edit".</p>
-				{% else %}
-					{{ user.work_doc.rendered|safe }}
-				{% endif %}
+				{{ user.work_doc.rendered|safe }}
 			</div>
+		</div>
+	</div>
+	<div class="span1"></div>
+	<div class="span3">
+		<h3 id="notes-title">
+			<a href="{% url peach.views.index %}">Your notes:</a>
+		</h3>
+		{% if not user.namespaces.all %}
+			<div id="notes-welcome" class="alert alert-info">
+				<p><strong>Compile and share your ideas</strong> in these multi-page documents.</p>
+			</div>
+		{% endif %}
+		<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">
+			{% for field in namespace_form %}{{ field }}{% endfor %}
+		</form>
+		<div id="notes-list" class="rounded-block editable-section">
+			<ul>
+				{% for namespace in user.namespaces.all %}
+					{% if not namespace.archive %}
+						<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
+					{% endif %}
+				{% endfor %}
+			</ul>
 		</div>
 	</div>
 </div>

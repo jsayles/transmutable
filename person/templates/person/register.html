@@ -2,27 +2,47 @@
 
 {% block sub-title %}Sign Up | {% endblock %}
 
-{% block style %}
+{% block sub-style %}
 .errorlist { color: #922; float: right; }
-#registration-form th { text-align: right; padding-right: 10px; }
+#registration-form th {
+	text-align: right; padding-right: 10px;
+}
+#registration-form input[type=checkbox] {
+	margin: 0 0.5em 0 0;
+}
+#content h1 { text-align: right; width: 35%; }
+#content form { width: 35%; }
+#content form table { width: 100%; }
+#content form input[type=text], #content form input[type=password] { width: 95%; }
+label[for="id_tos"] { display: none; }
 {% endblock %}
 
 {% block sub-head %}
 <script>
 $(document).ready(function() {
+	$('#id_tos').after($.el.span('I accept the terms of service.'));
 	$('#id_username').focus();
+	$('#registration-form').submit(function(){
+		$('#registration-form-submit').attr('disabled', 'disabled');
+		return true;
+	})
 });
 </script>
 {% endblock %}
 
 {% block content%}
-<h1>Sign Up:</h1>
-
 {% if open_registration %}
 	{% if request.user.is_authenticated %}
 		<p>It appears that you're already logged in.  If you'd like to register a new account, you'll need to log out.</p>
 	{% else %}
-		{% include "person/registration_form.frag" %}
+		<h1>Brains Welcome:</h1>
+		<form id="registration-form" action="{% url person.views.register %}" method="post">
+			<table>
+				{{ registration_form }}
+				<tr><td colspan="2" style="text-align: right;"><input id="registration-form-submit" type="submit" value="sign up" /></td>
+			</table>
+			{% csrf_token %}
+		</form>
 	{% endif %}
 {% else %}
 	<h2 style="margin: 100px; text-align: center;">We're sorry, but registration is currently closed.</h2>

@@ -1,0 +1,78 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+{% load banana %}
+{% block sub-title %}{{ user.get_full_name }} | {% endblock %}
+
+{% block sub-style %}
+	#work-doc, .completed-list { min-height: 400px; }
+	#work-doc { width: 99%; }
+	#formatting-help-link {
+		position: absolute;
+		top: -1.6em;
+		right: -0px;
+	}
+	.formatting-help {
+		width: 100%;
+	}
+
+	#notes-list { min-height: 3em; }
+	#notes-list ul { margin: 0; }
+	#notes-list li { display: inline; margin-right: 10px; }
+
+	#user-info h1, #top-right-column h2 { margin-top: 0; }
+{% endblock %}
+
+{% block content %}
+<div class="row-fluid">
+	<div class="span2">
+		{% if user.get_profile.photo %}
+		<img class="person-photo" src="{{ user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ user.get_full_name}}" alt="{{ user.get_full_name}}" />
+		{% else %}
+		<img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" />		
+		{% endif %}
+	</div>
+	<div class="span10"><h1>{{ user.get_full_name }}</h1></div>
+</div>
+<div class="row-fluid">
+	<div class="span3" id="left-column">
+		<h3>What I did:</h3>
+		<ul class="completed-list">
+		{% for completed_item in user.completed_items.all|slice:":10" %}
+			{% completed_item_widget %}
+		{% endfor %}
+		</ul>
+	</div>
+	<div class="span1"></div>
+	<div class="span4" id="right-column">
+		<h3 class="user-prompt-heading">
+			What I'm doing:
+		</h3>
+		<div id="work-doc" class="rendered-wrapper rounded-block">
+			{% if not user.work_doc.rendered %}
+			<p>Apparently, it's a seekret.</p>
+			{% endif %}
+			<div id="work-doc-render">
+				{{ user.work_doc.rendered|safe }}
+			</div>
+		</div>
+	</div>
+	<div class="span1"></div>
+	<div class="span3">
+		<h3>Notes:</h3>
+		<div id="notes-list" class="rounded-block">
+			{% if not user.namespaces.public_not_archived %}
+				<p>Nothing of note has been noted.</p>
+			{% endif %}
+			<ul>
+				{% for namespace in user.namespaces.all %}
+					{% if namespace.public %}
+						{% if not namespace.archive %}
+							<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}

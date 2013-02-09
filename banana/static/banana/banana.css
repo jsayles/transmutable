@@ -30,11 +30,11 @@
 
 #completed-form textarea {
 	height: 5em;
-	width: 99%;
+	width: 95%;
 }
 button[name="completed-form-button"] { float: right; z-index: 1; }
 #completed-form { min-height: 140px;}
 
 #promoted-ui { margin-top: 0.5em; }
-#promoted-extended-ui #id_link { width: 98%; margin-bottom: 1em; }
-#promoted-extended-ui { visibility: hidden; position: absolute; }
+#promoted-extended-ui #id_link { width: 95%; margin-bottom: 1em; }
+#promoted-extended-ui { display: none; }

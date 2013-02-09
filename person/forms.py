@@ -27,8 +27,7 @@ class UserCreationForm(forms.ModelForm):
 	""" A form that creates a user, with no privileges, from the given username and password. """
 	first_name = forms.CharField()
 	last_name = forms.CharField()
-	username = forms.RegexField(label=_("Username"), max_length=30, regex=r'^\w+$',
-	error_message = _("This value must contain only letters, numbers and underscores."))
+	username = forms.RegexField(label=_("Username"), max_length=30, regex=r'^\w+$', error_message = _("This value must contain only letters, numbers and underscores."))
 	email = forms.EmailField(label=_("Email"))
 	password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 	tos = forms.BooleanField(label="I accept the terms of service.")

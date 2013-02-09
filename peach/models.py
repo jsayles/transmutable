@@ -24,6 +24,12 @@ def clean_url_element(element):
 	if not element: return element
 	return element.replace('/','-').replace('&', '-').replace('#', '-')
 
+class NamespaceManager(models.Manager):
+	def public(self): return self.filter(public=True)
+	def public_not_archived(self): return self.filter(public=True).filter(archive=False)
+	def private_not_archived(self): return self.filter(public=False).filter(archive=False)
+	def archived(self): return self.filter(archive=True)
+
 class Namespace(models.Model):
 	name = models.CharField(max_length=1000, blank=False, null=False)
 	display_name = models.CharField(max_length=1000, blank=False, null=False)
@@ -31,6 +37,8 @@ class Namespace(models.Model):
 	public = models.BooleanField(default=True)
 	archive = models.BooleanField(default=False)
 	
+	objects = NamespaceManager()
+
 	def save(self, *args, **kwargs):
 		self.name = slugify(self.display_name)
 		super(Namespace, self).save(*args, **kwargs)
