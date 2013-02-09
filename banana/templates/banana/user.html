@@ -13,7 +13,7 @@
 	#work-doc { width: 99%; }
 	#work-doc-controls { float: right; padding: 0px; }
 	#work-doc-form { margin: 0; }
-	#work-doc-form textarea { width: 95%; height: 30em; }
+	#work-doc-form textarea { width: 97%; height: 30em; }
 	#work-doc-editor { position: relative; }
 	#formatting-help-link {
 		float: right;
@@ -21,7 +21,7 @@
 
 	#notes-title a { color: #444; }
 	#notes-title a:hover { color: rgb(0, 136, 204); }
-	#create-namespace-form input { width: 95%; }
+	#create-namespace-form input[type=text] { width: 60%; margin-bottom: 0; }
 	#notes-list { min-height: 3em; }
 
 	.alert-info { min-height: 5em; }
@@ -68,6 +68,7 @@ $(document).ready(function() {
 	$('#completed-form').submit(function(){
 		submitCompletedItem($('#completed-form'), $('.completed-list'));
 		$('#completed-form textarea').val('');
+		$('#promoted-extended-ui').hide();
 		$('#id_promoted').attr('checked', null);
 		$('#id_link').val('');
 		$('#completed-welcome').hide();
@@ -119,7 +120,7 @@ $(document).ready(function() {
 		</h3>
 		{% if not user.work_doc.rendered %}
 			<div id="work-doc-welcome" class="alert alert-info">
-				<p><strong>Offload your upcoming <nobr>to-do's</nobr></strong> and relevent info in this handy editor.</p>
+				<p><strong>Offload your upcoming <nobr>to-do's</nobr></strong> and relevent info into this handy editor.</p>
 			</div>
 		{% endif %}
 		<div id="work-doc-editor">
@@ -148,6 +149,7 @@ $(document).ready(function() {
 		{% endif %}
 		<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">
 			{% for field in namespace_form %}{{ field }}{% endfor %}
+			<button type='submit'>create note</button>
 		</form>
 		<div id="notes-list" class="rounded-block editable-section">
 			<ul>

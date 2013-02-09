@@ -5,12 +5,13 @@ from django.contrib.auth.models import User
 from models import WorkDoc, CompletedItem
 
 class WorkDocForm(forms.ModelForm):
+	markup = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'- Check out sciencesaints.com'}))
 	class Meta:
 		model = WorkDoc
 		fields = ('markup',)
 
 class CompletedItemForm(forms.ModelForm):
-	markup = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Some awesome thing you did.'}))
+	markup = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Some awesome thing I did.'}))
 	link = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'optional link to promote'}))
 	class Meta:
 		model = CompletedItem

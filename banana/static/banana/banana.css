@@ -29,7 +29,7 @@
 }
 
 #completed-form textarea {
-	height: 5em;
+	height: 5.5em;
 	width: 95%;
 }
 button[name="completed-form-button"] { float: right; z-index: 1; }
