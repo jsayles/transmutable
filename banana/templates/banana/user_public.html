@@ -16,8 +16,6 @@
 	}
 
 	#notes-list { min-height: 3em; }
-	#notes-list ul { margin: 0; }
-	#notes-list li { display: inline; margin-right: 10px; }
 
 	#user-info h1, #top-right-column h2 { margin-top: 0; }
 {% endblock %}
@@ -36,6 +34,9 @@
 <div class="row-fluid">
 	<div class="span3" id="left-column">
 		<h3>What I did:</h3>
+		{% if not user.completed_items.all %}
+			<p>I'm still doing it.</p>
+		{% endif %}
 		<ul class="completed-list">
 		{% for completed_item in user.completed_items.all|slice:":10" %}
 			{% completed_item_widget %}
@@ -64,12 +65,8 @@
 				<p>Nothing of note has been noted.</p>
 			{% endif %}
 			<ul>
-				{% for namespace in user.namespaces.all %}
-					{% if namespace.public %}
-						{% if not namespace.archive %}
-							<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
-						{% endif %}
-					{% endif %}
+				{% for namespace in user.namespaces.public_not_archived %}
+					<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
 				{% endfor %}
 			</ul>
 		</div>
