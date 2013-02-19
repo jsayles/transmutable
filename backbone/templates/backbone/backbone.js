@@ -33,8 +33,90 @@ transmutable.{{api_form.form_name}}Collection = Backbone.Collection.extend({
 
 {% endfor %}
 
-
 transmutable.urls = {};
+
+transmutable.createUrlFuction = function(patternInfo, prefix){
+    return function(){
+        if(arguments.length != patternInfo.groups.length){
+            throw "Expected arguments: (" + patternInfo.groups.join(',') + ")";
+        }
+        for(var i=0; i < arguments.length; i++){
+            if(typeof arguments[i] == 'undefined'){
+                console.log('Undefined arguments', arguments);
+                throw 'Passed an undefined argument: ' + arguments;
+            }
+        }
+        var tokens = transmutable.splitRegex(patternInfo.regex);
+        var url = '';
+        var groupIndex = 0;
+        for(var i=0; i < tokens.length; i++){
+            if(tokens[i] == null){ // it's a group, add from args 
+                url += arguments[groupIndex];
+                groupIndex++;
+            } else { // it's a token, add it to the URL
+                url += tokens[i];
+            }
+        }
+        if(!prefix) prefix = ''
+        return prefix + url;
+    }
+};
+
+transmutable.splitRegex = function(regex){
+    /*
+    Takes a regex string like '^views/(?P<view>[^/]+)/$' and returns an array of elements like ["views/", null, "/"]
+    */
+    if(regex.charAt(0) == '^') regex = regex.slice(1);
+    if(regex.charAt(regex.length - 1) == '$') regex = regex.slice(0, regex.length - 1);
+    results = []
+    line = ''
+    for(var i =0; i < regex.length; i++){
+        var c = regex.charAt(i);
+        if(c == '('){
+            results[results.length] = line;
+            results[results.length] = null;
+            line = '';
+        } else if(c == ')'){
+            line = '';
+        } else {
+            line = line + c;
+        }
+    }
+    if(line.length > 0) results[results.length] = line
+    return results
+}
+
+transmutable.cleanPathElement = function(element){
+    return element.replace('-', '_');
+}
+
+transmutable.UrlLoader = Backbone.Model.extend({
+    /*
+    This object reads the URL resource from the server and populates transmutable.urls with functions which return URLs.
+    */
+    url:'{% url backbone.views.urls %}',
+    initialize: function(options){
+        this.on('change', this.populate);
+    },
+    populate: function(){
+        var patterns = this.get('patterns');
+        for(var i=0; i < patterns.length; i++){
+            transmutable.urls[transmutable.cleanPathElement(patterns[i].name)] = transmutable.createUrlFuction(patterns[i], '/');
+        }
+        var resolvers = this.get('resolvers');
+        for(var i=0; i < resolvers.length; i++){
+            var resolver_patterns = {};
+            var resolverPrefix = transmutable.createUrlFuction(resolvers[i], '/')()
+            for(var j=0; j < resolvers[i].patterns.length; j++){
+                var pattern = resolvers[i].patterns[j];
+                resolver_patterns[transmutable.cleanPathElement(pattern.name)] = transmutable.createUrlFuction(pattern, resolverPrefix)
+            }
+            transmutable.urls[transmutable.cleanPathElement(resolvers[i].name)] = resolver_patterns;
+        }
+    }
+});
+transmutable.URL_LOADER = new transmutable.UrlLoader();
+transmutable.URL_LOADER.fetch();
 
 transmutable.urls.wikiPage = function(username, namespace, name){
 	var url = transmutable.replaceID("{% url peach.views.wiki 333 666 999 %}", 333, username);

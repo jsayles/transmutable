@@ -7,12 +7,22 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect, HttpResponsePermanentRedirect
 
+from dynamicresponse.json_response import JsonResponse
+
 from api_forms import SearchForm
+
+from url_resource import generate_url_resource
+
+@cache_control(public=True,max_age=10000)
+def urls(request):
+	resource = generate_url_resource()
+	return JsonResponse(resource)
 
 @login_required
 def search(request):

@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.template import Context, loader
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
@@ -25,6 +26,7 @@ from discovery import discover_api_forms, discover_search_providers
 api_forms = discover_api_forms()
 discover_search_providers()
 
+@cache_control(public=True,max_age=10000)
 def backbone_js(request):
 	return render_to_response('backbone/backbone.js', {'api_forms':api_forms}, context_instance=RequestContext(request), mimetype='application/javascript')
 

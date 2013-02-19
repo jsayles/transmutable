@@ -6,10 +6,6 @@
 {% block sub-style %}
 	#work-doc, .completed-list { min-height: 400px; }
 
-	#promoted-ui { margin: 0; }
-	#promoted-ui input[type=checkbox] { margin: 0; }
-	#promoted-extended-ui input[type=text] { margin-top: 1em; }
-
 	#work-doc { width: 99%; }
 	#work-doc-controls { float: right; padding: 0px; }
 	#work-doc-form { margin: 0; }
@@ -19,20 +15,55 @@
 		float: right;
 	}
 
-	#notes-title a { color: #444; }
-	#notes-title a:hover { color: rgb(0, 136, 204); }
-	#create-namespace-form input[type=text] { width: 60%; margin-bottom: 0; }
-	#notes-list { min-height: 3em; }
-
 	.alert-info { min-height: 5em; }
+
+	#content h3 { font-size: 1.5em; color: #603913; }
 {% endblock %}
 
 {% block sub-head %}
 <script>
+var hasUnusedTada = '{{user.has_unused_tada}}' == 'True';
+var completedItemEditView = null;
+var completedItems = new banana.models.CompletedItemCollection();
+var completedItemsView = null;
+
+var gratitudeEditView = null;
+var gratitudes = new banana.models.GratitudeCollection();
+var gratitudesView = null;
+
 var oldWorkDoc = null;
+
 
 $(document).ready(function() {
 	$('#home-nav').addClass('active');
+
+	completedItemEditView = new banana.views.CompletedItemEditView({
+		'hasTada':hasUnusedTada,
+		'successCallback':function(newModel){
+			hasUnusedTada = false;
+			$('#completed-welcome').hide();
+		}
+	});
+	$('#completed-column').append(completedItemEditView.el);
+	completedItemsView = new banana.views.CompletedItemsView({
+		'collection':completedItems
+	});
+	$('#completed-column').append(completedItemsView.el);
+	completedItemsView.collection.fetch();
+
+	gratitudeEditView = new banana.views.GratitudeEditView({
+		'successCallback':function(newGratitude){
+			$('#gratitude-welcome').hide();
+			gratitudes.fetch();
+		}
+	});
+	$('#gratitudes-column').append(gratitudeEditView.el);
+
+	gratitudesView = new banana.views.GratitudesView({
+		'collection':gratitudes
+	});
+	$('#gratitudes-column').append(gratitudesView.el);
+	gratitudesView.collection.fetch();
 
 	$('#work-doc-editor').hide();
 
@@ -64,7 +95,6 @@ $(document).ready(function() {
 		$('#work-doc-editor').show();
 	})
 
-	$('button[name="completed-form-button"]').click(function(){ $('#completed-form').submit(); });
 	$('#completed-form').submit(function(){
 		submitCompletedItem($('#completed-form'), $('.completed-list'));
 		$('#completed-form textarea').val('');
@@ -96,19 +126,14 @@ $(document).ready(function() {
 {% endif %}
 
 <div class="row-fluid">
-	<div class="span3">
+	<div class="span3" id="completed-column">
 		<h3 class="completed-form-heading user-prompt-heading">What did you do?</h3>
 		{% if not user.completed_items.all %}
 			<div id="completed-welcome" class="alert alert-info">
 				<p><strong>Celebrate the tasks you complete</strong> and occasionally promote your work.</p>
 			</div>
 		{% endif %}
-		{% include "banana/completed_form.frag" %}
-		<ul class="completed-list">
-		{% for completed_item in user.completed_items.all|slice:":10" %}
-			{% completed_item_widget %}
-		{% endfor %}
-		</ul>
+		<!-- CompletedItemEditView is inserted here -->
 	</div>
 	<div class="span1"></div>
 	<div class="span4">
@@ -138,28 +163,15 @@ $(document).ready(function() {
 		</div>
 	</div>
 	<div class="span1"></div>
-	<div class="span3">
-		<h3 id="notes-title">
-			<a href="{% url peach.views.index %}">Your notes:</a>
-		</h3>
-		{% if not user.namespaces.all %}
-			<div id="notes-welcome" class="alert alert-info">
-				<p><strong>Compile and share your ideas</strong> in these multi-page documents.</p>
+	<div class="span3" id="gratitudes-column">
+		<h3 id="gratitudes-title">What are your gratitudes?</h3>
+		{% if not user.gratitudes.all %}
+			<div id="gratitudes-welcome" class="alert alert-info">
+				<p><strong>Focus on the world's gifts</strong> for better perspective and happiness.</p>
 			</div>
 		{% endif %}
-		<form action="{% url peach.views.index %}" method="post" id="create-namespace-form">
-			{% for field in namespace_form %}{{ field }}{% endfor %}
-			<button type='submit'>create</button>
-		</form>
-		<div id="notes-list" class="rounded-block editable-section">
-			<ul>
-				{% for namespace in user.namespaces.all %}
-					{% if not namespace.archive %}
-						<li><a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a></li>
-					{% endif %}
-				{% endfor %}
-			</ul>
-		</div>
+		<!-- GratitudeEditView is inserted here -->
+		<!-- GratitudesView is inserted here -->
 	</div>
 </div>
 

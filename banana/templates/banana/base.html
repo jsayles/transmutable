@@ -1,7 +1,8 @@
 {% extends "base/base.html" %}
 
 {% block extra-links %}
-	<link rel="stylesheet" href="{{STATIC_URL}}banana/banana.css?v=5" />
+	<link rel="stylesheet" href="{{STATIC_URL}}banana/banana.css" />
+	<script src="{{STATIC_URL}}banana/banana.js"></script>
 {% endblock %}
 
 {% block app-head %}
@@ -18,7 +19,7 @@ $(document).ready(function(){
 function rockCompletedItem(itemID, rock_count, element){
 	try {
 		$.post(
-			'{% url banana.views.rock_completed_item %}',
+			'{% url banana.views.completed_item_rock %}',
 			'completed_item_id=' + itemID,
 			function(data) { 
 				$(element).html('Rocked! (' + (rock_count + 1) + ')');
@@ -30,37 +31,6 @@ function rockCompletedItem(itemID, rock_count, element){
 		console.log('error', er);
 		return false;
 	}
-}
-function submitCompletedItem(form, completedList){
-	$.post(
-		'{% url banana.views.completed_edit %}',
-		form.serialize(),
-		function(data) {
-			if(completedList){
-			    var cls = "completed-item-li rounded-block rendered-wrapper";
-                if(data.promoted){
-                    cls += " promoted-completed-item-li";
-                }
-			    var li = $('<li/>');
-			    li.attr('class', cls);
-			    li.append(data.rendered);
-			    var meta_div = $('<div/>');
-			    meta_div.attr('class', 'completed-item-meta');
-			    if(data.link != null && data.link != ''){
-			        meta_div.html('<a class="completed-item-meta-button" href="' + data.link + '">promoted</a>');
-			    } else {
-			        meta_div.html('just now');
-		        }
-		        li.append(meta_div);
-				completedList.prepend(li);
-				if(data.promoted){
-                    $('#promoted-ui').hide();
-                    $('#promoted-extended-ui').hide();
-				}
-			}
-		},
-		'json'
-	);
 }
 function submitWorkdoc(form, workdocRender){
 	$.post(

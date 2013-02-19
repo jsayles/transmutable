@@ -1,4 +1,5 @@
 <script src="{{STATIC_URL}}js/jquery-1.7.1.js"></script>
+<script src="{{STATIC_URL}}js/timeago-1.0.2.js"></script>
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-tab.js"></script>
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-scrollspy.js"></script>
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-dropdown.js"></script>

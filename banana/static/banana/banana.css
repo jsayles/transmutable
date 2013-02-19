@@ -4,9 +4,6 @@
 	padding: 0; margin: 0;
 	list-style-type: none;
 }
-.completed-list li {
-
-}
 
 .completed-item-li {
 	margin-bottom: 10px;
@@ -28,13 +25,27 @@
 	text-decoration: none;
 }
 
-#completed-form textarea {
-	height: 5.5em;
+
+/*  
+	Views CSS
+*/
+.edit-view {
+	min-height: 11em;
+}
+.edit-view textarea, .edit-view input[type=text] {
 	width: 95%;
 }
-button[name="completed-form-button"] { float: right; z-index: 1; }
-#completed-form { min-height: 140px;}
+.edit-view input[type=checkbox] {
+	margin: 0 0.25em 0 0; padding: 0;
+}
+.edit-view textarea { height: 8em; }
+.edit-view label {
+	display: inline;
+}
+.completed-item-edit-view input[type=text] { margin-top: 1em; }
+button[name="submit-form-button"] { float: right; z-index: 1; }
 
-#promoted-ui { margin-top: 0.5em; }
-#promoted-extended-ui #id_link { width: 95%; margin-bottom: 1em; }
-#promoted-extended-ui { display: none; }
+.update-view { margin: 0.5em 0 1em 0; border-bottom: solid 1px #EEEEEE; }
+.update-view .rendered { min-height: 2em; }
+.update-view.promoted { border: dashed 1px #ddd; padding: 0.5em; }
+.update-view .promoted-link { float: left; }

@@ -46,8 +46,22 @@ class MarkedUpModel(models.Model):
 		abstract = True
 		ordering = ['-created']
 
+class Gratitude(MarkedUpModel):
+	"""Some thing for which we are grateful"""
+	user = models.ForeignKey(User, related_name='gratitudes')
+
+	def flatten(self): return {
+		'user':self.user.username, 
+		'markup':self.markup, 
+		'rendered':self.rendered, 
+		'modified':'%s' % self.modified,
+		'created':'%s' % self.created
+	}
+
+	@models.permalink
+	def get_absolute_url(self): return ('banana.views.gratitude', [], { 'id':self.id })
+
 class CompletedItemManager(models.Manager):
-	
 	def recent(self, max_count=10, created_after=None):
 		results = []
 		users = {}
@@ -72,7 +86,7 @@ class CompletedItem(MarkedUpModel):
 	link = models.URLField(verify_exists=False, max_length=1000, blank=True, null=True)
 	
 	objects = CompletedItemManager()
-	def flatten(self): return {'user':self.user.username, 'promoted':self.promoted, 'link':self.link, 'rendered':self.rendered, 'modified':'%s' % self.modified}
+	def flatten(self): return {'id':self.id, 'user':self.user.username, 'promoted':self.promoted, 'link':self.link, 'rendered':self.rendered, 'modified':'%s' % self.modified, 'created':'%s' % self.created}
 	
 	def rocked_it(self, user):
 		if not user.is_authenticated(): return False
@@ -81,7 +95,7 @@ class CompletedItem(MarkedUpModel):
 	def rock_count(self): return CompletedItemRock.objects.filter(completed_item=self).count()
 	
 	@models.permalink
-	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'username':self.user.username, 'id':self.id })
+	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'id':self.id })
 	def __unicode__(self): return 'CompletedItem for %s' % self.user
 
 class CompletedItemRock(models.Model):

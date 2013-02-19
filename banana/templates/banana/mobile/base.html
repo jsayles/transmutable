@@ -1,7 +1,7 @@
 {% extends "base/mobile_base.html" %}
 
 {% block extra-links %}
-	<link rel="stylesheet" href="{{STATIC_URL}}banana/banana.css?v=5" />
+	<link rel="stylesheet" href="{{STATIC_URL}}banana/banana.css" />
 {% endblock %}
 
 {% block app-head %}
@@ -13,7 +13,7 @@
 function rockCompletedItem(itemID, rock_count, element){
 	try {
 		$.post(
-			'{% url banana.views.rock_completed_item %}',
+			'{% url banana.views.completed_item_rock %}',
 			'completed_item_id=' + itemID,
 			function(data) { 
 				$(element).html('Rocked! (' + (rock_count + 1) + ')');

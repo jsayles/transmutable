@@ -12,10 +12,9 @@
 
 		{% include 'base/common_styles.frag' %}
 		<link href="{{STATIC_URL}}css/base.css" rel="stylesheet" />
-		{% block extra-links %}{% endblock %}
-
 		{% include 'base/common_scripts.frag' %}
 		<script src="{{STATIC_URL}}js/base.js"></script>
+		{% block extra-links %}{% endblock %}
 
 		<style type="text/css">
 			{% block app-style %}{% endblock %}
@@ -44,7 +43,21 @@
 						<ul class="nav">
 							{% if request.user.is_authenticated %}
 								<li id="home-nav"><a href="{% url banana.views.user request.user.username %}">Home</a></li>
-								<li id="notes-nav"><a href="{% url peach.views.index %}">Notes</a></li>
+								<li id="notes-nav" class="dropdown">
+									<a id="notes-dropdown" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="notes-dropdown">
+										<li role="presentation"><a role="menuitem" tabindex="-1" href="{% url peach.views.index %}">All</a></li>
+										{% if request.user.namespaces.not_archived %}
+											<li role="presentation" class="divider"></li>
+										{% endif %}
+										{% for namespace in request.user.namespaces.not_archived %}
+											<li role="presentation">
+												<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+											</li>
+										{% endfor %}
+
+									</ul>
+								</li>
 							{% endif %}
 							{% if default_help_url %}
 								<li id="help-nav"><a href="{{ default_help_url }}">Help</a></li>
@@ -63,7 +76,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div id="content" class="container-fluid">
 			{% block content %}{% endblock %}
 			<hr>

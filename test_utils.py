@@ -1,3 +1,6 @@
+import simplejson
+
+from django.test import TestCase
 from django.test.client import Client
 from django.contrib.auth.models import User
 
@@ -16,3 +19,10 @@ def create_user(username, password, first_name=None, last_name=None, email=None,
 	client = Client()
 	client.login(username=username, password=password)
 	return (user, client)
+
+class APITestCase(TestCase):
+
+	def getJSON(self, url, client):
+		response = client.get(url, HTTP_ACCEPT='application/json')
+		self.assertEqual(response.status_code, 200, 'Response status was %s' % response.status_code)
+		return simplejson.loads(response.content)

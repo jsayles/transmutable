@@ -4,6 +4,10 @@ from django.forms.util import ErrorList
 
 from models import *
 
+class GratitudeAdmin(admin.ModelAdmin):
+	list_display = ('user', 'modified')
+admin.site.register(Gratitude, GratitudeAdmin)
+
 class CompletedItemAdmin(admin.ModelAdmin):
 	list_display = ('user', 'modified')
 admin.site.register(CompletedItem, CompletedItemAdmin)

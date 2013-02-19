@@ -28,6 +28,7 @@ class NamespaceManager(models.Manager):
 	def public(self): return self.filter(public=True)
 	def public_not_archived(self): return self.filter(public=True).filter(archive=False)
 	def private_not_archived(self): return self.filter(public=False).filter(archive=False)
+	def not_archived(self): return self.filter(archive=False)
 	def archived(self): return self.filter(archive=True)
 
 class Namespace(models.Model):
