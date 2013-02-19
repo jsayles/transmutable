@@ -42,6 +42,7 @@ $(document).ready(function() {
 		'successCallback':function(newModel){
 			hasUnusedTada = false;
 			$('#completed-welcome').hide();
+			completedItems.fetch();
 		}
 	});
 	$('#completed-column').append(completedItemEditView.el);
@@ -53,7 +54,7 @@ $(document).ready(function() {
 
 	gratitudeEditView = new banana.views.GratitudeEditView({
 		'successCallback':function(newGratitude){
-			$('#gratitude-welcome').hide();
+			$('#gratitudes-welcome').hide();
 			gratitudes.fetch();
 		}
 	});
