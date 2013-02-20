@@ -10,8 +10,7 @@
 #registration-form input[type=checkbox] {
 	margin: 0 0.5em 0 0;
 }
-#content h1 { text-align: right; width: 35%; }
-#content form { width: 35%; }
+#content h1 { text-align: right; }
 #content form table { width: 100%; }
 #content form input[type=text], #content form input[type=password] { width: 95%; }
 label[for="id_tos"] { display: none; }
@@ -41,20 +40,29 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content%}
-{% if open_registration %}
-	{% if request.user.is_authenticated %}
+	{% if open_registration and not request.user.is_authenticated %}
+		<div class="row-fluid">
+			<div class="span4 offset1">
+				<h1>Brains Welcome:</h1>
+				<form id="registration-form" action="{% url person.views.register %}" method="post">
+					<table>
+						{{ registration_form }}
+						<tr><td colspan="2" style="text-align: right;"><input id="registration-form-submit" type="submit" value="sign up" /></td>
+					</table>
+					{% csrf_token %}
+				</form>
+			</div>
+			<div class="span4 offset1">
+				<h2>Work in public:</h2>
+				<p>Share using tools designed for work (not cat pictures).</p>
+				<p>Feel the satisfaction of hitting the 'to-done' button.</p>
+				<p>Purge your mind of open loops and nagging thoughts.</p>
+			</div>
+		</div>
+	{% elif open_registration and request.user.is_authenticated %}
 		<p>It appears that you're already logged in.  If you'd like to register a new account, you'll need to log out.</p>
 	{% else %}
-		<h1>Brains Welcome:</h1>
-		<form id="registration-form" action="{% url person.views.register %}" method="post">
-			<table>
-				{{ registration_form }}
-				<tr><td colspan="2" style="text-align: right;"><input id="registration-form-submit" type="submit" value="sign up" /></td>
-			</table>
-			{% csrf_token %}
-		</form>
+		<h2 style="margin: 100px; text-align: center;">We're sorry, but registration is currently closed.</h2>
 	{% endif %}
-{% else %}
-	<h2 style="margin: 100px; text-align: center;">We're sorry, but registration is currently closed.</h2>
-{% endif %}
+
 {% endblock %}
