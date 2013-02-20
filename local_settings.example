@@ -12,6 +12,8 @@ OPEN_REGISTRATION = True
 OPEN_INVITE_REQUEST = False
 OPEN_INVITE = True
 
+PRIVACY_POLICY_URL = None # Or a URL to the site's privacy policy
+TERMS_OF_SERVICE_URL = None # Or a URL to the site's terms of service
 DEFAULT_HELP_URL = None # Or a URL to a help page.  If non-None, a Help link will appear in the top bar
 
 #CACHE_BACKEND = 'dummy:///'
@@ -27,7 +29,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 DEFAULT_FROM_EMAIL = "someaddress@gmail.com"
 EMAIL_HOST = "smtp.nothing.com"

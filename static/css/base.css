@@ -3,6 +3,18 @@ body {
 	padding-bottom: 40px;
 }
 
+footer {
+  margin-top: 1em;
+  border-top: solid 1px #EEE;
+  text-align: right;
+  color: #888;
+  font-size: 0.8em;
+}
+footer a {
+  margin-left: 2em;
+  color: #888;
+}
+
 .sidebar-nav {
 	padding: 9px 0;
 }

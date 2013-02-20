@@ -80,6 +80,12 @@
 			{% block content %}{% endblock %}
 			{% block footer %}
 				<footer>
+					{% if terms_of_service_url %}
+						<a href="{{ terms_of_service_url }}">terms of service</a>
+					{% endif %}
+					{% if privacy_policy_url %}
+						<a href="{{ privacy_policy_url }}">privacy policy</a>
+					{% endif %}
 					{% block sub-footer %}{% endblock %}
 				</footer>
 			{% endblock %}

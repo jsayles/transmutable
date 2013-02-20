@@ -62,6 +62,8 @@ I really wanted the kids to learn:
 * cross generation hair styles""")
 		completed_item3 = self.create_completed_item(person1, "Submitted bid to Cthulu")
 		completed_item4 = self.create_completed_item(person1, "Rebooted the Internet")
+
+		gratitude1 = self.create_gratitude(person1, 'Amy\'s awesome laugh.');
 		
 		person2 = self.create_user('jerry', '1234', 'Jerry', 'Dorfendorf', 'Detroit, MI', is_staff=False, is_superuser=False)
 		person2.work_doc.save_markup("I am currently flying between one of three coasts.")
@@ -81,6 +83,10 @@ I really wanted the kids to learn:
 [This link](http://example.net/) has no title attribute.
 """)
 
+		legal_namespace = self.create_namespace('Legal', person1)
+		tos = self.create_wiki_page(legal_namespace, 'ToS', 'This is where all sort of terms of service would go.')
+		privacy_policy = self.create_wiki_page(legal_namespace, 'Privacy-Policy', 'This is where all sort of privacy legalese would go.')
+
 		namespace2 = self.create_namespace('Dog Walks in Bothell', person3)
 		page2 = self.create_wiki_page(namespace2, 'How to Make Dog Biscuits', """Google the recipe. CamelCase """)
 	
@@ -91,6 +97,10 @@ I really wanted the kids to learn:
 	def create_namespace(self, name, owner):
 		from peach.models import Namespace
 		return Namespace.objects.get_or_create(display_name=name, owner=owner)[0]
+
+	def create_gratitude(self, user, markup):
+		from banana.models import Gratitude
+		return Gratitude.objects.create(user=user, markup=markup)
 
 	def create_completed_item(self, user, markup):
 		from banana.models import CompletedItem
