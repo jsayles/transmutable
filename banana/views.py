@@ -76,7 +76,7 @@ def gratitudes(request):
 			return JsonResponse(gratitude.flatten())
 		else:
 			return HttpResponse(status=400)
-	return JsonResponse([gratitude.flatten() for gratitude in request.user.gratitudes.all()])
+	return JsonResponse([gratitude.flatten() for gratitude in request.user.gratitudes.all()[:20]])
 
 def completed_item(request, id):
 	item = get_object_or_404(CompletedItem, pk=id)
@@ -100,7 +100,7 @@ def completed_items(request):
 		else:
 			print request.POST, create_form
 			return HttpResponse(status=400)
-	return JsonResponse([item.flatten() for item in request.user.completed_items.all()])
+	return JsonResponse([item.flatten() for item in request.user.completed_items.all()[:20]])
 
 @login_required
 def completed_item_rock(request):

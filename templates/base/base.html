@@ -78,11 +78,11 @@
 		</div>
 		<div id="content" class="container-fluid">
 			{% block content %}{% endblock %}
-			<hr>
-
-			{% block footer %}<footer>
-				{% block sub-footer %}{% endblock %}
-			</footer>{% endblock %}
+			{% block footer %}
+				<footer>
+					{% block sub-footer %}{% endblock %}
+				</footer>
+			{% endblock %}
 		</div><!--/.fluid-container-->
 	{% endblock %}</body>
 </html>

@@ -51,6 +51,7 @@ class Gratitude(MarkedUpModel):
 	user = models.ForeignKey(User, related_name='gratitudes')
 
 	def flatten(self): return {
+		'id':self.id,
 		'user':self.user.username, 
 		'markup':self.markup, 
 		'rendered':self.rendered, 
@@ -86,12 +87,13 @@ class CompletedItem(MarkedUpModel):
 	link = models.URLField(verify_exists=False, max_length=1000, blank=True, null=True)
 	
 	objects = CompletedItemManager()
-	def flatten(self): return {'id':self.id, 'user':self.user.username, 'promoted':self.promoted, 'link':self.link, 'rendered':self.rendered, 'modified':'%s' % self.modified, 'created':'%s' % self.created}
+	def flatten(self): return {'id':self.id, 'user':self.user.username, 'promoted':self.promoted, 'link':self.link, 'rendered':self.rendered, 'modified':'%s' % self.modified, 'created':'%s' % self.created, 'rock_count':self.rock_count}
 	
 	def rocked_it(self, user):
 		if not user.is_authenticated(): return False
 		return CompletedItemRock.objects.filter(completed_item=self, user=user).count() == 1
 
+	@property
 	def rock_count(self): return CompletedItemRock.objects.filter(completed_item=self).count()
 	
 	@models.permalink

@@ -1,51 +1,63 @@
 /* Banana CSS */
 
-.completed-list {
+footer {
+	border-top: solid 1px #EEE;
+}
+
+.section-title { font-size: 1.5em; color: #603913; }
+
+
+
+/*
+	=========================================
+	Update Views
+	=========================================
+*/
+
+.update-list {
 	padding: 0; margin: 0;
 	list-style-type: none;
 }
 
-.completed-item-li {
-	margin-bottom: 10px;
+.update-view { 
+	margin: 0.5em 0 1em 0; 
+	padding: 0.5em 0;
+	border-bottom: solid 1px #EEEEEE; 
 }
-.completed-item-li a { text-decoration: none; }
-.completed-item-li img { float: left; margin-right: 8px; }
-.completed-item-li:hover a { text-decoration: underline; }
-.completed-item-meta { width: 100%; text-align: right; color: #888; }
-.promoted-completed-item-li { border: dashed 1px #ddd; padding: 0.5em 0; }
-
-.completed-item-meta-button {
-	border: solid 1px #999;
-	background-color: #FFF;
-	display: inline;
-	padding: 0 2px 0 2px;
-	text-decoration: none;
+.update-view .rendered { min-height: 2em; }
+.update-view.promoted { 
+	border: dashed 1px #ddd;
+	padding: 0.5em;
 }
-.completed-item-li:hover .completed-item-meta-button {
-	text-decoration: none;
+.update-view .promoted-link {
+	float: left;
 }
+.update-view img { float: left; margin-right: 8px; }
+.update-view .promoted-link { float: left; }
+.update-meta { text-align: right; color: #888; }
+.update-timestamp, .completed-item-rock { font-size: 0.8em; }
 
+.completed-item-rock { text-align: right; }
 
-/*  
-	Views CSS
+/*
+	=========================================
+	Update Editors
+	=========================================
 */
-.edit-view {
+
+.update-edit-view {
 	min-height: 11em;
 }
-.edit-view textarea, .edit-view input[type=text] {
+.update-edit-view textarea, .edit-view input[type=text] {
 	width: 95%;
 }
-.edit-view input[type=checkbox] {
+.update-edit-view input[type=checkbox] {
 	margin: 0 0.25em 0 0; padding: 0;
 }
-.edit-view textarea { height: 8em; }
-.edit-view label {
+.update-edit-view textarea { height: 8em; }
+.update-edit-view label {
 	display: inline;
 }
-.completed-item-edit-view input[type=text] { margin-top: 1em; }
-button[name="submit-form-button"] { float: right; z-index: 1; }
 
-.update-view { margin: 0.5em 0 1em 0; border-bottom: solid 1px #EEEEEE; }
-.update-view .rendered { min-height: 2em; }
-.update-view.promoted { border: dashed 1px #ddd; padding: 0.5em; }
-.update-view .promoted-link { float: left; }
+.update-edit-view input[type=text] { margin-top: 1em; }
+button[name="submit-form-button"] { float: right; z-index: 1; }

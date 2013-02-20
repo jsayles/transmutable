@@ -1,0 +1,34 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+{% load banana %}
+{% block sub-title%}Gratitude {{ gratitude.id }} | {% endblock %}
+{% block sub-head %}
+<script>
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
+
+{% block sub-style %}
+.update-timestamp a { color: #888; }
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div id="user-info" class="span2 offset3">
+		{% if gratitude.user.get_profile.photo %}
+			<a href="{{ gratitude.user.get_absolute_url }}"><img class="person-photo" src="{{ gratitude.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ gratitude.user.get_full_name}}" alt="{{ gratitude.user.get_full_name}}" /></a>
+		{% else %}
+			<a href="{{ gratitude.user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" /></a>
+		{% endif %}
+		<h4>
+			<a href="{{ gratitude.user.get_absolute_url }}">{{ gratitude.user.get_full_name }}</a>
+		</h4>
+	</div>
+
+	<div class="span4">
+		<h3 class='section-title'>I'm grateful for:</h3>
+		{% include "banana/gratitude.frag" %}
+	</div>
+</div>
+{% endblock %}

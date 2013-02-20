@@ -4,10 +4,9 @@
 {% block sub-title %}{{ user.get_full_name }} | {% endblock %}
 
 {% block sub-style %}
-	#work-doc, .completed-list { min-height: 400px; }
-
+	#work-doc, .updates-list { min-height: 400px; }
 	#work-doc { width: 99%; }
-	#work-doc-controls { float: right; padding: 0px; }
+	#work-doc-controls { padding: 0px; }
 	#work-doc-form { margin: 0; }
 	#work-doc-form textarea { width: 97%; height: 30em; }
 	#work-doc-editor { position: relative; }
@@ -16,8 +15,6 @@
 	}
 
 	.alert-info { min-height: 5em; }
-
-	#content h3 { font-size: 1.5em; color: #603913; }
 {% endblock %}
 
 {% block sub-head %}
@@ -32,7 +29,6 @@ var gratitudes = new banana.models.GratitudeCollection();
 var gratitudesView = null;
 
 var oldWorkDoc = null;
-
 
 $(document).ready(function() {
 	$('#home-nav').addClass('active');
@@ -69,13 +65,17 @@ $(document).ready(function() {
 	$('#work-doc-editor').hide();
 
 	$('#formatting-help-link').click(function(){
-		if($('.formatting-help').length > 0) return false;
+		if($('.formatting-help').length > 0){
+			$('.formatting-help').remove();
+			return false;
+		} 
 		var formattingHelpView = new transmutable.views.FormattingHelpView();
 		$('.completed-form-heading').after(formattingHelpView.render().el);
 		return false;
 	});
 
 	$('button[name="work-doc-form-button"]').click(function(){
+		$('.formatting-help').remove();
 		$('#work-doc-editor').hide();
 		$('#work-doc-render').html('Submitting...');
 		$('#work-doc').show();
@@ -84,6 +84,7 @@ $(document).ready(function() {
 		submitWorkdoc($('#work-doc-form'), $('#work-doc-render'));
 	});
 	$('button[name="work-doc-reset-button"]').click(function(){
+		$('.formatting-help').remove();
 		$('#work-doc-editor').hide();
 		$('#work-doc').show();
 		$('#work-doc-controls').show();
@@ -95,16 +96,6 @@ $(document).ready(function() {
 		$('#work-doc-controls').hide();
 		$('#work-doc-editor').show();
 	})
-
-	$('#completed-form').submit(function(){
-		submitCompletedItem($('#completed-form'), $('.completed-list'));
-		$('#completed-form textarea').val('');
-		$('#promoted-extended-ui').hide();
-		$('#id_promoted').attr('checked', null);
-		$('#id_link').val('');
-		$('#completed-welcome').hide();
-		return false;
-	});
 
 	{% if user.work_doc.rendered == ' ' or not user.work_doc.rendered %}
 		$('button[name="edit-work-doc-button"]').click();
@@ -128,7 +119,7 @@ $(document).ready(function() {
 
 <div class="row-fluid">
 	<div class="span3" id="completed-column">
-		<h3 class="completed-form-heading user-prompt-heading">What did you do?</h3>
+		<h3 class="completed-form-heading user-prompt-heading section-title">What did you do?</h3>
 		{% if not user.completed_items.all %}
 			<div id="completed-welcome" class="alert alert-info">
 				<p><strong>Celebrate the tasks you complete</strong> and occasionally promote your work.</p>
@@ -136,13 +127,12 @@ $(document).ready(function() {
 		{% endif %}
 		<!-- CompletedItemEditView is inserted here -->
 	</div>
-	<div class="span1"></div>
-	<div class="span4">
-		<h3 class="user-prompt-heading">
+	<div class="span4 offset1">
+		<h3 class="user-prompt-heading section-title">
 				What are you doing?
-				<div id="work-doc-controls">
+				<span id="work-doc-controls">
 					<button name="edit-work-doc-button" class="positive">edit</button>
-				</div>
+				</span>
 		</h3>
 		{% if not user.work_doc.rendered %}
 			<div id="work-doc-welcome" class="alert alert-info">
@@ -163,9 +153,8 @@ $(document).ready(function() {
 			</div>
 		</div>
 	</div>
-	<div class="span1"></div>
-	<div class="span3" id="gratitudes-column">
-		<h3 id="gratitudes-title">What are your gratitudes?</h3>
+	<div class="span3 offset1" id="gratitudes-column">
+		<h3 id="gratitudes-title" class='section-title'>What are your gratitudes?</h3>
 		{% if not user.gratitudes.all %}
 			<div id="gratitudes-welcome" class="alert alert-info">
 				<p><strong>Focus on the world's gifts</strong> for better perspective and happiness.</p>

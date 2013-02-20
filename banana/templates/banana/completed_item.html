@@ -5,39 +5,21 @@
 {% block sub-head %}
 <script>
 $(document).ready(function() {
-	$('#edit-widget').hide();
-	$('button[name="edit-completed-button"]').click(function(){
-		$('.completed-list ul').hide();
-		$('#completed-controls').remove();
-		$('#edit-widget').show();
-	})
-	$('button[name="re-done-button"]').click(function(){ $('#completed-item-form').submit(); });
 });
 </script>
 {% endblock %}
 
 {% block sub-style %}
-#completed-controls { visibility: hidden; float: right; padding: 0px; }
-#id_markup { width: 100%; }
-
-{% if request.user == completed_item.user %}
-	#completed-list:hover #completed-controls { visibility: visible; }
-{% endif %}
-#completed-list {
-	list-style: none;
-	max-width: 500px;
-	padding: 0; margin: 0;
-}
-.completed-item-li:hover .completed-item-meta-timestamp { visibility: visible; }
+.update-timestamp a { color: #888; }
 {% endblock %}
 
 {% block content %}
 <div class="row">
-	<div id="user-info" class="span2">
+	<div id="user-info" class="span2 offset3">
 		{% if completed_item.user.get_profile.photo %}
-		<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" /></a>
+			<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" /></a>
 		{% else %}
-		<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" /></a>
+			<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" /></a>
 		{% endif %}
 		<h4>
 			<a href="{{ completed_item.user.get_absolute_url }}">{{ completed_item.user.get_full_name }}</a>
@@ -45,20 +27,8 @@ $(document).ready(function() {
 	</div>
 
 	<div class="span4">
-		{% if request.user.username == completed_item.user.username %}<div id="completed-controls"><button name="edit-completed-button" class="positive">edit</button></div>{% endif %}
-		<ul id="completed-list" class="{% if request.user.username == completed_item.user.username %}editable-section{% endif %}">
-			{% with "True" as hide_completed_item_info_button %}
-				{% completed_item_widget %}
-			{% endwith %}
-		</ul>
-		{% if request.user == completed_item.user %}
-		<div id="edit-widget">
-			<form action="." method="post" id="completed-item-form">
-				{% for field in completed_item_form %}{{ field }}{% endfor %}
-			</form>
-			<button type="submit" name="re-done-button">re-done!</button>
-		</div>
-		{% endif %}
+		<h3 class='section-title'>What I did:</h3>
+		{% completed_item_widget %}
 	</div>
 </div>
 {% endblock %}
