@@ -1,6 +1,6 @@
 Hey,
 
-I just created an account for you on {{ site.name }}.  It's a simple app, but I'll be adding to it as time permits.  The concept is to create an elegant vessel for smarty-pants' work notes which is both a pleasure to use and interesting to others.
+I just created an account for you on {{ site.name }}.  It's a simple app, but I'll be adding to it as time permits.  The concept is to create an elegant vessel for smarty-pants' work which is both a pleasure to use and interesting to others.
 
 Head on over to http://{{ site.domain}}/ and hit the login link on the upper right.
 

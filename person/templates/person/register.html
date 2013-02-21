@@ -52,11 +52,12 @@ $(document).ready(function() {
 					{% csrf_token %}
 				</form>
 			</div>
-			<div class="span4 offset1">
+			<div class="span5 offset1">
 				<h2>Work in public:</h2>
-				<p>Share using tools designed for work (not cat pictures).</p>
-				<p>Feel the satisfaction of hitting the 'to-done' button.</p>
-				<p>Purge your mind of open loops and nagging thoughts.</p>
+				<p class='alert alert-info'>Share using tools designed for work (not cat pictures).</p>
+				<p class='alert alert-info'>Feel the satisfaction of hitting the 'to-done' button.</p>
+				<p class='alert alert-info'>Purge your mind of open loops and nagging thoughts.</p>
+				<p class='alert alert-info'>Focus on gratitude for perspective and happiness.</p>
 			</div>
 		</div>
 	{% elif open_registration and request.user.is_authenticated %}

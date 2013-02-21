@@ -55,7 +55,7 @@ def register(request):
 			user.backend='django.contrib.auth.backends.ModelBackend' #TODO figure out what is the right thing to do here
 			auth.login(request, user)
 			user.get_profile().send_email_validation()
-			return HttpResponseRedirect(user.get_profile().get_absolute_url())
+			return HttpResponseRedirect(reverse('banana.views.user', kwargs={'username':user.username}))
 	else:
 		registration_form = UserCreationForm()
 	return render_to_response('person/register.html', { 'registration_form':registration_form }, context_instance=RequestContext(request))

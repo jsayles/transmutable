@@ -15,6 +15,10 @@
 #registration-form td { padding: 5px;}
 #registration-form th { padding-right: 10px; }
 
+#profile-form input[type=text], #profile-form textarea { width: 100%; }
+#profile-form th, #password-change-form th { vertical-align: top; text-align: right; padding-right: 1em;}
+#profile-form td { padding-bottom: 1.5em; }
+#password-change-form input[type=submit] { float: right; } 
 .invite-form { margin: 20px 0px; }
 .invite-form th { vertical-align: top; }
 .invite-form #id_email { width: 300px; }

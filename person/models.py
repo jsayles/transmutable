@@ -116,7 +116,7 @@ class UserProfile(ThumbnailedModel):
 	"""Extends the django.contrib.auth User model"""
 	user = models.ForeignKey(User, unique=True, related_name='profile')
 	photo = models.ForeignKey(Photo, blank=True, null=True)
-	location = models.CharField(max_length=1024, blank=True, null=True, help_text="Where you are, for example 'Seattle' or 'Home'")
+	location = models.CharField(max_length=1024, blank=True, null=True, help_text="Where you work, for example 'Seattle'")
 	bio = models.TextField(null=True, blank=True)
 	url = models.URLField(verify_exists=False, null=True, blank=True, max_length=300)
 	invites = models.ManyToManyField(Invite, blank=True, null=True, related_name='inviter')
