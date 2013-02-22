@@ -39,7 +39,7 @@ $(document).ready(function(){
 
 <div class="row-fluid">
 	<ul id="public-list" class="namespace-list span3">
-		<h2>Public</h2>
+		<h3 class="section-title">Public</h3>
 		{% if not request.user.namespaces.public_not_archived %}
 			<div class='alert alert-info'>
 				Notes which are visible to anyone.
@@ -51,8 +51,8 @@ $(document).ready(function(){
 			</li>
 		{% endfor %}
 	</ul>
-	<ul id="private-list" class="namespace-list span3">
-		<h2>Private</h2>
+	<ul id="private-list" class="namespace-list span3 offset1">
+		<h3 class="section-title">Private</h3>
 		{% if not request.user.namespaces.private_not_archived %}
 			<div class='alert alert-info'>
 				Notes which are visible only to you.
@@ -64,8 +64,8 @@ $(document).ready(function(){
 			</li>
 		{% endfor %}
 	</ul>
-	<ul id="archive-list" class="namespace-list span3">
-		<h2>Archive</h2>
+	<ul id="archive-list" class="namespace-list span3 offset1">
+		<h3 class="section-title">Archive</h3>
 		{% if not request.user.namespaces.archived %}
 			<div class='alert alert-info'>
 				<p>Archived notes (public or private) don't show up in your list of notes.</p>
