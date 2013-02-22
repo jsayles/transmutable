@@ -14,4 +14,8 @@ def pagination(request):
 
 def person_context(request):
 	"""Adds a context variables related to accounts, registration, and invites"""
-	return { 'open_registration':settings.OPEN_REGISTRATION, 'open_invite':settings.OPEN_INVITE, 'open_invite_request':settings.OPEN_INVITE_REQUEST }
+	return {
+		'open_registration':settings.OPEN_REGISTRATION, 
+		'open_invite':settings.OPEN_INVITE, 
+		'open_invite_request':settings.OPEN_INVITE_REQUEST
+	}

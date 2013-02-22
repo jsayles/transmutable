@@ -18,12 +18,6 @@ class InviteRequestAdmin(StyledAdmin):
 	list_display = ('email', 'created')
 admin.site.register(InviteRequest, InviteRequestAdmin)
 
-class UserProfileAdmin(StyledAdmin):
-	list_display = ('user', 'user__first_name', 'user__last_name', 'thumb')
-	raw_id_fields = ('user', 'photo', 'invites')
-#admin.site.register(UserProfile, UserProfileAdmin)
-# commented out because we use the UserAndProfileAdmin instead
-
 class UserProfileInline(admin.StackedInline):
 	raw_id_fields = ('user', 'photo', 'invites')
 	model = UserProfile

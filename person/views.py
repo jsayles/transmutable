@@ -1,28 +1,28 @@
 import datetime
-import calendar
 import pprint
-import traceback
-import tempfile
 import urllib
-from time import time
 import logging 
+import calendar
+import tempfile
+import traceback
+from time import time
 
-from django.conf import settings
-from django.contrib import auth
 from django.db.models import Q
-from django.template import Context, loader
-from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect, HttpResponsePermanentRedirect
-from django.shortcuts import render_to_response, get_object_or_404
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.sites.models import Site
-import django.contrib.contenttypes.models as content_type_models
-from django.template import RequestContext
+from django.contrib import auth
+from django.conf import settings
 from django.core.mail import send_mail
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.template.loader import render_to_string
+from django.template import RequestContext
+from django.contrib.auth.models import User
+from django.template import Context, loader
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
+import django.contrib.contenttypes.models as content_type_models
+from django.shortcuts import render_to_response, get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect, HttpResponsePermanentRedirect
 
 from models import *
 from forms import *
@@ -70,7 +70,7 @@ def invite(request, secret):
 			auth.login(request, user)
 			invite.used_by = user
 			invite.save()
-			return HttpResponseRedirect(user.get_profile().get_absolute_url())
+			return HttpResponseRedirect(reverse('banana.views.user', kwargs={'username':user.username}))
 	else:
 		registration_form = UserCreationForm()
 	return render_to_response('person/invite.html', { 'registration_form':registration_form, 'invite':invite }, context_instance=RequestContext(request))
@@ -88,7 +88,7 @@ def invites(request):
 				invite = invites[0]
 				site = Site.objects.get_current()
 				message = render_to_string('person/email/invite.txt', { 'site':site, 'message':strip_tags(invite_form.cleaned_data['message']), 'invite':invite, 'inviter':request.user.get_profile() })
-				subject = '%s wants to read your news stream on %s' % (request.user.get_profile().full_name, site.name)
+				subject = '%s invites you to %s' % (request.user.get_full_name(), site.name)
 				send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [invite_form.cleaned_data['email']], fail_silently=False)
 				invite.sent_to = invite_form.cleaned_data['email']
 				invite.available = False

@@ -3,39 +3,12 @@
 {% block sub-title %}Sign Up | {% endblock %}
 
 {% block sub-style %}
-.errorlist { color: #922; float: right; }
-#registration-form th {
-	text-align: right; padding-right: 10px;
-}
-#registration-form input[type=checkbox] {
-	margin: 0 0.5em 0 0;
-}
 #content h1 { text-align: right; }
-#content form table { width: 100%; }
-#content form input[type=text], #content form input[type=password] { width: 95%; }
-label[for="id_tos"] { display: none; }
 {% endblock %}
 
 {% block sub-head %}
 <script>
-{% if terms_of_service_url %}
-	var tosURL = '{{ terms_of_service_url }}';
-{% else %}
-	var tosURL = null;
-{% endif %}
-
-$(document).ready(function() {
-	if(tosURL){
-		$('#id_tos').after($.el.span('I accept the ', $.el.a({'href':tosURL, 'target':'_new'}, 'terms of service'), '.'));
-	} else {
-		$('#id_tos').after($.el.span('I accept the terms of service.'));
-	}
-	$('#id_username').focus();
-	$('#registration-form').submit(function(){
-		$('#registration-form-submit').attr('disabled', 'disabled');
-		return true;
-	})
-});
+	{% include "person/registration_script.frag" %}
 </script>
 {% endblock %}
 

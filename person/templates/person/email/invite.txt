@@ -11,5 +11,3 @@ Thanks,
 The {{ site.name}} team
 
 This invitation was sent you from {{ site.name}} by {{ inviter.user.get_full_name }}.
-
-{{ site.name}}: A more friendly way to read the news.

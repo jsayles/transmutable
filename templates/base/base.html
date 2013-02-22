@@ -58,6 +58,11 @@
 
 									</ul>
 								</li>
+								{% if request.user.get_profile.available_invites.count > 0 %}
+									<li id="invites-nav">
+										<a href="{% url person.views.invites %}">Invites <span class="badge badge-success">{{ request.user.get_profile.available_invites.count }}</span></a>
+									</li>
+								{% endif %}
 							{% endif %}
 							{% if default_help_url %}
 								<li id="help-nav"><a href="{{ default_help_url }}">Help</a></li>

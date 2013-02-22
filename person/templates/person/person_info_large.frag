@@ -1,7 +1,7 @@
 {% load imagetags %}
 <div class="person-info">
 		{% if profile.photo %}
-		<img class="person-photo" src="{{ profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{profile.full_name}}" alt="{{ profile.full_name}}" />
+		<img class="person-photo" src="{{ profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{profile.get_full_name}}" alt="{{ profile.get_full_name}}" />
 		{% else %}
 		<img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" />		
 		{% endif %}

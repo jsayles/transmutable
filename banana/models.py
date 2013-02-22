@@ -73,7 +73,7 @@ class CompletedItemManager(models.Manager):
 
 		for item in items.order_by('-created').select_related():
 			if len(results) >= max_count: break
-			if users.has_key(item.user.id): continue
+			if users.has_key(item.user.id) or item.user.get_profile().mute: continue
 			users[item.user.id] = item.user
 			results.append(item)
 		return results

@@ -35,8 +35,9 @@ from peach.forms import NamespaceForm
 
 def index(request):
 	day_limit = 4
-	promoted_users = User.objects.exclude(profile__bio='').exclude(profile__bio=None).order_by('?')
-	return render_to_response('banana/index.html', {'promoted_users':promoted_users, 'completed_items':CompletedItem.objects.recent(max_count=10, created_after=datetime.now() - timedelta(days=day_limit)), 'users':User.objects.filter(work_docs__modified__gt=datetime.now() - timedelta(days=day_limit)).order_by('-work_docs__modified') }, context_instance=RequestContext(request))
+	promoted_users = User.objects.exclude(profile__bio='').exclude(profile__bio=None).exclude(profile__mute=True).order_by('?')
+	completed_items = CompletedItem.objects.recent(max_count=10, created_after=datetime.now() - timedelta(days=day_limit))
+	return render_to_response('banana/index.html', {'promoted_users':promoted_users, 'completed_items':completed_items }, context_instance=RequestContext(request))
 
 @staff_member_required
 def test(request):

@@ -33,7 +33,7 @@ $(document).ready(function(){
 <p style="margin-top: 20px;">Don't remember your password?  Try our <a href="{% url person.views.password_reset %}">password reset page</a>.</p>
 
 {% if open_registration %}
-<p style="margin-top: 20px;">Don't have an account yet?  Try our <a href="{% url person.views.register %}">registration page</a>.<br/>It's quick, we promise.</p>
+<p style="margin-top: 20px;">Don't have an account yet?  Try our <a href="{% url person.views.register %}">registration page</a>.</p>
 {% endif %}
 
 {% endblock %}

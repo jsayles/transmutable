@@ -63,7 +63,7 @@ def create_secret(): return User.objects.make_random_password(length=20)
 
 class InviteManager(models.Manager):
 	def distribute_invites(self, num_per_user):
-		for profile in UserProfile.objects.filter(user__is_active=True):
+		for profile in UserProfile.objects.filter(user__is_active=True).filter(mute=False):
 			num_to_distribute = num_per_user - Invite.objects.filter(inviter=profile, sent_to=None).count()
 			if num_to_distribute < 1: continue
 			for i in range(0, num_per_user):
@@ -122,7 +122,8 @@ class UserProfile(ThumbnailedModel):
 	invites = models.ManyToManyField(Invite, blank=True, null=True, related_name='inviter')
 	email_validated = models.BooleanField(default=False, blank=False, null=False)
 	tos = models.BooleanField(default=False, blank=False, null=False)
-	
+	mute = models.BooleanField(default=False, blank=False, null=False, help_text="Hide this account from public listings.")
+
 	objects = UserProfileManager()
 	def invitees(self):
 		return UserProfile.objects.filter(user__origin_invites__inviter=self.user)
