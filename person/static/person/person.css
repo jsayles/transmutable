@@ -22,7 +22,8 @@
 }
 #registration-form table { width: 100%; }
 #registration-form input[type=text], #content form input[type=password] { width: 95%; }
-#registration-form label[for="id_tos"] { display: none; }
+#registration-form label[for=id_tos] { display: none; }
+#id_tos { margin; 0 0.2em 0 0; }
 
 #profile-form input[type=text], #profile-form textarea { width: 100%; }
 #profile-form th, #password-change-form th { vertical-align: top; text-align: right; padding-right: 1em;}

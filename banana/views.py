@@ -51,9 +51,7 @@ def user_redirect(request):
 def user(request, username):
 	user = get_object_or_404(User, username=username)
 	if request.user == user and not request.GET.get('public') == 'true':
-		workdoc_form = WorkDocForm(instance=user.work_doc)
-		completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
-		return render_to_response('banana/user.html', {'workdoc_form':workdoc_form, 'completed_form':completed_form, 'namespace_form':NamespaceForm(), 'user':user }, context_instance=RequestContext(request))
+		return render_to_response('banana/user.html', {'user':user }, context_instance=RequestContext(request))
 	else:
 		return render_to_response('banana/user_public.html', { 'user':user }, context_instance=RequestContext(request))
 
@@ -119,11 +117,11 @@ def completed_item_rock(request):
 	raise HttpResponseServerError('Error')
 
 @login_required
-def workdoc_edit(request):
+def work_doc(request):
 	if request.method == 'POST':
 		workdoc_form = WorkDocForm(request.POST)
 		if workdoc_form.is_valid():
 			request.user.work_doc.save_markup(workdoc_form.cleaned_data['markup'])
-	return HttpResponse(json.dumps(request.user.work_doc.flatten()), mimetype='application/json')
+	return JsonResponse(request.user.work_doc.flatten())
 
 # Copyright 2011 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

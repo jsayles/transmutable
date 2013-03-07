@@ -2,6 +2,39 @@
 
 /*
 	=========================================
+	Workdoc Editor
+	=========================================
+*/
+.work-doc-edit-view textarea {
+	width: 96%;
+	height: 30em;
+	margin: 0 0 0.6em 0;
+}
+
+.work-doc-edit-view button {
+	float: right;
+	margin-left: 0.6em;
+}
+
+/*
+	=========================================
+	New User Tour
+	=========================================
+*/
+.new-user-tour-view h4 {
+	font-size: 3.4em;
+	position: absolute;
+	line-height: 0.9em;
+	left: -0.7em;
+}
+.new-user-tour-view .icon-arrow-down {
+	float: left;
+	margin-right: 0.2em;
+	font-size: 4em;
+}
+
+/*
+	=========================================
 	Update Views
 	=========================================
 */

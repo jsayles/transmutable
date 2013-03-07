@@ -32,20 +32,9 @@
 	<div class="span10"><h1>{{ user.get_full_name }}</h1></div>
 </div>
 <div class="row-fluid">
-	<div class="span2" id="completed-column">
-		<h3 class='section-title'>What I did:</h3>
-		{% if not user.completed_items.all %}
-			<p class='alert alert-info'>Awaiting to-dones.</p>
-		{% endif %}
-		<div class="completed-list update-list">
-		{% for completed_item in user.completed_items.all|slice:":10" %}
-			{% completed_item_widget %}
-		{% endfor %}
-		</div>
-	</div>
-	<div class="span3 offset1" id="work-doc-column">
+	<div class="span3" id="work-doc-column">
 		<h3 class="user-prompt-heading section-title">
-			What I'm doing:
+			What I will do:
 		</h3>
 		<div id="work-doc" class="rendered-wrapper rounded-block">
 			{% if not user.work_doc.rendered %}
@@ -54,6 +43,17 @@
 			<div id="work-doc-render">
 				{{ user.work_doc.rendered|safe }}
 			</div>
+		</div>
+	</div>
+	<div class="span2 offset1" id="completed-column">
+		<h3 class='section-title'>What I did:</h3>
+		{% if not user.completed_items.all %}
+			<p class='alert alert-info'>Awaiting to-dones.</p>
+		{% endif %}
+		<div class="completed-list update-list">
+		{% for completed_item in user.completed_items.all|slice:":10" %}
+			{% completed_item_widget %}
+		{% endfor %}
 		</div>
 	</div>
 	<div class="span2 offset1" id="gratitudes-column">

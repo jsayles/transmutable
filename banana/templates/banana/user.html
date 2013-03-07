@@ -4,21 +4,18 @@
 {% block sub-title %}{{ user.get_full_name }} | {% endblock %}
 
 {% block sub-style %}
-	#work-doc, .updates-list { min-height: 20em; }
-	#work-doc { width: 99%; }
-	#work-doc-controls { padding: 0px; }
-	#work-doc-form { margin: 0; }
-	#work-doc-form textarea { width: 97%; height: 30em; }
-	#work-doc-editor { position: relative; }
-	#formatting-help-link {
-		float: right;
-	}
-
+	.work-doc-edit-view, .updates-list { min-height: 20em; }
 	.alert-info { min-height: 5em; }
 {% endblock %}
 
 {% block sub-head %}
 <script>
+var newUserTourView = null;
+var newUser = {% if not user.completed_items.all and not user.work_doc.rendered and not user.namespaces.all %}true{% else %}false{% endif %};
+
+var workDoc = new banana.models.WorkDoc();
+var workDocEditView = null;
+
 var hasUnusedTada = '{{user.has_unused_tada}}' == 'True';
 var completedItemEditView = null;
 var completedItems = new banana.models.CompletedItemCollection();
@@ -28,17 +25,34 @@ var gratitudeEditView = null;
 var gratitudes = new banana.models.GratitudeCollection();
 var gratitudesView = null;
 
-var oldWorkDoc = null;
-
 $(document).ready(function() {
 	$('#home-nav').addClass('active');
+	transmutable.URL_LOADER.on('change', _.once(initPage));
+});
+
+function initPage(){
+	if(newUser){
+		newUserTourView = new banana.views.NewUserTourView({'siteName':'{{ site.name }}'});
+		$('#content').prepend(newUserTourView.el);
+	}
+
+	workDocEditView = new banana.views.WorkDocEditView({ 'model':workDoc });
+	workDoc.fetch();
+	$('button[name="edit-work-doc-button"]').click(function(){
+		workDocEditView.edit();
+	});
+	workDoc.on('edit-completed', function(){
+		$('button[name="edit-work-doc-button"]').show()
+		if(newUser){ newUserTourView.showStepTwo(); }
+	})
+	$('#work-doc-column .section-title').after(workDocEditView.el);
 
 	completedItemEditView = new banana.views.CompletedItemEditView({
 		'hasTada':hasUnusedTada,
 		'successCallback':function(newModel){
 			hasUnusedTada = false;
-			$('#completed-welcome').hide();
 			completedItems.fetch();
+			if(newUser){ newUserTourView.showStepThree(); }
 		}
 	});
 	$('#completed-column').append(completedItemEditView.el);
@@ -50,8 +64,8 @@ $(document).ready(function() {
 
 	gratitudeEditView = new banana.views.GratitudeEditView({
 		'successCallback':function(newGratitude){
-			$('#gratitudes-welcome').hide();
 			gratitudes.fetch();
+			if(newUser){ newUserTourView.showStepFour(); }
 		}
 	});
 	$('#gratitudes-column').append(gratitudeEditView.el);
@@ -62,8 +76,6 @@ $(document).ready(function() {
 	$('#gratitudes-column').append(gratitudesView.el);
 	gratitudesView.collection.fetch();
 
-	$('#work-doc-editor').hide();
-
 	$('#formatting-help-link').click(function(){
 		if($('.formatting-help').length > 0){
 			$('.formatting-help').remove();
@@ -73,93 +85,26 @@ $(document).ready(function() {
 		$('.completed-form-heading').after(formattingHelpView.render().el);
 		return false;
 	});
-
-	$('button[name="work-doc-form-button"]').click(function(){
-		$('.formatting-help').remove();
-		$('#work-doc-editor').hide();
-		$('#work-doc-render').html('Submitting...');
-		$('#work-doc').show();
-		$('#work-doc-controls').show();
-		$('#work-doc-welcome').hide();
-		submitWorkdoc($('#work-doc-form'), $('#work-doc-render'));
-	});
-	$('button[name="work-doc-reset-button"]').click(function(){
-		$('.formatting-help').remove();
-		$('#work-doc-editor').hide();
-		$('#work-doc').show();
-		$('#work-doc-controls').show();
-		$('#work-doc-form textarea').val(oldWorkDoc);
-	});
-	$('button[name="edit-work-doc-button"]').click(function(){
-		oldWorkDoc = $('#work-doc-form textarea').val();
-		$('#work-doc').hide();
-		$('#work-doc-controls').hide();
-		$('#work-doc-editor').show();
-	})
-
-	{% if user.work_doc.rendered == ' ' or not user.work_doc.rendered %}
-		$('button[name="edit-work-doc-button"]').click();
-	{% endif %}
-
-	$('#id_markup').focus();
-});
+}
 </script>
 {% endblock %}
 
 {% block content %}
-
-{% if not user.completed_items.all and not user.work_doc.rendered and not user.namespaces.all %}
-<div class="row-fluid" id="welcome-row">
-	<div class="span12 alert alert-info">
-		<h2>Welcome to {{ site.name}}, Smarty Pants!</h2>
-	</div>
-</div>
-
-{% endif %}
-
 <div class="row-fluid">
-	<div class="span3" id="completed-column">
-		<h3 class="completed-form-heading user-prompt-heading section-title">What did you do?</h3>
-		{% if not user.completed_items.all %}
-			<div id="completed-welcome" class="alert alert-info">
-				<p><strong>Celebrate the tasks you complete</strong> and occasionally promote your work.</p>
-			</div>
-		{% endif %}
-		<!-- CompletedItemEditView is inserted here -->
-	</div>
-	<div class="span4 offset1">
+	<div class="span4" id="work-doc-column">
 		<h3 class="user-prompt-heading section-title">
-				What are you doing?
+				Intentions:
 				<span id="work-doc-controls">
 					<button name="edit-work-doc-button" class="positive">edit</button>
 				</span>
 		</h3>
-		{% if not user.work_doc.rendered %}
-			<div id="work-doc-welcome" class="alert alert-info">
-				<p><strong>Offload your upcoming <nobr>to-do's</nobr></strong> and relevent info into this handy editor.</p>
-			</div>
-		{% endif %}
-		<div id="work-doc-editor">
-			<form id="work-doc-form" action="." method="post">
-				{% for field in workdoc_form %}{{ field }}{% endfor %}
-			</form>
-			<a id='formatting-help-link' href=".">formatting help</a>
-			<button accesskey="s" name="work-doc-form-button" type="button" class="positive">save</button>
-			<button name="work-doc-reset-button" type="button" class="negative">cancel</button>
-		</div>
-		<div id="work-doc" class="rendered-wrapper rounded-block editable-section">
-			<div id="work-doc-render">
-				{{ user.work_doc.rendered|safe }}
-			</div>
-		</div>
+	</div>
+	<div class="span3 offset1" id="completed-column">
+		<h3 class="completed-form-heading user-prompt-heading section-title">Manifestations:</h3>
+		<!-- CompletedItemEditView is inserted here -->
 	</div>
 	<div class="span3 offset1" id="gratitudes-column">
-		<h3 id="gratitudes-title" class='section-title'>What are your gratitudes?</h3>
-		{% if not user.gratitudes.all %}
-			<div id="gratitudes-welcome" class="alert alert-info">
-				<p><strong>Focus on the world's gifts</strong> for better perspective and happiness.</p>
-			</div>
-		{% endif %}
+		<h3 id="gratitudes-title" class='section-title'>Gratitudes:</h3>
 		<!-- GratitudeEditView is inserted here -->
 		<!-- GratitudesView is inserted here -->
 	</div>

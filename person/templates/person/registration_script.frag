@@ -5,6 +5,7 @@
 {% endif %}
 
 $(document).ready(function() {
+	$('label[for=id_tos]').hide();
 	if(tosURL){
 		$('#id_tos').after($.el.span('I accept the ', $.el.a({'href':tosURL, 'target':'_new'}, 'terms of service'), '.'));
 	} else {

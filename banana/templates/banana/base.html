@@ -32,17 +32,5 @@ function rockCompletedItem(itemID, rock_count, element){
 		return false;
 	}
 }
-function submitWorkdoc(form, workdocRender){
-	$.post(
-		'{% url banana.views.workdoc_edit %}',
-		form.serialize(),
-		function(data) {
-			if(workdocRender){
-				workdocRender.html(data.rendered);
-			}
-		},
-		'json'
-	);
-}
 </script>
 {% endblock %}

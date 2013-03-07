@@ -14,7 +14,7 @@ urlpatterns = patterns('',
 	url(r'^m/activity/$', 'banana.mobile_views.activity', name='mobile_activity'),
 
 	# API views
-	url(r'^api/workdoc/$', 'banana.views.workdoc_edit', name='workdoc_edit'),
+	url(r'^api/work-doc/$', 'banana.views.work_doc', name='work_doc'),
 	url(r'^api/completed-item/$', 'banana.views.completed_items', name='completed_items'),
 	url(r'^api/completed-item/rock$', 'banana.views.completed_item_rock', name='completed_item_rock'),
 	url(r'^api/gratitude/$', 'banana.views.gratitudes', name='gratitudes'),
