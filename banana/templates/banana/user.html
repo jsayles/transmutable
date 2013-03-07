@@ -25,12 +25,10 @@ var gratitudeEditView = null;
 var gratitudes = new banana.models.GratitudeCollection();
 var gratitudesView = null;
 
-$(document).ready(function() {
-	$('#home-nav').addClass('active');
-	transmutable.URL_LOADER.on('change', _.once(initPage));
-});
+transmutable.URL_LOADER.on('change', _.once(initPage));
 
 function initPage(){
+	$('#home-nav').addClass('active');
 	if(newUser){
 		newUserTourView = new banana.views.NewUserTourView({'siteName':'{{ site.name }}'});
 		$('#content').prepend(newUserTourView.el);

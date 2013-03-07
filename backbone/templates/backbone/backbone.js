@@ -116,7 +116,9 @@ transmutable.UrlLoader = Backbone.Model.extend({
     }
 });
 transmutable.URL_LOADER = new transmutable.UrlLoader();
-transmutable.URL_LOADER.fetch();
+$(document).ready(function(){
+    transmutable.URL_LOADER.fetch();
+});
 
 transmutable.urls.wikiPage = function(username, namespace, name){
 	var url = transmutable.replaceID("{% url peach.views.wiki 333 666 999 %}", 333, username);
