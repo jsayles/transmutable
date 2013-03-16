@@ -30,60 +30,58 @@ banana.views.NewUserTourView = Backbone.View.extend({
 	className: 'new-user-tour-view',
 	initialize: function(options){
 		_.bindAll(this);
+		this.completed = false;
 
 		this.titleRow = $.el.div(
 			{'class':'row-fluid new-user-tour-title-row'}, 
-			$.el.h2({'class':'span12 alert alert-info'}, 'Get Started With ' + this.options.siteName + ', Smarty Pants!')
+			$.el.h2({'class':'span12 alert alert-info'}, 'Let\'s get started with ' + this.options.siteName + '!')
 		);
 		this.$el.append(this.titleRow);
 
 		this.congratulationsRow = $.el.div(
 			{'class':'row-fluid new-user-tour-congratulations-row'}, 
-			$.el.h2({'class':'span12 alert alert-info'}, 'You Are A ' + this.options.siteName + ' Nerd!'),
-			$.el.p('Those three steps (intentions, manifestations, and gratitudes) are the Big Three steps for all work.')
+			$.el.h2({'class':'span12 alert alert-info'}, 'That\'s the core of Transmutable Work.  Keep going!')
 		);
 		this.$el.append(this.congratulationsRow);
 
-		this.infoRow = $.el.div(
-			{'class':'row-fluid'},
-			$.el.div({'id':'infoSpan', 'class':'span12 offset1'},
-				$.el.i({'class':'icon-arrow-down'}),
-				$.el.div({'class':'copy'})
-			)
-		);
-		this.$el.append(this.infoRow);
+		$('#work-doc-column .section-title').html('1. ' + $('#work-doc-column .section-title').html());
+		$('#completed-column .section-title').html('2. ' + $('#completed-column .section-title').html());
+		$('#gratitudes-column .section-title').html('3. ' + $('#gratitudes-column .section-title').html());
+		$('#completed-column').hide();
+		$('#gratitudes-column').hide();
+		this.$el.find('.new-user-tour-title-row').show();
+		this.$el.find('.new-user-tour-congratulations-row').hide();
 
 		this.showStepOne();
 	},
 	showStepOne: function(){
-		this.$el.find('.new-user-tour-title-row').show();
-		this.$el.find('.new-user-tour-congratulations-row').hide();
-		this.$el.find('#infoSpan').removeClass();
-		this.$el.find('.icon-arrow-down').css({'float':'left'}).show();
-		this.$el.find('.copy').css({'float': 'none', 'margin-right': 'inherit'}).show();
-		this.$el.find('.copy').empty().append($.el.span('Think of a specific task that you intend to do for one of your current projects and write it below.', $.el.br(), 'Examples: "- Call Steve" or "- Research Bucky Balls".'));
+		if(this.completed) return;
+		$('.new-user-copy').remove();
+		$('#work-doc-column .section-title').append($.el.div({'class':'new-user-copy'}, 'Offload your upcoming to-do\'s and relevant info into this handy editor.'));
+		$('#work-doc-column').show().addClass('offset3');
 	},
 	showStepTwo: function(){
-		this.$el.find('.new-user-tour-title-row').show();
-		this.$el.find('.new-user-tour-congratulations-row').hide();
-		this.$el.find('#infoSpan').removeClass().addClass('span6 offset6');
-		this.$el.find('.icon-arrow-down').css({'float':'left'}).show();
-		this.$el.find('.copy').css({'float': 'none', 'margin-right': 'inherit'}).show();
-		this.$el.find('.copy').empty().append($.el.span('Now celebrate some task you finished by writing it below.', $.el.br(), 'Examples: "Found a mentor!" or "Served my 100th client.".'));
+		if(this.completed) return;
+		$('#work-doc-column').show().removeClass('offset3');
+		$('#completed-column .section-title').append($.el.div({'class':'new-user-copy'}, 'Now celebrate some task you finished by writing it below.'));
+		$('#completed-column').show();
 	},
 	showStepThree: function(){
-		this.$el.find('.new-user-tour-title-row').show();
-		this.$el.find('.new-user-tour-congratulations-row').hide();
-		this.$el.find('#infoSpan').removeClass().addClass('span6 offset5');
-		this.$el.find('.icon-arrow-down').css({'float':'right'}).show();
-		this.$el.find('.copy').css({'float': 'right', 'margin-right': '1em'}).show();
-		this.$el.find('.copy').empty().append($.el.span('Something about gratitudes.', $.el.br(), 'Examples: "- Bink!" or "- Bonk.".'));
+		if(this.completed) return;
+		$('#gratitudes-column').show();
+		$('#gratitudes-column .section-title').append($.el.div({'class':'new-user-copy'}, 'Now give thanks for one of your many helpful people or tools.'));
 	},
 	showStepFour: function(){
+		if(this.completed) return;
+		this.completed = true;
 		this.$el.find('.new-user-tour-title-row').hide();
-		this.$el.find('.copy').hide();
 		this.$el.find('.new-user-tour-congratulations-row').show();
-		this.$el.find('i.icon-arrow-down').hide();
+
+		setTimeout(_.bind(function(){
+			this.$el.find('.new-user-tour-congratulations-row').hide(400);
+			$('.new-user-copy').hide(400);
+			
+		}, this), 5000);
 	}
 });
 

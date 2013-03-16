@@ -27,12 +27,11 @@
 	line-height: 0.9em;
 	left: -0.7em;
 }
-.new-user-tour-view .icon-arrow-down {
-	float: left;
-	margin-right: 0.2em;
-	font-size: 4em;
+.section-title .new-user-copy {
+	font-size: 0.8em;
+	color: #444;
+	font-weight: normal;
 }
-
 /*
 	=========================================
 	Update Views
