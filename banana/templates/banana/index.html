@@ -44,13 +44,15 @@
 		  <div class="hero-unit">
 			<h1>Work in public!</h1>
 			<p>Emerge from behind your intellectual firewall and share your work.</p>
-			<!-- <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p> -->
+		  </div>
+		  <div id="users-title-row" class="row-fluid">
+		  	<h2>Meet the people:</h2>
 		  </div>
 		  <div id="users-row" class="row-fluid">
 		  	{% for user in promoted_users|slice:":2" %}
 				<div class="span4">
 					<div class='testimonial'>
-						<h2>{{ user.get_full_name }}</h2>
+						<h3>{{ user.get_full_name }}</h3>
 						<p>{{ user.get_profile.bio|striptags|truncatewords:"30" }}</p>
 					</div>
 					<div class='testimonial-buttons'>

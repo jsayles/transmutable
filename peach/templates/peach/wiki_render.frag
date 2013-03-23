@@ -34,11 +34,17 @@ $(document).ready(function() {
 
 	{% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
 		<div class="wiki-control-links">
+		<a href="{% url peach.views.wiki_edit page.namespace.owner.username page.namespace.name page.name %}">
+			<i class="icon-edit" alt="edit"></i> edit
+		</a>
 		{% if not is_mobile %}
-			<button type="button" name="history-button">history</button>
-			<button type="button" name="print-button">print</button>
+			<a href="{% url peach.views.wiki_print page.namespace.owner.username page.namespace.name page.name %}" target="_new">
+				<i class="icon-print" alt="print"></i> print
+			</a>
+			<a href="{% url peach.views.wiki_history page.namespace.owner.username page.namespace.name page.name %}">
+				<i class="icon-time" alt="history"></i> history
+			</a>
 		{% endif %}
-		<button type="button" name="edit-button">edit</button>
 		</div> 
 	{% endif %}
 

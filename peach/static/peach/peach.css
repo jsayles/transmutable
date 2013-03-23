@@ -3,6 +3,7 @@
 .rendered-wrapper { margin: 20px 0px;  }
 
 .wiki-control-links { float: right;  }
+.wiki-control-links a { font-size: 1.2em; margin-left: 1em; }
 .wiki-control-links form { display: inline; margin-right: 15px; }
 
 .printed-page { border-bottom: none; }

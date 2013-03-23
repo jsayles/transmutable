@@ -34,15 +34,19 @@ banana.views.NewUserTourView = Backbone.View.extend({
 
 		this.titleRow = $.el.div(
 			{'class':'row-fluid new-user-tour-title-row'}, 
-			$.el.h2({'class':'span12 alert alert-info'}, 'Let\'s get started with ' + this.options.siteName + '!')
+			$.el.h2({'class':'span12'}, 'Let\'s get started with ' + this.options.siteName + '!')
 		);
 		this.$el.append(this.titleRow);
 
 		this.congratulationsRow = $.el.div(
 			{'class':'row-fluid new-user-tour-congratulations-row'}, 
-			$.el.h2({'class':'span12 alert alert-info'}, 'That\'s the core of Transmutable Work.  Keep going!')
+			$.el.h2({'class':'span12'}, 'That\'s the core of Transmutable Work.  Keep going!')
 		);
 		this.$el.append(this.congratulationsRow);
+
+		this.toDoCopy = $.el.div({'class':'new-user-copy'}, 'Offload your upcoming to-do\'s and relevant info into this handy editor.');
+		this.toDoneCopy = $.el.div({'class':'new-user-copy'}, 'Now celebrate some task you finished by writing it below.');
+		this.gratitudesCopy = $.el.div({'class':'new-user-copy'}, 'Now give thanks for one of your many helpful people or tools.');
 
 		$('#work-doc-column .section-title').html('1. ' + $('#work-doc-column .section-title').html());
 		$('#completed-column .section-title').html('2. ' + $('#completed-column .section-title').html());
@@ -57,19 +61,19 @@ banana.views.NewUserTourView = Backbone.View.extend({
 	showStepOne: function(){
 		if(this.completed) return;
 		$('.new-user-copy').remove();
-		$('#work-doc-column .section-title').append($.el.div({'class':'new-user-copy'}, 'Offload your upcoming to-do\'s and relevant info into this handy editor.'));
-		$('#work-doc-column').show().addClass('offset3');
+		$('#work-doc-column .section-title').append(this.toDoCopy);
+		$('#work-doc-column').show().addClass('offset4');
 	},
 	showStepTwo: function(){
 		if(this.completed) return;
-		$('#work-doc-column').show().removeClass('offset3');
-		$('#completed-column .section-title').append($.el.div({'class':'new-user-copy'}, 'Now celebrate some task you finished by writing it below.'));
+		$('#work-doc-column').show().removeClass('offset4');
+		$('#completed-column .section-title').append(this.toDoneCopy);
 		$('#completed-column').show();
 	},
 	showStepThree: function(){
 		if(this.completed) return;
 		$('#gratitudes-column').show();
-		$('#gratitudes-column .section-title').append($.el.div({'class':'new-user-copy'}, 'Now give thanks for one of your many helpful people or tools.'));
+		$('#gratitudes-column .section-title').append(this.gratitudesCopy);
 	},
 	showStepFour: function(){
 		if(this.completed) return;
@@ -102,7 +106,7 @@ banana.views.WorkDocEditView = Backbone.View.extend({
 		this.$el.append(this.form);
 		$(this.form).hide();
 
-		this.markupView = $.el.div({'class':'markup-view rendered-wrapper'});
+		this.markupView = $.el.div({'class':'work-doc-render markup-view rendered-wrapper'});
 		this.$el.append(this.markupView);
 
 		this.model.on('change:rendered', this.handleRenderedChange);

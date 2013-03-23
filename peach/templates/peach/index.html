@@ -3,6 +3,7 @@
 {% block sub-title %}Notes | {% endblock %}
 
 {% block sub-style %}
+.welcome-title { text-align: center; }
 #namespace-form { display: inline; }
 #namespace-form input[type=text] { width: 20em; }
 .namespace-list li { margin-left: 20px; list-style-type: disc; margin-bottom: 8px; }
@@ -25,8 +26,8 @@ $(document).ready(function(){
 {% block content %}
 {% if not request.user.namespaces.all %}
 	<div class="row-fluid">
-		<div class="span9 alert alert-info">
-			<h2>This is the place for your ideas, Thinker of Thoughts!</h2>
+		<div class="span12 welcome-title">
+			<h2>This is the place for your ideas.</h2>
 		</div>
 	</div>
 
@@ -38,7 +39,7 @@ $(document).ready(function(){
 </h1>
 
 <div class="row-fluid">
-	<ul id="public-list" class="namespace-list span3">
+	<ul id="public-list" class="namespace-list span4">
 		<h3 class="section-title">Public</h3>
 		{% if not request.user.namespaces.public_not_archived %}
 			<div class='alert alert-info'>
@@ -51,7 +52,7 @@ $(document).ready(function(){
 			</li>
 		{% endfor %}
 	</ul>
-	<ul id="private-list" class="namespace-list span3 offset1">
+	<ul id="private-list" class="namespace-list span4">
 		<h3 class="section-title">Private</h3>
 		{% if not request.user.namespaces.private_not_archived %}
 			<div class='alert alert-info'>
@@ -64,7 +65,7 @@ $(document).ready(function(){
 			</li>
 		{% endfor %}
 	</ul>
-	<ul id="archive-list" class="namespace-list span3 offset1">
+	<ul id="archive-list" class="namespace-list span4">
 		<h3 class="section-title">Archive</h3>
 		{% if not request.user.namespaces.archived %}
 			<div class='alert alert-info'>

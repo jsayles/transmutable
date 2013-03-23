@@ -35,7 +35,7 @@ class WikiPhotoForm(forms.ModelForm):
 		fields = ('image','title','description')
 
 class NamespaceForm(forms.ModelForm):
-	display_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Really interesting name'}))
+	display_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'New note name'}))
 
 	class Meta:
 		model = Namespace

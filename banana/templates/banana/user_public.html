@@ -51,13 +51,14 @@
 		<div id="work-doc" class="rendered-wrapper rounded-block">
 			{% if not user.work_doc.rendered %}
 				<p class='alert alert-info'>Awaiting to-dos.</p>
+			{% else %}
+				<div class="work-doc-render">
+					{{ user.work_doc.rendered|safe }}
+				</div>
 			{% endif %}
-			<div id="work-doc-render">
-				{{ user.work_doc.rendered|safe }}
-			</div>
 		</div>
 	</div>
-	<div class="span2 offset1" id="completed-column">
+	<div class="span3" id="completed-column">
 		<h3 class='section-title'>What I did:</h3>
 		{% if not user.completed_items.all %}
 			<p class='alert alert-info'>Awaiting to-dones.</p>
@@ -68,7 +69,7 @@
 		{% endfor %}
 		</div>
 	</div>
-	<div class="span2 offset1" id="gratitudes-column">
+	<div class="span3" id="gratitudes-column">
 		<h3 class='section-title'>I'm grateful for:</h3>
 			{% if not user.gratitudes.all %}
 				<p class='alert alert-info'>Awaiting gratitudes.</p>
@@ -79,7 +80,7 @@
 			{% endfor %}
 			</div>
 	</div>	
-	<div class="span2 offset1">
+	<div class="span3">
 		<h3 class='section-title'>My notes:</h3>
 		<div id="notes-list" class="rounded-block">
 			{% if not user.namespaces.public_not_archived %}

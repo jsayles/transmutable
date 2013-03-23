@@ -6,12 +6,14 @@
 {% block sub-style %}
 	.work-doc-edit-view, .updates-list { min-height: 20em; }
 	.alert-info { min-height: 5em; }
+	#edit-work-doc-link { font-size: 0.7em; font-weight: normal; }
 {% endblock %}
 
 {% block sub-head %}
 <script>
+
 var newUserTourView = null;
-var newUser = {% if not user.completed_items.all and not user.work_doc.rendered and not user.namespaces.all %}true{% else %}false{% endif %};
+var newUser = {% if not user.completed_items.all and not user.work_doc.rendered and not user.gratitudes.all %}true{% else %}false{% endif %};
 
 var workDoc = new banana.models.WorkDoc();
 var workDocEditView = null;
@@ -36,11 +38,14 @@ function initPage(){
 
 	workDocEditView = new banana.views.WorkDocEditView({ 'model':workDoc });
 	workDoc.fetch();
-	$('button[name="edit-work-doc-button"]').click(function(){
+	$('#edit-work-doc-link').click(function(){
+		console.log("Clicker")
 		workDocEditView.edit();
+		$(this).hide();
+		return false;
 	});
 	workDoc.on('edit-completed', function(){
-		$('button[name="edit-work-doc-button"]').show()
+		$('#edit-work-doc-link').show()
 		if(newUser){ newUserTourView.showStepTwo(); }
 	})
 	$('#work-doc-column .section-title').after(workDocEditView.el);
@@ -93,15 +98,15 @@ function initPage(){
 		<h3 class="user-prompt-heading section-title">
 				What are you going to do?
 				<span id="work-doc-controls">
-					<button name="edit-work-doc-button" class="positive">edit</button>
+					<a id="edit-work-doc-link">edit</a>
 				</span>
 		</h3>
 	</div>
-	<div class="span3 offset1" id="completed-column">
+	<div class="span4" id="completed-column">
 		<h3 class="completed-form-heading user-prompt-heading section-title">What did you do?</h3>
 		<!-- CompletedItemEditView is inserted here -->
 	</div>
-	<div class="span3 offset1" id="gratitudes-column">
+	<div class="span4" id="gratitudes-column">
 		<h3 id="gratitudes-title" class='section-title'>What are your gratitudes?</h3>
 		<!-- GratitudeEditView is inserted here -->
 		<!-- GratitudesView is inserted here -->

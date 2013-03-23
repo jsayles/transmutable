@@ -2,7 +2,16 @@
 
 {% block title %}{{ page.name }}{% endblock %}
 
+{% block sub-head %}
+<style>
+footer { display: none; }
+body { padding: 1em 0; }
+</style>
+{% endblock %}
+
+
 {% block header %}{% endblock %}
+{%block navbar %}{% endblock %}
 {% block content %}
 	{% include "peach/wiki_print_render.frag" %}
 {% endblock %}
