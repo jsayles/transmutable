@@ -1,5 +1,5 @@
 {% extends "banana/base.html" %}
-{% load imagetags %}
+{% block sub-title %}Add Invites | {% endblock %}
 
 {% block sub-head %}
 <script>
@@ -9,23 +9,28 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block style %}
-#content li { 	padding-left: 0em; margin-left: 1.6em;}
-#content ul > li { list-style-type: disc; }
-#content ol > li { list-style-type: decimal; }
 {% endblock %}
 
 {% block content %}
-
 <ul class="breadcrumb">
       <li>
          <a href="{% url apple.views.index %}">Staff tools</a> <span class="divider">/</span>
       </li>
-      <li class="active">Sreate an account</li>
+      <li class="active">add invites</li>
 </ul>
 
-<form enctype="multipart/form-data" action='.' method='post'>
-   <table id="signup">
-      {% for field in create_account_form %}
+{% if page_message %}
+   <div class="row-fluid">
+      <div class="span12 alert alert-info">
+         {{ page_message }}
+      </div>
+   </div>
+{% endif %}
+
+
+<form id="add-invites-form" action='.' method='post'>
+   <table>
+      {% for field in add_invites_form %}
          <tr class="{% cycle 'row-even' 'row-odd' %}">
             <td>{{ field.label_tag }}</td>
             <td>
@@ -38,7 +43,7 @@ $(document).ready(function() {
             {% endif %}
          </tr>
       {% endfor %}
-      <tr><td></td><td><input type="submit" value="Create!" /></td></tr>
+      <tr><td></td><td><input type="submit" value="Add invites" /></td></tr>
    </table>
 </form>
 {% endblock %}

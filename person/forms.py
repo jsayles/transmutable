@@ -38,15 +38,12 @@ class UserCreationForm(forms.ModelForm):
 
 	def clean_username(self):
 		username = self.cleaned_data["username"]
-		try:
-			User.objects.get(username=username)
-		except User.DoesNotExist:
-			return username
-		raise forms.ValidationError(_("A user with that username already exists."))
+		if User.objects.filter(username__iexact=username).count() > 0: raise forms.ValidationError(("A user with that username already exists."))
+		return username.lower()
 
 	def clean_email(self):
 		email = self.cleaned_data["email"]
-		if User.objects.filter(email=email).count() > 0:
+		if User.objects.filter(email__iexact=email).count() > 0:
 			raise forms.ValidationError(_("A user with that email already exists."))
 		return email
 

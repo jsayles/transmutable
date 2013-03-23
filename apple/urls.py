@@ -5,6 +5,7 @@ urlpatterns = patterns('',
 	(r'^$', 'apple.views.index'),
 	(r'^create-account/$' , 'apple.views.create_account'),
 	(r'^send-test/$' , 'apple.views.send_test'),
+	(r'^add-invites/$' , 'apple.views.add_invites'),
 	(r'^email-everyone/$' , 'apple.views.email_everyone'),
 )
 

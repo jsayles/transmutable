@@ -44,7 +44,7 @@ banana.views.NewUserTourView = Backbone.View.extend({
 		);
 		this.$el.append(this.congratulationsRow);
 
-		this.toDoCopy = $.el.div({'class':'new-user-copy'}, 'Offload your upcoming to-do\'s and relevant info into this handy editor.');
+		this.toDoCopy = $.el.div({'class':'new-user-copy'}, 'Offload your upcoming to-do\'s and relevant info.');
 		this.toDoneCopy = $.el.div({'class':'new-user-copy'}, 'Now celebrate some task you finished by writing it below.');
 		this.gratitudesCopy = $.el.div({'class':'new-user-copy'}, 'Now give thanks for one of your many helpful people or tools.');
 
@@ -60,6 +60,7 @@ banana.views.NewUserTourView = Backbone.View.extend({
 	},
 	showStepOne: function(){
 		if(this.completed) return;
+		$('#edit-work-doc-link').hide();
 		$('.new-user-copy').remove();
 		$('#work-doc-column .section-title').append(this.toDoCopy);
 		$('#work-doc-column').show().addClass('offset4');

@@ -6,8 +6,4 @@
 To find out more about {{ site.name}}, and optionally sign up, visit the link below:
 http://{{ site.domain}}{{ invite.get_absolute_url }}
 
-Thanks,
-
-The {{ site.name}} team
-
 This invitation was sent you from {{ site.name}} by {{ inviter.user.get_full_name }}.

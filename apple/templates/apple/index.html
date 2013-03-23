@@ -15,11 +15,11 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-<h1>Staff tools:</h1>
 <ul>
 	<li><a href="{% url apple.views.create_account %}">Create an Account</a></li>
 	<li><a href="{% url apple.views.email_everyone %}">Email All Active Accounts</a></li>
 	<li><a href="{% url apple.views.send_test %}">Send Test Messages</a></li>
+	<li><a href="{% url apple.views.add_invites %}">Add Invites</a></li>
 	<li><a href="{% url admin:index %}">Admin</a></li>
 </ul>
 {% endblock %}

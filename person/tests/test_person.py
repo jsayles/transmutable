@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.core.urlresolvers import reverse
 
+from person.models import Invite
+
 class BasicViewsTest(TestCase):
 	
 	def setUp(self):
@@ -17,6 +19,11 @@ class BasicViewsTest(TestCase):
 		
 	def tearDown(self):
 		pass
+
+	def test_invites(self):
+		num_invites = self.user.get_profile().invites.count()
+		Invite.objects.add_invites(3, self.user)
+		self.assertEqual(num_invites + 3, self.user.get_profile().invites.count())
 
 	def test_email_validation(self):
 		user = User.objects.get(username='trevor_smith')

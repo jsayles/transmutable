@@ -29,7 +29,7 @@ from django.utils.encoding import smart_str
 from django.core.mail import send_mail
 
 from banana.models import CompletedItem
-from forms import CreateAccountForm, SendTestEmailForm, EmailEveryoneForm
+from forms import CreateAccountForm, SendTestEmailForm, EmailEveryoneForm, AddInvitesForm
 
 @staff_member_required
 def index(request): return render_to_response('apple/index.html', { }, context_instance=RequestContext(request))
@@ -71,6 +71,19 @@ def send_test(request):
 	else:
 		send_test_email_form = SendTestEmailForm()
 	return render_to_response('apple/send_test.html', { 'page_message':page_message, 'send_test_email_form':send_test_email_form }, context_instance=RequestContext(request))
+
+@staff_member_required
+def add_invites(request):
+	page_message = None
+	if request.method == 'POST':
+		add_invites_form = AddInvitesForm(request.POST)
+		if add_invites_form.is_valid():
+			add_invites_form.save()
+			page_message = 'Added %i invites for %s' % (add_invites_form.cleaned_data['number_of_invites'], add_invites_form.cleaned_data['username'])
+			add_invites_form = AddInvitesForm()
+	else:
+		add_invites_form = AddInvitesForm()
+	return render_to_response('apple/add_invites.html', { 'page_message':page_message, 'add_invites_form':add_invites_form }, context_instance=RequestContext(request))
 
 @staff_member_required
 def create_account(request):

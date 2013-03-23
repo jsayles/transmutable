@@ -2,12 +2,32 @@ from django import forms
 from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 
+from person.models import Invite
+
 class SendTestEmailForm(forms.Form):
 	email = forms.EmailField(max_length=100, required=True, label="Email *")
 
 class EmailEveryoneForm(forms.Form):
 	subject = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'placeholder':'subject'}))
 	message = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'plain text email message'}))
+
+class AddInvitesForm(forms.Form):
+	username = forms.RegexField(max_length=30, regex=r'^[\w.@+-]+$', help_text = "30 characters or fewer. Letters, digits and @/./+/-/_ only.", error_messages = {'invalid': "This value may contain only letters, numbers and @/./+/-/_ characters."}, label="Username *")
+	number_of_invites = forms.IntegerField()
+
+	def clean_number_of_invites(self):
+		data = int(self.cleaned_data['number_of_invites'])
+		if data < 1: raise forms.ValidationError('The number must be greater than 0')
+		return data
+
+	def clean_username(self):
+		data = self.cleaned_data['username']
+		if User.objects.filter(username__iexact=data).count() != 1: raise forms.ValidationError("No user with that username")
+		return data
+
+	def save(self):
+		user = User.objects.get(username=self.cleaned_data['username'])
+		Invite.objects.add_invites(int(self.cleaned_data['number_of_invites']), user)
 
 class CreateAccountForm(forms.Form):
 	username = forms.RegexField(max_length=30, regex=r'^[\w.@+-]+$', help_text = "30 characters or fewer. Letters, digits and @/./+/-/_ only.", error_messages = {'invalid': "This value may contain only letters, numbers and @/./+/-/_ characters."}, label="Username *")
@@ -18,7 +38,7 @@ class CreateAccountForm(forms.Form):
 
 	def clean_username(self):
 		data = self.cleaned_data['username']
-		if User.objects.filter(username=data).count() > 0: raise forms.ValidationError("That username is already in use.")
+		if User.objects.filter(username__iexact=data).count() > 0: raise forms.ValidationError("That username is already in use.")
 		return data
 
 	def save(self):

@@ -9,14 +9,21 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 
-{% block style %}
+{% block sub-style %}
 #email-everyone-form { width: 500px; text-align: right; }
 #email-everyone-form textarea, #email-everyone-form input[type="text"] { width: 99%; }
 #email-everyone-form textarea { height: 40em; }
 {% endblock %}
 
 {% block content %}
-<h1><a href="{% url apple.views.index %}">Staff Tools</a> &raquo; Email All Active Accounts:</h1>
+
+<ul class="breadcrumb">
+      <li>
+         <a href="{% url apple.views.index %}">Staff tools</a> <span class="divider">/</span>
+      </li>
+      <li class="active">Email all active accounts</li>
+</ul>
+
 <h2>Use With Caution and Spell Check</h2>
 
 {% if page_message %}<h2>{{ page_message }}</h2>{% endif %}

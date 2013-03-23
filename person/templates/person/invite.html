@@ -17,16 +17,16 @@
 
 {% block content%}
 	<div class="row-fluid">
-		<div class="span6 offset3">
-			{% if invite.sent_to %}
-				{% if invite.used_by %}
-					<p>It appears that this invite has been claimed.</p>
-					<p>If you claimed it then you can login (or retrieve a lost password) on our <a href="{% url django.contrib.auth.views.login %}">login page</a>.</p>
-				{% else  %}
-					{% if request.user.is_authenticated %}
-						<p>It appears that you're already logged in.  If you'd like to claim this invite you'll need to log out.</p>
-					{% else %}
-						<h3 class="section-title">Claim your invite by registering:</h3>
+		{% if invite.sent_to %}
+			{% if invite.used_by %}
+				<p>It appears that this invite has been claimed.</p>
+				<p>If you claimed it then you can login (or retrieve a lost password) on our <a href="{% url django.contrib.auth.views.login %}">login page</a>.</p>
+			{% else  %}
+				{% if request.user.is_authenticated %}
+					<p>It appears that you're already logged in.  If you'd like to claim this invite you'll need to log out.</p>
+				{% else %}
+					<div class="span4 offset1">
+						<h1>Claim your invite</h1>
 						<form id="registration-form" action="." method="post">
 							<table>
 								{{ registration_form }}
@@ -34,11 +34,18 @@
 							</table>
 							{% csrf_token %}
 						</form>
-					{% endif %}
+					</div>
+					<div class="span5 offset1">
+						<h2>Work in public</h2>
+						<p class='alert alert-info'>Share using tools designed for work (not cat pictures).</p>
+						<p class='alert alert-info'>Feel the satisfaction of hitting the 'to-done' button.</p>
+						<p class='alert alert-info'>Purge your mind of open loops and nagging thoughts.</p>
+						<p class='alert alert-info'>Focus on gratitude for perspective and happiness.</p>
+					</div>
 				{% endif %}
-			{% else %}
-					<p>We have no record that this invite has been sent.</p>
 			{% endif %}
-		</div>
+		{% else %}
+				<p>We have no record that this invite has been sent.</p>
+		{% endif %}
 	</div>
 {% endblock %}
