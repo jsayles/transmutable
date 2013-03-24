@@ -18,8 +18,8 @@
 
 .work-doc-render {
 	background-color: #EEEEEE;
-	border-radius: 0.5em;
-	padding: 0.5em;
+	border-radius: 0.3em;
+	padding: 0.8em;
 }
 
 /*
@@ -54,9 +54,9 @@
 
 .update-view { 
 	margin: 0.5em 0 1em 0; 
-	padding: 0.5em;
+	padding: 0.8em;
 	background-color: #EEEEEE;
-	border-radius: 0.5em;
+	border-radius: 0.3em;
 }
 .update-view .rendered { min-height: 2em; }
 .update-view.promoted { 
