@@ -30,6 +30,14 @@ DATABASES = {
     }
 }
 
+#GOOGLE_AD_SETTINGS = {
+#	'user_public_top': { 'ad_client':'CLIENT ID', 'ad_slot':'SLOT ID' },
+#	'namespace_left': { 'ad_client':'CLIENT ID', 'ad_slot':'SLOT ID' },
+#	'wiki_left': { 'ad_client':'CLIENT ID', 'ad_slot':'SLOT ID' },
+#}
+#GOOGLE_ANALYTICS_ACCOUNT = 'ACCOUNT ID'
+
+
 DEFAULT_FROM_EMAIL = "someaddress@gmail.com"
 EMAIL_HOST = "smtp.nothing.com"
 EMAIL_HOST_PASSWORD = "12344321"
@@ -37,6 +45,32 @@ EMAIL_HOST_USER = "someaddress@gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
-LOGGING_NAME = '/tmp/transmutable.log'
-import logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s', filename=LOGGING_NAME, filemode = 'w')
+LOGGING = {
+	'version': 1,
+	'formatters': {
+		'verbose': {
+			'format': '%(module)s:%(levelname)s pid:%(process)d tid:%(thread)d %(message)s'
+		},
+		'simple': {
+			'format': '%(levelname)s %(message)s BOO'
+		},
+	},
+	'handlers': {
+		'syslog':{
+			'address': '/dev/log',
+			'class': 'logging.handlers.SysLogHandler',
+			'formatter':'verbose',
+			# 'address':('logs.papertrailapp.com', 11111)
+		}
+	},
+	'loggers': {
+		'': {
+			'handlers': ['syslog'],
+			'level': 'DEBUG',
+		}
+	}
+}
+
+logging.getLogger('').setLevel('DEBUG')
+logging.getLogger('django.db.backends').setLevel('WARNING')
+logging.getLogger('south').setLevel('WARNING')

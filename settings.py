@@ -1,6 +1,6 @@
-import traceback
-import pprint
 import os
+import logging
+import traceback
 
 PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 MEDIA_ROOT = PROJECT_ROOT + '/media/'

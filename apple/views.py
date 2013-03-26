@@ -1,9 +1,6 @@
-import datetime
-import calendar
-import pprint
+import logging
 import traceback
-import urllib
-import simplejson as json
+from datetime import datetime
 
 from django.utils.html import urlize
 from django.core.urlresolvers import reverse
