@@ -1,3 +1,5 @@
+import logging
+import traceback
 
 ADMINS = ( ('Your Name', 'your_email@somedomainyouown.com'), )
 MANAGERS = ADMINS
@@ -45,11 +47,26 @@ EMAIL_HOST_USER = "someaddress@gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
+class ExceptionFormatter(logging.Formatter):
+	def formatException(self, exc_info):
+		exc_type, val, tb = exc_info
+		init_formatted = traceback.format_exception(exc_type, val, tb)
+		init_formatted = map(lambda x: x.replace('\n', ' '), init_formatted)
+		init_formatted = map(lambda x: x.strip(), init_formatted)
+		limit = 0
+		formatted = None
+		while formatted is None or len(formatted) > 2000:
+			formatted = init_formatted[limit:]
+			formatted = ' | '.join(formatted)
+			limit += 5
+		return formatted
+
 LOGGING = {
 	'version': 1,
 	'formatters': {
 		'verbose': {
 			'format': '%(module)s:%(levelname)s pid:%(process)d tid:%(thread)d %(message)s'
+			'()': 'local_settings.ExceptionFormatter'
 		},
 		'simple': {
 			'format': '%(levelname)s %(message)s BOO'

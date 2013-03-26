@@ -29,7 +29,8 @@ from banana.models import CompletedItem
 from forms import CreateAccountForm, SendTestEmailForm, EmailEveryoneForm, AddInvitesForm
 
 @staff_member_required
-def index(request): return render_to_response('apple/index.html', { }, context_instance=RequestContext(request))
+def index(request):
+	return render_to_response('apple/index.html', { }, context_instance=RequestContext(request))
 
 @staff_member_required
 def email_everyone(request):
