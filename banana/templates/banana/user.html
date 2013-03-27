@@ -6,7 +6,7 @@
 {% block sub-style %}
 	.work-doc-edit-view, .updates-list { min-height: 20em; }
 	.alert-info { min-height: 5em; }
-	#edit-work-doc-link { font-size: 0.7em; font-weight: normal; }
+	#edit-work-doc-link { font-size: 0.7em; font-weight: normal; float: right; }
 {% endblock %}
 
 {% block sub-head %}
@@ -98,7 +98,7 @@ function initPage(){
 		<h3 class="user-prompt-heading section-title">
 				What are you going to do?
 				<span id="work-doc-controls">
-					<a id="edit-work-doc-link">edit</a>
+					<a id="edit-work-doc-link"><i class="icon-edit" alt="edit"></i> edit</a>
 				</span>
 		</h3>
 	</div>
