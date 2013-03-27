@@ -5,6 +5,7 @@ south
 ipython
 markdown
 psycopg2==2.4.1
+boto==2.8.0
 beautifulsoup
 simplejson
 -e git+git://github.com/Captricity/django-dynamicresponse.git@c88d519#egg=django-dynamicresponse
