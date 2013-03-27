@@ -84,11 +84,19 @@ class BackupManager(object):
 		if db_password: os.environ['PGPASSWORD'] = db_password
 
 		# now delete and recreate the database
-		command = 'echo "drop database %s; create database %s; grant all on database %s to %s;" | psql -U %s' % (db_name, db_name, db_name, db_user, db_user)
+		command = 'echo "drop database %s; create database %s;" | psql -U %s' % (db_name, db_name, db_user)
 		if not self.call_system(command): raise BackupError('Aborting restoration.')
 
-		# now load the SQL into the database
-		command = 'gunzip -c %s/*-sql.gz | psql -U %s %s' % (working_dir, db_user, db_name)
+		# gunzip the db dump
+		command = 'cd "%s" && gunzip *-sql.gz' % working_dir
+		if not self.call_system(command): raise BackupError('Aborting restoration.')
+
+		# restore database
+		command = 'cd "%s" && pg_restore -d %s -U %s *-sql' % (working_dir, db_name, db_user)
+		if not self.call_system(command): raise BackupError('Aborting restoration.')
+
+		# restore permissions
+		command = 'echo "grant all on all tables in schema public to %s; grant all on all sequences in schema public to %s; grant all on all functions in schema public to %s;" | psql -U %s' % (db_user, db_user, db_user, db_user)
 		if not self.call_system(command): raise BackupError('Aborting restoration.')
 
 	def check_dirs(self):
@@ -112,7 +120,7 @@ class BackupManager(object):
 		sql_path = '%s%s' % (settings.BACKUP_ROOT, sql_file)
 		sql_pass_args = ''
 		if db_password: os.environ['PGPASSWORD'] = db_password
-		command = 'pg_dump -U %s %s | gzip > "%s"' % (db_user, db_name, sql_path)
+		command = 'pg_dump -Fc --no-acl --no-owner -U %s %s | gzip > "%s"' % (db_user, db_name, sql_path)
 		if not self.call_system(command):
 			print 'aborting'
 			return
