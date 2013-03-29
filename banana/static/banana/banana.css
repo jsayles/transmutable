@@ -57,6 +57,7 @@
 	padding: 0.8em;
 	background-color: #EEEEEE;
 	border-radius: 0.3em;
+	overflow: hidden;
 }
 .update-view .rendered { min-height: 2em; }
 .update-view.promoted { 
