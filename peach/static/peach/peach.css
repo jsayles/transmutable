@@ -13,3 +13,5 @@
 .author-info { text-align: center; }
 .author-info h3 a { text-decoration: none; }
 .author-info:hover h3 { text-decoration: underline; }
+
+a[href='#delete'] { color: red; }

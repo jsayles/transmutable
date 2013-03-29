@@ -30,11 +30,11 @@ def namespaces(request):
 		else:
 			return HttpResponse(status=400)
 	if request.method != 'GET': return HttpResponseServerError()
-	return JsonResponse(Namespace.objects.all())
+	return JsonResponse(Namespace.objects.filter(owner=request.user))
 
 @login_required
-def namespace(request, name):
-	namespace = get_object_or_404(Namespace, owner=request.user, name=name)
+def namespace(request, id):
+	namespace = get_object_or_404(Namespace, owner=request.user, id=id)
 	if not namespace.can_read(request.user): return HttpResponse(status=403)
 	if request.method == 'DELETE':
 		if not namespace.can_delete(request.user): return HttpResponse(status=403)
@@ -44,8 +44,8 @@ def namespace(request, name):
 	return JsonResponse(namespace)
 
 @login_required
-def pages(request, name):
-	namespace = get_object_or_404(Namespace, owner=request.user, name=name)
+def pages(request, id):
+	namespace = get_object_or_404(Namespace, owner=request.user, id=id)
 	if not namespace.can_read(request.user): return HttpResponse(status=403)
 
 	if request.method == 'POST':

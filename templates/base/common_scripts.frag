@@ -3,6 +3,7 @@
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-tab.js"></script>
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-scrollspy.js"></script>
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-dropdown.js"></script>
+<script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-modal.js"></script>
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-collapse.js"></script>
 <script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-alert.js"></script>
 <script src="{{STATIC_URL}}backbone/underscore-1.4.3-min.js"></script>

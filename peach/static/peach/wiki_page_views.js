@@ -51,5 +51,6 @@ transmutable.WikiPageEditView = Backbone.View.extend({
 		el.append(form);
 		el.append('<button type="buttom" class="save-button">Save</button>');
 		el.append('<button type="buttom" class="save-and-close-button">Save and Close</button>');
+		$(textArea).focus()
 	}
 });

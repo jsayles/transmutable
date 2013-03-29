@@ -1,6 +1,9 @@
 {% load imagetags %}
 {% load wikitags %}
 <script>
+window.pageId = {{page.id}};
+window.isNamespace = {% if page.name == "SplashPage" %}true{% else %}false{% endif %};
+
 $(document).ready(function() {
 	{% if is_mobile %}
 		$('button[name="edit-button"]').click(function(){
@@ -15,6 +18,30 @@ $(document).ready(function() {
 		});
 		$('button[name="history-button"]').click(function(){
 			document.location.href = "{% url peach.views.wiki_history page.namespace.owner.username page.namespace.name page.name %}";
+		});
+		$('button[name="delete-button"]').click(function(event){
+			event.preventDefault();
+			if(window.isNamespace){
+				var namespace = new transmutable.Namespace({ id:{{page.namespace.id}} });
+				namespace.destroy({
+					'success':function(){
+						document.location.href = "{% url peach.views.index %}";
+					},
+					'error': function(){
+						alert('I could not delete.');
+					}
+				});
+			} else {
+				var page = new transmutable.WikiPage({ id: {{page.id}} });
+				page.destroy({
+					'success':function(){
+						document.location.href = "{% url peach.views.namespace page.namespace.owner.username page.namespace.name %}";
+					},
+					'error': function(){
+						alert('I could not delete.');
+					}
+				})
+			}
 		});
 	{% endif %}
 });
@@ -44,6 +71,26 @@ $(document).ready(function() {
 			<a href="{% url peach.views.wiki_history page.namespace.owner.username page.namespace.name page.name %}">
 				<i class="icon-time" alt="history"></i> history
 			</a>
+
+			<a href="#delete" role="button" data-toggle="modal"><i class="icon-trash" alt="delete"></i> delete</a>
+			<div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 id="deleteLabel">Are you sure?</h3>
+				</div>
+				<div class="modal-body">
+					{% if page.name == "SplashPage" %}
+						<p>This will permanently delete this note and all of its pages.</p>
+					{% else %}
+						<p>This will permanently delete this page.</p>
+					{% endif %}
+				</div>
+					<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+					<button name="delete-button" class="btn btn-danger">Delete</button>
+				</div>
+			</div>
+
 		{% endif %}
 		</div> 
 	{% endif %}

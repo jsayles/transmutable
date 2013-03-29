@@ -3,7 +3,7 @@
 {% block sub-title %}{{ namespace.display_name }} | {% endblock %}
 
 {% block sub-style %}
-#left-column button { display: block; width: 99%; margin: 1em 0; }
+#left-column .column-button { display: block; width: 99%; margin: 1em 0; }
 #left-column ul { margin: 0px; }
 #left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
 #left-column input { width: 94%; }
@@ -62,7 +62,7 @@ function toggleArchive(){
 		</ul>
 
 		{% if request.user == namespace.owner %}
-			<button type="button" class="positive" id="toggle-public">
+			<button type="button" class="column-button btn" id="toggle-public">
 			{% if namespace.public %}
 				Make private
 			{% else %}
@@ -70,13 +70,13 @@ function toggleArchive(){
 			{% endif %}
 			</button>
 		
-			<button type="button" class="positive" id="toggle-archive">
+			<button type="button" class="column-button btn" id="toggle-archive">
 			{% if namespace.archive %}
 				Unarchive
 			{% else %}
 				Archive
 			{% endif %}
-			</button>
+			</button>			
 		{% endif %}
 
 		{% if google_ad_settings.namespace_left %}

@@ -98,10 +98,10 @@ banana.views.WorkDocEditView = Backbone.View.extend({
 			$.el.textarea({'name':'markup', 'placeholder':'- Check out sciencesaints.com'}),
 			$.el.a({'id':'formatting-help-link', 'href':'.'}, 'formatting help')
 		);
-		this.saveButton = $.el.button({'accesskey':'s', 'name':'work-doc-save-button', 'type':'button'}, 'save'),
+		this.saveButton = $.el.button({'accesskey':'s', 'name':'work-doc-save-button', 'type':'button', 'class':'btn'}, 'save'),
 		this.form.append(this.saveButton);
 		$(this.saveButton).click(this.save);
-		this.cancelButton = $.el.button({'name':'work-doc-cancel-button', 'type':'button'}, 'cancel')
+		this.cancelButton = $.el.button({'name':'work-doc-cancel-button', 'type':'button', 'class':'btn'}, 'cancel')
 		this.form.append(this.cancelButton);
 		$(this.cancelButton).click(this.cancel);
 		this.$el.append(this.form);
@@ -169,7 +169,7 @@ banana.views.CompletedItemEditView = Backbone.View.extend({
 		this.textArea = $.el.textarea({'name':'markup', 'placeholder':'Some awesome thing I did...'}, this.model.get('markup'));
 		this.$el.append(this.textArea);
 
-		this.submitButton = $.el.button({'name':'submit-form-button', 'type':'submit'}, 'to-done!');
+		this.submitButton = $.el.button({'name':'submit-form-button', 'type':'submit', 'class':'btn'}, 'to-done!');
 		$(this.$el).submit(this.handleSubmit);
 		this.$el.append(this.submitButton);
 
@@ -292,7 +292,7 @@ banana.views.GratitudeEditView = Backbone.View.extend({
 		this.textArea = $.el.textarea({'name':'markup', 'placeholder':'I\'m grateful for...'}, this.model.get('markup'));
 		this.$el.append(this.textArea);
 
-		this.submitButton = $.el.button({'name':'submit-form-button', 'type':'submit'}, 'thanks!');
+		this.submitButton = $.el.button({'name':'submit-form-button', 'type':'submit', 'class':'btn'}, 'thanks!');
 		$(this.$el).submit(this.handleSubmit);
 		this.$el.append(this.submitButton);
 	},
