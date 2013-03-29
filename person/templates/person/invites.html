@@ -8,8 +8,16 @@
 #invite-form th {
 	vertical-align: top;
 }
-.person-info-small img { float: left; }
-.person-info-small h2 { font-size: 1em; }
+#person-list {
+	list-style: none;
+	margin-left: 0;
+}
+#person-list li {
+	margin-bottom: 1em;
+}
+#person-list li h4 {
+	margin-top: 0.1em;
+}
 </style>
 
 <script>
@@ -47,11 +55,13 @@ $(document).ready(function() {
 	<div class="span4 offset1">
 		{% if request.user.get_profile.invitees %}
 			<h3 class="section-title">People who accepted your invites:</h3>
-				{% for profile in request.user.get_profile.invitees %}
-					{% with profile.user.get_absolute_url as profile_link %}
-						{% include "person/person_info_small.frag" %}
-					{% endwith %}
-				{% endfor %}
+				<ul id="person-list">
+					{% for profile in request.user.get_profile.invitees %}
+						{% with profile.user.get_absolute_url as profile_link %}
+							{% include "person/person_list_item.frag" %}
+						{% endwith %}
+					{% endfor %}
+				</ul>
 		{% endif %}
 	</div>
 </div>
