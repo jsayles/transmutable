@@ -47,7 +47,7 @@ class MarkedUpModel(models.Model):
 		ordering = ['-created']
 
 class Gratitude(MarkedUpModel):
-	"""Some thing for which we are grateful"""
+	"""Something for which we are grateful"""
 	user = models.ForeignKey(User, related_name='gratitudes')
 
 	def flatten(self): return {
@@ -58,6 +58,12 @@ class Gratitude(MarkedUpModel):
 		'modified':'%s' % self.modified,
 		'created':'%s' % self.created
 	}
+
+	@staticmethod
+	def can_create(user): return user.is_authenticated()
+	def can_read(self, user): return True
+	def can_update(self, user): return self.user == user
+	def can_delete(self, user): return self.user == user
 
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.gratitude', [], { 'id':self.id })
@@ -88,6 +94,12 @@ class CompletedItem(MarkedUpModel):
 	
 	objects = CompletedItemManager()
 	def flatten(self): return {'id':self.id, 'user':self.user.username, 'promoted':self.promoted, 'link':self.link, 'rendered':self.rendered, 'modified':'%s' % self.modified, 'created':'%s' % self.created, 'rock_count':self.rock_count}
+
+	@staticmethod
+	def can_create(user): return user.is_authenticated()
+	def can_read(self, user): return True
+	def can_update(self, user): return self.user == user
+	def can_delete(self, user): return self.user == user
 	
 	def rocked_it(self, user):
 		if not user.is_authenticated(): return False
@@ -111,6 +123,12 @@ class WorkDoc(MarkedUpModel):
 	"""A markdown document displaying a person's current work queue."""
 	user = models.ForeignKey(User, related_name='work_docs', unique=True)
 
+	@staticmethod
+	def can_create(user): return user.is_authenticated()
+	def can_read(self, user): return True
+	def can_update(self, user): return self.user == user
+	def can_delete(self, user): return self.user == user
+	
 	def flatten(self): return {'user':self.user.username, 'markup':self.markup, 'rendered':self.rendered, 'modified':'%s' % self.modified}
 	def __unicode__(self):
 		return 'WordDoc for %s' % self.user

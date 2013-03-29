@@ -57,13 +57,21 @@ def user(request, username):
 
 def gratitude(request, id):
 	gratitude = get_object_or_404(Gratitude, pk=id)
+
 	if request.method == 'PUT':
+		if not gratitude.can_update(request.user): return HttpResponse(status=403)
 		gratitude_form = GratitudeForm(request.POST, instance=gratitude)
 		if gratitude_form.is_valid():
 			gratitude = gratitude_form.save()
 			return JsonResponse(gratitude.flatten())
 		else:
 			return HttpResponse(status=400)
+
+	if request.method == 'DELETE':
+		if not gratitude.can_delete(request.user): return HttpResponse(status=403)
+		gratitude.delete()
+		return HttpResponse(status=200)
+
 	return render_to_response('banana/gratitude.html', {'gratitude':gratitude}, context_instance=RequestContext(request))
 
 @login_required
@@ -79,7 +87,9 @@ def gratitudes(request):
 
 def completed_item(request, id):
 	item = get_object_or_404(CompletedItem, pk=id)
+
 	if request.method == 'PUT':
+		if not item.can_update(request.user): return HttpResponse(status=403)
 		item_form = CompletedItemForm(request.POST, instance=item)
 		if item_form.is_valid():
 			item = item_form.save()
@@ -87,6 +97,12 @@ def completed_item(request, id):
 		else:
 			print request.POST, item_form
 			return HttpResponse(status=400)
+
+	if request.method == 'DELETE':
+		if not item.can_delete(request.user): return HttpResponse(status=403)
+		item.delete()
+		return HttpResponse(status=200)
+
 	return render_to_response('banana/completed_item.html', { 'completed_item':item, }, context_instance=RequestContext(request))
 
 @login_required
