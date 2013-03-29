@@ -64,7 +64,9 @@ def create_secret(): return User.objects.make_random_password(length=20)
 class InviteManager(models.Manager):
 	def add_invites(self, number_of_invites, user):
 		for i in range(number_of_invites):
-			user.get_profile().invites.add(Invite.objects.create())
+			profile = user.get_profile()
+			profile.invites.add(Invite.objects.create())
+			profile.save()
 			
 	def distribute_invites(self, num_per_user):
 		for profile in UserProfile.objects.filter(user__is_active=True).filter(mute=False):
