@@ -16,6 +16,7 @@ admin.site.register(Photo, PhotoAdmin)
 
 class InviteRequestAdmin(StyledAdmin):
 	list_display = ('email', 'created')
+
 admin.site.register(InviteRequest, InviteRequestAdmin)
 
 class UserProfileInline(admin.StackedInline):
@@ -29,5 +30,10 @@ admin.site.unregister(User)
 admin.site.register(User, UserAndProfileAdmin)
 
 class InviteAdmin(StyledAdmin):
-	list_display = ('id', 'sent_to', 'used_by', 'created')
+	list_display = ('id', 'invite_owner', 'sent_to', 'used_by', 'created')
+
+	def invite_owner(self, invite):
+		if not invite.inviter.all(): return None
+		return invite.inviter.all()[0]
+
 admin.site.register(Invite, InviteAdmin)
