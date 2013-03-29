@@ -10,6 +10,7 @@ from dynamicresponse.json_response import JsonResponse
 from django.db.models import Q
 from django.contrib import auth
 from django.conf import settings
+from django.utils import timezone
 from django.core.cache import cache
 from django.utils.html import urlize
 from django.core.mail import send_mail
@@ -36,7 +37,7 @@ from peach.forms import NamespaceForm
 def index(request):
 	day_limit = 4
 	promoted_users = User.objects.exclude(profile__bio='').exclude(profile__bio=None).exclude(profile__mute=True).order_by('?')
-	completed_items = CompletedItem.objects.recent(max_count=10, created_after=datetime.now() - timedelta(days=day_limit))
+	completed_items = CompletedItem.objects.recent(max_count=10, created_after=datetime.now() - timedelta(days=day_limit), exclude_users_younger_than=timezone.now() - timedelta(days=day_limit + 1))
 	return render_to_response('banana/index.html', {'promoted_users':promoted_users, 'completed_items':completed_items }, context_instance=RequestContext(request))
 
 @staff_member_required
