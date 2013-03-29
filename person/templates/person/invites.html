@@ -8,6 +8,8 @@
 #invite-form th {
 	vertical-align: top;
 }
+.person-info-small img { float: left; }
+.person-info-small h2 { font-size: 1em; }
 </style>
 
 <script>
@@ -32,7 +34,7 @@ $(document).ready(function() {
 					<table class="invite-form">
 						<tr><td></td><td style="text-align: center;">Fill out this form to send an invite.</td></tr>
 						{{ invite_form }}
-						<tr><td colspan="2" style="text-align: right;"><input tabindex="3" type="submit" value="send invite" /></td></tr>
+						<tr><td colspan="2" style="text-align: right;"><input tabindex="3" class="btn" type="submit" value="send invite" /></td></tr>
 					</table>
 					{% csrf_token %}
 				</form>
@@ -45,9 +47,11 @@ $(document).ready(function() {
 	<div class="span4 offset1">
 		{% if request.user.get_profile.invitees %}
 			<h3 class="section-title">People who accepted your invites:</h3>
-			{% with request.user.get_profile.invitees as profiles %}
-				{% include "person/person_info_list.frag" %}
-			{% endwith %}
+				{% for profile in request.user.get_profile.invitees %}
+					{% with profile.user.get_absolute_url as profile_link %}
+						{% include "person/person_info_small.frag" %}
+					{% endwith %}
+				{% endfor %}
 		{% endif %}
 	</div>
 </div>
