@@ -59,12 +59,16 @@
 
 										</ul>
 									</li>
-									{% if request.user.get_profile.available_invites.count > 0 %}
-										<li id="invites-nav">
-											<a href="{% url person.views.invites %}">Invites <span class="badge badge-success">{{ request.user.get_profile.available_invites.count }}</span></a>
-										</li>
-									{% endif %}
 								{% endif %}
+
+								<li id="activity-nav"><a href="{% url banana.views.activity %}">Activity</a></li>
+
+								{% if request.user.is_authenticated and request.user.get_profile.available_invites.count > 0 %}
+									<li id="invites-nav">
+										<a href="{% url person.views.invites %}">Invites <span class="badge badge-success">{{ request.user.get_profile.available_invites.count }}</span></a>
+									</li>
+								{% endif %}
+
 								{% if default_help_url %}
 									<li id="help-nav"><a href="{{ default_help_url }}">Help</a></li>
 								{% endif %}

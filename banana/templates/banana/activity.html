@@ -1,0 +1,64 @@
+{% extends "banana/base.html" %}
+{% load imagetags %}
+{% load banana %}
+{% block sub-title %}Activity | {% endblock %}
+
+{% block sub-head %}
+	<script>
+	$(document).ready(function() {
+		$('#activity-nav').addClass('active');
+		if(document.location.hash){
+			$('a[href="' + document.location.hash.split('?')[0] + '"]').tab('show')
+		} else {
+			$('a[href="#completed-items"]').tab('show')
+		}
+		$('#activities-tab a').click(function(event){
+			window.history.pushState({}, "", $(this).attr('href'));
+		})
+	});
+	</script>
+{% endblock %}
+
+{% block sub-style %}
+	.update-list .update-view { 
+		width: 20em;
+		display: inline-block;
+		vertical-align: top;
+		margin-right: 2%;
+	}
+{% endblock %}
+
+{% block content %}
+
+<div class='row-fluid'>
+	<ul class="nav nav-tabs" id="activities-tab">
+	  <li><a href="#completed-items" data-toggle="tab">To-dones</a></li>
+	  <li><a href="#gratitudes" data-toggle="tab">Gratitudes</a></li>
+	</ul>
+</div>
+
+<div class='row-fluid'>
+	<div class="tab-content span12">
+	  <div class="tab-pane" id="completed-items">
+				<ul class="update-list">
+				{% with "True" as show_completed_item_user %}
+					{% with "True" as hide_meta %}
+						{% for completed_item in completed_items %}
+							{% completed_item_widget %}
+						{% endfor %}
+					{% endwith %}
+				{% endwith %}
+				</ul>
+	  </div>
+	  <div class="tab-pane" id="gratitudes">
+			<ul class="update-list">
+				{% with "True" as hide_meta %}
+					{% for gratitude in gratitudes %}
+						{% include "banana/gratitude.frag" %}
+					{% endfor %}
+				{% endwith %}
+			</ul>
+	  </div>
+	</div>
+</div>
+{% endblock %}

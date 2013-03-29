@@ -46,9 +46,28 @@ class MarkedUpModel(models.Model):
 		abstract = True
 		ordering = ['-created']
 
+class UpdateManager(models.Manager):
+	def recent(self, max_count=10, created_after=None, exclude_users_younger_than=None):
+		results = []
+		users = {}
+		if created_after:
+			items = self.filter(created__gte=created_after)
+		else:
+			items = self.all()
+
+		for item in items.order_by('-created').select_related():
+			if len(results) >= max_count: break
+			if users.has_key(item.user.id): continue 
+			if item.user.get_profile().mute: continue
+			if exclude_users_younger_than and item.user.date_joined > exclude_users_younger_than: continue
+			users[item.user.id] = item.user
+			results.append(item)
+		return results
+
 class Gratitude(MarkedUpModel):
 	"""Something for which we are grateful"""
 	user = models.ForeignKey(User, related_name='gratitudes')
+	objects = UpdateManager()
 
 	def flatten(self): return {
 		'id':self.id,
@@ -68,24 +87,6 @@ class Gratitude(MarkedUpModel):
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.gratitude', [], { 'id':self.id })
 
-class CompletedItemManager(models.Manager):
-	def recent(self, max_count=10, created_after=None, exclude_users_younger_than=None):
-		results = []
-		users = {}
-		if created_after:
-			items = self.filter(created__gte=created_after)
-		else:
-			items = self.all()
-
-		for item in items.order_by('-created').select_related():
-			if len(results) >= max_count: break
-			if users.has_key(item.user.id): continue 
-			if item.user.get_profile().mute: continue
-			if exclude_users_younger_than and item.user.date_joined > exclude_users_younger_than: continue
-			users[item.user.id] = item.user
-			results.append(item)
-		return results
-
 class CompletedItem(MarkedUpModel):
 	"""Something which a user has completed, mostly items taked off of the work doc."""
 	user = models.ForeignKey(User, related_name='completed_items')
@@ -94,7 +95,7 @@ class CompletedItem(MarkedUpModel):
 	promoted = models.BooleanField(default=False, blank=False, null=False)
 	link = models.URLField(verify_exists=False, max_length=1000, blank=True, null=True)
 	
-	objects = CompletedItemManager()
+	objects = UpdateManager()
 	def flatten(self): return {'id':self.id, 'user':self.user.username, 'promoted':self.promoted, 'link':self.link, 'rendered':self.rendered, 'modified':'%s' % self.modified, 'created':'%s' % self.created, 'rock_count':self.rock_count}
 
 	@staticmethod

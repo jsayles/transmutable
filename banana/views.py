@@ -40,6 +40,15 @@ def index(request):
 	completed_items = CompletedItem.objects.recent(max_count=10, created_after=datetime.now() - timedelta(days=day_limit), exclude_users_younger_than=timezone.now() - timedelta(days=day_limit + 1))
 	return render_to_response('banana/index.html', {'promoted_users':promoted_users, 'completed_items':completed_items }, context_instance=RequestContext(request))
 
+def activity(request):
+	'''A timely snapshot of what's going on around the site.'''
+	day_limit = 20
+	context = {
+		'completed_items': CompletedItem.objects.recent(max_count=100, created_after=datetime.now() - timedelta(days=day_limit)),
+		'gratitudes': Gratitude.objects.recent(max_count=100, created_after=datetime.now() - timedelta(days=day_limit))
+	}
+	return render_to_response('banana/activity.html', context, context_instance=RequestContext(request))
+
 @staff_member_required
 def test(request):
 	if not settings.DEBUG: raise Http404
@@ -141,4 +150,4 @@ def work_doc(request):
 			request.user.work_doc.save_markup(workdoc_form.cleaned_data['markup'])
 	return JsonResponse(request.user.work_doc.flatten())
 
-# Copyright 2011 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+# Copyright 2011-2013 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

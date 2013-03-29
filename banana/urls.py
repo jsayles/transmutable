@@ -6,6 +6,7 @@ urlpatterns = patterns('',
 	url(r'^u/(?P<username>[^/]+)/$', 'banana.views.user', name='user'),
 	url(r'^c/(?P<id>[\d]+)/$', 'banana.views.completed_item', name='completed_item'),
 	url(r'^g/(?P<id>[\d]+)$', 'banana.views.gratitude', name='gratitude'),
+	url(r'^a/$', 'banana.views.activity', name='activity'),
 
 	# Mobile views
 	url(r'^m/$', 'banana.mobile_views.index', name='mobile_index'),
