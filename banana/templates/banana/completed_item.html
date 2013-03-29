@@ -5,7 +5,7 @@
 {% block sub-head %}
 <script>
 $(document).ready(function(){
-	{% if request.user == gratitude.user %}
+	{% if request.user == completed_item.user %}
 		$('button[name="delete-button"]').click(function(event){
 			$.ajax({
 				'url': "{% url banana.views.completed_item completed_item.id %}",
