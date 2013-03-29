@@ -71,10 +71,23 @@
 								{% if request.user.is_staff %}
 									<li id="staff-nav"><a href="{% url apple.views.index %}">Staff</a></li>
 								{% endif %}
+
+								{% if request.user.is_authenticated and not request.user.get_profile.photo %}
+									<li id="intrusive-camera">
+										<a href="{% url person.views.profile request.user.username %}#edit-photo">
+											<i class="icon-camera-retro"></i>
+										</a>
+									</li>
+								{% endif %}
+
 							</ul>
 							{% if request.user.is_authenticated %}
-								<p class="navbar-text pull-right">/ <a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></p>
-								<p class="navbar-text pull-right"><a href="{% url person.views.profile request.user.username %}">account</a>&nbsp;</p>
+								<p class="navbar-text pull-right">
+									/&nbsp;<a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a>
+								</p>
+								<p class="navbar-text pull-right">
+									<a href="{% url person.views.profile request.user.username %}">account</a>&nbsp;
+								</p>
 							{% else %}
 								<p class="navbar-text pull-right"><a href="{% url django.contrib.auth.views.login %}">login</a></p>
 							{% endif %}

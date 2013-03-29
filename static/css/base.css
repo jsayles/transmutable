@@ -58,6 +58,10 @@ footer a {
   text-transform: uppercase;
 }
 
+#intrusive-camera a {
+  color: #c8241b;
+}
+
 @media (max-width: 980px) {
   body {
     padding-top: 0;
