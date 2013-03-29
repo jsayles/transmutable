@@ -52,10 +52,12 @@
 	  </div>
 	  <div class="tab-pane" id="gratitudes">
 			<ul class="update-list">
-				{% with "True" as hide_meta %}
-					{% for gratitude in gratitudes %}
-						{% include "banana/gratitude.frag" %}
-					{% endfor %}
+				{% with "True" as show_user %}
+					{% with "True" as hide_meta %}
+						{% for gratitude in gratitudes %}
+							{% include "banana/gratitude.frag" %}
+						{% endfor %}
+					{% endwith %}
 				{% endwith %}
 			</ul>
 	  </div>
