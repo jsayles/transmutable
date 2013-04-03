@@ -1,7 +1,7 @@
 from django.db.models import Q
 
 from models import WikiPage
-from backbone.search import SearchProvider, SearchResult
+from transmutable.search import SearchProvider, SearchResult
 
 class ToDoProvider(SearchProvider):
 	"""

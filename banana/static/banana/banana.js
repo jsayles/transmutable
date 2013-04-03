@@ -241,7 +241,7 @@ banana.views.CompletedItemView = Backbone.View.extend({
 		if(this.model.get('link')){
 			this.metaData.append($.el.div({'class':'promoted-link update-meta-button'}, $.el.a({'href':this.model.get('link'), 'rel':'nofollow'}, $.el.i({'class':'icon-external-link'}))));
 		}
-		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':transmutable.urls.banana.completed_item(this.model.id)}, $.timeago(this.model.get('created')))));
+		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':phlogiston.urls.banana.completed_item(this.model.get('id'))}, $.timeago(this.model.get('created')))));
 		if(this.model.get('promoted')){
 			this.$el.addClass('promoted');
 		}
@@ -258,7 +258,7 @@ banana.views.CompletedItemsView = Backbone.View.extend({
 		_.bindAll(this);
 		this.childrenViews = [];
 		this.maxLength = this.options.maxLength || 10;
-		this.listenTo(this.collection, 'reset', this.handleReset);
+		this.collection.on('sync', this.handleReset);
 	},
 	handleReset: function(){
 		for(var i=0; i < this.childrenViews.length; i++){
@@ -329,7 +329,7 @@ banana.views.GratitudeView = Backbone.View.extend({
 
 		this.metaData = $.el.div({'class':'update-meta'});
 		this.$el.append(this.metaData);
-		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':transmutable.urls.banana.gratitude(this.model.id)}, $.timeago(this.model.get('created')))));
+		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':transmutable.urls.banana.gratitude(this.model.get('id'))}, $.timeago(this.model.get('created')))));
 	}
 });
 

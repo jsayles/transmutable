@@ -8,5 +8,8 @@ psycopg2==2.4.1
 boto==2.8.0
 beautifulsoup
 simplejson
--e git+git://github.com/Captricity/django-dynamicresponse.git@c88d519#egg=django-dynamicresponse
 gunicorn
+git+git://github.com/toastdriven/django-tastypie.git#egg=django-tastypie
+git+git://github.com/Captricity/django-dynamicresponse.git@c88d519#egg=django-dynamicresponse
+
+-e git+git://github.com/TrevorFSmith/phlogiston.git#egg=phlogiston

@@ -1,4 +1,4 @@
-"""Provides the SearchProvider class which is used by other apps to hook into backbone search."""
+"""Provides the SearchProvider class which is used by other apps to hook into site search."""
 
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -71,7 +71,7 @@ class UserSearchProvider(SearchProvider):
 	def display_name(cls): return "User"
 
 	@classmethod
-	def type_name(cls): return "backbone.user"
+	def type_name(cls): return "django.user"
 	
 	def search(self, user, search_terms=[], slice_start=0, slice_end=None):
 		terms = search_terms.split()

@@ -12,14 +12,15 @@
 
 		{% include 'base/common_styles.frag' %}
 		<link href="{{STATIC_URL}}css/base.css" rel="stylesheet" />
-		{% include 'base/common_scripts.frag' %}
-		<script src="{{STATIC_URL}}js/base.js"></script>
-		{% block extra-links %}{% endblock %}
-
 		<style type="text/css">
 			{% block app-style %}{% endblock %}
 			{% block sub-style%}{% endblock %}
 		</style>
+
+		{% include 'base/common_scripts.frag' %}
+		<script src="{{STATIC_URL}}js/base.js"></script>
+		{% block extra-links %}{% endblock %}
+
 		<!--[if lt IE 9]>
 			<script src="{{STATIC_URL}}js/ie_html5.js"></script>
 		<![endif]-->
