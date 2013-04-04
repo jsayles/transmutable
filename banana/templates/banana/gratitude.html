@@ -6,10 +6,17 @@
 <script>
 $(document).ready(function() {
 	{% if request.user == gratitude.user %}
-		$('button[name="delete-button"]').click(function(event){
-			$.ajax({
-				'url': "{% url banana.views.gratitude gratitude.id %}",
-				'type':'delete',
+		window.tastyPieSchema.once('populated', function(){
+			window.gratitude = new phlogiston.banana.Gratitude({'id':{{gratitude.id}}});
+			window.gratitude.fetch({
+				'success':function(){
+					$('button[name="delete-button"]').click(destroyGratitude);
+				}
+			});
+		})
+
+		function destroyGratitude(event){
+			window.gratitude.destroy({
 				'success':function(){
 					document.location.href = "{% url banana.views.user request.user.username %}";
 				},
@@ -17,7 +24,7 @@ $(document).ready(function() {
 					alert('I could not delete.');
 				}
 			});
-		});
+		}
 	{% endif %}
 });
 </script>

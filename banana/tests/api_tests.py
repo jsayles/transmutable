@@ -18,16 +18,16 @@ class APITests(APITestCase):
 		self.user1, self.client1 = create_user(username='alice', password='1234', first_name='Alice', last_name='Flowers')
 		self.user2, self.client2 = create_user(username='bob', password='1234', first_name='Bob', last_name='Smith')
 
-	def test_completed_items(self):
+	def test_user(self):
 		self.api_client.client.login(username='alice', password='1234')
-		user1_json = self.getJSON('/api/v0.1/auth/user/%i/' % self.user1.id, self.api_client)
-		user2_json = self.getJSON('/api/v0.1/auth/user/%i/' % self.user2.id, self.api_client)
+		user1_json = self.getJSON(self.user1.get_api_url(), self.api_client)
+		user2_json = self.getJSON(self.user2.get_api_url(), self.api_client)
 		self.api_client.client.logout()
 
+	def test_completed_items(self):
 		self.assertHttpUnauthorized(self.api_client.get(APITests.completed_items_url, format='json'))
 		data = {
 			'markup':'I did a thing',
-			'user':user1_json['resource_uri']
 		}
 		response = self.api_client.post(APITests.completed_items_url, format='json', data=data)
 		self.assertHttpUnauthorized(response)
@@ -61,6 +61,7 @@ class APITests(APITestCase):
 		self.assertEqual(response.status_code, 404, 'Response status was %s. Response content: %s' % (response.status_code, response.content))
 
 		# Check that users can't post as someone else
+		user2_json = self.getJSON(self.user2.get_api_url(), self.api_client)
 		data['user'] = user2_json['resource_uri']
 		response = self.api_client.post(APITests.completed_items_url, format='json', data=data)
 		self.assertHttpUnauthorized(response)

@@ -31,7 +31,7 @@ function initPage(){
 
 	window.workDoc = new banana.models.WorkDoc();
 	window.completedItems = new phlogiston.banana.CompletedItemCollection();
-	window.gratitudes = new banana.models.GratitudeCollection();
+	window.gratitudes = new phlogiston.banana.GratitudeCollection();
 
 	if(newUser){
 		newUserTourView = new banana.views.NewUserTourView({'siteName':'{{ site.name }}'});
@@ -55,7 +55,7 @@ function initPage(){
 		'hasTada':hasUnusedTada,
 		'successCallback':function(newModel){
 			hasUnusedTada = false;
-			completedItems.fetch({'success': function(){ console.log('success'); }});
+			completedItems.fetch();
 			if(newUser){ newUserTourView.showStepThree(); }
 		}
 	});

@@ -2,20 +2,13 @@ var banana = banana || {};
 banana.views = banana.views || {};
 banana.models = banana.models || {};
 
-window.tastyPieSchema.once('populated', function(){
-	phlogiston.banana.CompletedItemCollection.prototype.comparator = function(completedItem){
-		return -1 * phlogiston.parseJsonDate(completedItem.get('created')).getTime();		
-	}
-});
+function createdComparator(item){
+	return -1 * phlogiston.parseJsonDate(item.get('created')).getTime();		
+}
 
-banana.models.Gratitude = Backbone.Model.extend({
-	url:function(){
-		if(this.isNew()) return '/api/gratitude/';
-		return '/api/gratitude/' + this.id;
-	}
-});
-banana.models.GratitudeCollection = Backbone.Collection.extend({
-	url: '/api/gratitude/'
+window.tastyPieSchema.once('populated', function(){
+	phlogiston.banana.CompletedItemCollection.prototype.comparator = createdComparator;
+	phlogiston.banana.GratitudeCollection.prototype.comparator = createdComparator;
 });
 
 banana.models.WorkDoc = Backbone.Model.extend({
@@ -294,7 +287,7 @@ banana.views.GratitudeEditView = Backbone.View.extend({
 		this.$el.append(this.submitButton);
 	},
 	makeNewModel: function(){
-		this.options.model = this.model = new banana.models.Gratitude();
+		this.options.model = this.model = new phlogiston.banana.Gratitude();
 	},
 	saveSucceeded: function(){
 		if(this.options.successCallback){
@@ -326,7 +319,7 @@ banana.views.GratitudeView = Backbone.View.extend({
 
 		this.metaData = $.el.div({'class':'update-meta'});
 		this.$el.append(this.metaData);
-		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':transmutable.urls.banana.gratitude(this.model.get('id'))}, $.timeago(this.model.get('created')))));
+		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':phlogiston.urls.banana.gratitude(this.model.get('id'))}, $.timeago(this.model.get('created')))));
 	}
 });
 
@@ -336,7 +329,7 @@ banana.views.GratitudesView = Backbone.View.extend({
 		_.bindAll(this);
 		this.childrenViews = [];
 		this.maxLength = this.options.maxLength || 10;
-		this.listenTo(this.collection, 'reset', this.handleReset);
+		this.listenTo(this.collection, 'sync', this.handleReset);
 	},
 	handleReset: function(){
 		for(var i=0; i < this.childrenViews.length; i++){

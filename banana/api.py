@@ -19,7 +19,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect, HttpResponsePermanentRedirect
 
-from models import CompletedItem
+from models import CompletedItem, Gratitude
+from forms import CompletedItemForm, GratitudeForm
 
 from transmutable import API
 
@@ -55,17 +56,13 @@ class UserIsRequestorAuthorization(Authorization):
 		return bundle.obj.user == bundle.request.user
 
 	def create_list(self, object_list, bundle):
-		return object_list
+		raise Unauthorized("Sorry, no creates.")
 
 	def read_list(self, object_list, bundle):
 		return object_list.filter(user=bundle.request.user)
 
 	def update_list(self, object_list, bundle):
-		allowed = []
-		for obj in object_list:
-			if obj.user == bundle.request.user:
-				allowed.append(obj)
-		return allowed
+		raise Unauthorized("Sorry, no updates.")
 
 	def delete_list(self, object_list, bundle):
 		raise Unauthorized("Sorry, no deletes.")
@@ -86,11 +83,22 @@ class CompletedItemResource(ModelResource):
 		queryset = CompletedItem.objects.all()
 		include_absolute_url = True
 		allowed_methods = ['get', 'post', 'put', 'delete']
-		#filtering = { 'user': ALL_WITH_RELATIONS }
-		#validation = FormValidation(form_class=CompletedItemForm)
+		validation = FormValidation(form_class=CompletedItemForm)
 		authentication = SessionAuthentication()
 		authorization = UserIsRequestorAuthorization()
 API.register(CompletedItemResource())
+
+class GratitudeResource(ModelResource):
+	user = fields.ForeignKey(UserResource, 'user')
+	class Meta:
+		resource_name = 'banana/gratitude'
+		queryset = Gratitude.objects.all()
+		include_absolute_url = True
+		allowed_methods = ['get', 'post', 'put', 'delete']
+		validation = FormValidation(form_class=GratitudeForm)
+		authentication = SessionAuthentication()
+		authorization = UserIsRequestorAuthorization()
+API.register(GratitudeResource())
 
 # Copyright 2013 Trevor F. Smith (http://trevor.smith.name/) 
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
