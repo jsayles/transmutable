@@ -6,9 +6,9 @@ function createdComparator(item){
 	return -1 * phlogiston.parseJsonDate(item.get('created')).getTime();		
 }
 
-window.tastyPieSchema.once('populated', function(){
-	phlogiston.banana.CompletedItemCollection.prototype.comparator = createdComparator;
-	phlogiston.banana.GratitudeCollection.prototype.comparator = createdComparator;
+window.schema.once('populated', function(){
+	window.schema.api.banana.CompletedItemCollection.prototype.comparator = createdComparator;
+	window.schema.api.banana.GratitudeCollection.prototype.comparator = createdComparator;
 });
 
 banana.models.WorkDoc = Backbone.Model.extend({
@@ -175,7 +175,7 @@ banana.views.CompletedItemEditView = Backbone.View.extend({
 		$(this.linkInput).val(this.model.get('link'));
 	},
 	makeNewModel: function(){
-		this.options.model = this.model = new phlogiston.banana.CompletedItem();
+		this.options.model = this.model = new window.schema.api.banana.CompletedItem();
 	},
 	toggleTada: function(){
 		if($(this.promotedCheckbox).attr('checked') == 'checked'){
@@ -230,7 +230,7 @@ banana.views.CompletedItemView = Backbone.View.extend({
 		if(this.model.get('link')){
 			this.metaData.append($.el.div({'class':'promoted-link update-meta-button'}, $.el.a({'href':this.model.get('link'), 'rel':'nofollow'}, $.el.i({'class':'icon-external-link'}))));
 		}
-		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':phlogiston.urls.banana.completed_item(this.model.get('id'))}, $.timeago(this.model.get('created')))));
+		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':window.urlLoader.urls.banana.completed_item(this.model.get('id'))}, $.timeago(this.model.get('created')))));
 		if(this.model.get('promoted')){
 			this.$el.addClass('promoted');
 		}
@@ -287,7 +287,7 @@ banana.views.GratitudeEditView = Backbone.View.extend({
 		this.$el.append(this.submitButton);
 	},
 	makeNewModel: function(){
-		this.options.model = this.model = new phlogiston.banana.Gratitude();
+		this.options.model = this.model = new window.schema.api.banana.Gratitude();
 	},
 	saveSucceeded: function(){
 		if(this.options.successCallback){
@@ -319,7 +319,7 @@ banana.views.GratitudeView = Backbone.View.extend({
 
 		this.metaData = $.el.div({'class':'update-meta'});
 		this.$el.append(this.metaData);
-		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':phlogiston.urls.banana.gratitude(this.model.get('id'))}, $.timeago(this.model.get('created')))));
+		this.metaData.append($.el.div({'class':'update-timestamp'}, $.el.a({'href':window.urlLoader.urls.banana.gratitude(this.model.get('id'))}, $.timeago(this.model.get('created')))));
 	}
 });
 

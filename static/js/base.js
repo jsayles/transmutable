@@ -47,12 +47,12 @@ window.console = console||{'log':function(){}}; // Because IE does not create th
 	};
 })(document);
 
-window.tastyPieSchema = new phlogiston.TastyPieSchema(null, {'url':'/api/v0.1/'});
+window.schema = new phlogiston.TastyPieSchema(null, {'url':'/api/v0.1/'});
 window.urlLoader = new phlogiston.UrlLoader(null, {'url':'/phlogiston/url/'})
 
 $(document).ready(function(){
 	window.urlLoader.on('populated', function(){
-		window.tastyPieSchema.fetch({
+		window.schema.fetch({
 			'error': function(){
 				console.log("Could not fetch the tasty pie schema", arguments);
 			}

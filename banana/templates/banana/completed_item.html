@@ -6,8 +6,8 @@
 <script>
 $(document).ready(function(){
 	{% if request.user == completed_item.user %}
-		window.tastyPieSchema.once('populated', function(){
-			window.completedItem = new phlogiston.banana.CompletedItem({'id':{{completed_item.id}}});
+		window.schema.once('populated', function(){
+			window.completedItem = new window.schema.api.banana.CompletedItem({'id':{{completed_item.id}}});
 			window.completedItem.fetch({
 				'success':function(){
 					$('button[name="delete-button"]').click(destroyCompletedItem);

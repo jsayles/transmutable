@@ -24,14 +24,14 @@ var completedItemsView = null;
 var gratitudeEditView = null;
 var gratitudesView = null;
 
-window.tastyPieSchema.on('populated', _.once(initPage));
+window.schema.on('populated', _.once(initPage));
 
 function initPage(){
 	$('#home-nav').addClass('active');
 
 	window.workDoc = new banana.models.WorkDoc();
-	window.completedItems = new phlogiston.banana.CompletedItemCollection();
-	window.gratitudes = new phlogiston.banana.GratitudeCollection();
+	window.completedItems = new window.schema.api.banana.CompletedItemCollection();
+	window.gratitudes = new window.schema.api.banana.GratitudeCollection();
 
 	if(newUser){
 		newUserTourView = new banana.views.NewUserTourView({'siteName':'{{ site.name }}'});
