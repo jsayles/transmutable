@@ -6,10 +6,17 @@
 <script>
 $(document).ready(function(){
 	{% if request.user == completed_item.user %}
-		$('button[name="delete-button"]').click(function(event){
-			$.ajax({
-				'url': "{% url banana.views.completed_item completed_item.id %}",
-				'type':'delete',
+		window.tastyPieSchema.once('populated', function(){
+			window.completedItem = new phlogiston.banana.CompletedItem({'id':{{completed_item.id}}});
+			window.completedItem.fetch({
+				'success':function(){
+					$('button[name="delete-button"]').click(destroyCompletedItem);
+				}
+			});
+		})
+
+		function destroyCompletedItem(event){
+			window.completedItem.destroy({
 				'success':function(){
 					document.location.href = "{% url banana.views.user request.user.username %}";
 				},
@@ -17,7 +24,7 @@ $(document).ready(function(){
 					alert('I could not delete.');
 				}
 			});
-		});
+		}
 	{% endif %}
 });
 

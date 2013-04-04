@@ -115,6 +115,9 @@ class CompletedItem(MarkedUpModel):
 	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'id':self.id })
 	def __unicode__(self): return 'CompletedItem for %s' % self.user
 
+	class Meta:
+		ordering = ['-created']
+
 class CompletedItemRock(models.Model):
 	"""Indicates that someone other than the completed item owner thinks that the completed item rocks."""
 	completed_item = models.ForeignKey(CompletedItem, blank=False, null=False, related_name='rocks')

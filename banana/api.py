@@ -38,32 +38,29 @@ class UserIsRequestorAuthorization(Authorization):
 	def create_detail(self, object_list, bundle):
 		if not bundle.request.user.is_authenticated(): return False
 		user = self.get_user_by_resource_url(bundle.request.POST.get('user', None))
-		print 'create detail', bundle.request.user, user
-		return bundle.request.user == user
+		if user: return bundle.request.user == user
+		# 'user' wasn't passed so we'll set it
+		bundle.data['user'] = reverse('api_dispatch_detail', args=['v0.1', 'auth/user', bundle.request.user.id])
+		return True
 
 	def read_detail(self, object_list, bundle):
-		print 'read detail', bundle.request.user
 		return bundle.request.user.is_authenticated()
 
 	def update_detail(self, object_list, bundle):
-		print 'update detail', bundle.request.user
 		if not bundle.request.user.is_authenticated(): return False
 		return bundle.obj.user == bundle.request.user
 
 	def delete_detail(self, object_list, bundle):
-		print 'delete detail'
-		raise Unauthorized("Sorry, no deletes.")
+		if not bundle.request.user.is_authenticated(): return False
+		return bundle.obj.user == bundle.request.user
 
 	def create_list(self, object_list, bundle):
-		print 'create list'
 		return object_list
 
 	def read_list(self, object_list, bundle):
-		print 'read list'
 		return object_list.filter(user=bundle.request.user)
 
 	def update_list(self, object_list, bundle):
-		print 'update list'
 		allowed = []
 		for obj in object_list:
 			if obj.user == bundle.request.user:
@@ -71,7 +68,6 @@ class UserIsRequestorAuthorization(Authorization):
 		return allowed
 
 	def delete_list(self, object_list, bundle):
-		print 'delete list'
 		raise Unauthorized("Sorry, no deletes.")
 
 class UserResource(ModelResource):

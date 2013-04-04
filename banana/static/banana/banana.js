@@ -2,14 +2,10 @@ var banana = banana || {};
 banana.views = banana.views || {};
 banana.models = banana.models || {};
 
-banana.models.CompletedItem = Backbone.Model.extend({
-	url:function(){
-		if(this.isNew()) return '/api/completed-item/';
-		return '/api/completed-item/' + this.id;
+window.tastyPieSchema.once('populated', function(){
+	phlogiston.banana.CompletedItemCollection.prototype.comparator = function(completedItem){
+		return -1 * phlogiston.parseJsonDate(completedItem.get('created')).getTime();		
 	}
-});
-banana.models.CompletedItemCollection = Backbone.Collection.extend({
-	url: '/api/completed-item/'
 });
 
 banana.models.Gratitude = Backbone.Model.extend({
@@ -186,7 +182,7 @@ banana.views.CompletedItemEditView = Backbone.View.extend({
 		$(this.linkInput).val(this.model.get('link'));
 	},
 	makeNewModel: function(){
-		this.options.model = this.model = new banana.models.CompletedItem();
+		this.options.model = this.model = new phlogiston.banana.CompletedItem();
 	},
 	toggleTada: function(){
 		if($(this.promotedCheckbox).attr('checked') == 'checked'){
@@ -261,6 +257,7 @@ banana.views.CompletedItemsView = Backbone.View.extend({
 		this.collection.on('sync', this.handleReset);
 	},
 	handleReset: function(){
+		console.log('reset', this.collection.length)
 		for(var i=0; i < this.childrenViews.length; i++){
 			this.childrenViews[i].remove();
 		}

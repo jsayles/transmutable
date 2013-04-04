@@ -55,7 +55,7 @@ function initPage(){
 		'hasTada':hasUnusedTada,
 		'successCallback':function(newModel){
 			hasUnusedTada = false;
-			completedItems.fetch();
+			completedItems.fetch({'success': function(){ console.log('success'); }});
 			if(newUser){ newUserTourView.showStepThree(); }
 		}
 	});

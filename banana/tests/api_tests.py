@@ -45,15 +45,22 @@ class APITests(APITestCase):
 		response_json = self.getJSON(APITests.completed_items_url, self.api_client)
 		self.assertEqual(len(response_json['objects']), 0)
 
+		# Create
 		response_json = self.postJSON(APITests.completed_items_url, data, self.api_client)
+		# Read
 		response = self.api_client.get(response_json['resource_uri'], format='json')
 		self.assertValidJSONResponse(response)
-
+		# Update
 		self.putJSON(response_json['resource_uri'], {'markup':'Knock it off'}, self.api_client)
 		new_response_json = self.getJSON(response_json['resource_uri'], self.api_client)
+		self.assertEqual(new_response_json['markup'], 'Knock it off')
+		# Delete
+		response = self.api_client.delete(response_json['resource_uri'])
+		self.assertEqual(response.status_code, 204, 'Response status was %s. Response content: %s' % (response.status_code, response.content))
+		response = self.api_client.get(response_json['resource_uri'])
+		self.assertEqual(response.status_code, 404, 'Response status was %s. Response content: %s' % (response.status_code, response.content))
 
-
-		# Check that user's can't post as someone else
+		# Check that users can't post as someone else
 		data['user'] = user2_json['resource_uri']
 		response = self.api_client.post(APITests.completed_items_url, format='json', data=data)
 		self.assertHttpUnauthorized(response)
