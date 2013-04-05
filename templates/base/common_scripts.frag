@@ -12,4 +12,6 @@
 <script src="{{STATIC_URL}}phlogiston/backbone-1.0.0-min.js"></script>
 <script src="{{STATIC_URL}}phlogiston/backbone-tastypie-0.2.js"></script>
 <script src="{{STATIC_URL}}phlogiston/phlogiston.js"></script>
+<script src="{{STATIC_URL}}pagedown/Markdown.Converter.js"></script>
+<script src="{{STATIC_URL}}pagedown/Markdown.Sanitizer.js"></script>
 <script src="{{STATIC_URL}}js/search.js"></script>

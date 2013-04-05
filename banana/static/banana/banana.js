@@ -1,6 +1,5 @@
 var banana = banana || {};
 banana.views = banana.views || {};
-banana.models = banana.models || {};
 
 function createdComparator(item){
 	return -1 * phlogiston.parseJsonDate(item.get('created')).getTime();		
@@ -9,10 +8,6 @@ function createdComparator(item){
 window.schema.once('populated', function(){
 	window.schema.api.banana.CompletedItemCollection.prototype.comparator = createdComparator;
 	window.schema.api.banana.GratitudeCollection.prototype.comparator = createdComparator;
-});
-
-banana.models.WorkDoc = Backbone.Model.extend({
-	url:function(){ return '/api/work-doc/'; }
 });
 
 banana.views.NewUserTourView = Backbone.View.extend({
@@ -83,6 +78,9 @@ banana.views.WorkDocEditView = Backbone.View.extend({
 	className: 'work-doc-edit-view',
 	initialize: function(options){
 		_.bindAll(this);
+
+		this.markdownConverter = new Markdown.Converter();
+
 		this.form = $.el.form({'action':'.', 'method':'post'},
 			$.el.textarea({'name':'markup', 'placeholder':'- Check out sciencesaints.com'}),
 			$.el.a({'id':'formatting-help-link', 'href':'.'}, 'formatting help')
@@ -99,11 +97,11 @@ banana.views.WorkDocEditView = Backbone.View.extend({
 		this.markupView = $.el.div({'class':'work-doc-render markup-view rendered-wrapper'});
 		this.$el.append(this.markupView);
 
-		this.model.on('change:rendered', this.handleRenderedChange);
+		this.model.on('change:markup', this.handleMarkupChange);
 	},
-	handleRenderedChange: function(){
-		$(this.markupView).html(this.model.get('rendered'));
-		if(this.model.get('rendered').trim() == ''){
+	handleMarkupChange: function(){
+		$(this.markupView).html(this.markdownConverter.makeHtml(this.model.get('markup')));
+		if(this.model.get('markup').trim() == ''){
 			this.edit();
 		}
 	},
@@ -128,21 +126,13 @@ banana.views.WorkDocEditView = Backbone.View.extend({
 		});
 	},
 	handleSaved: function(){
-		this.showMarkupView();
+		if(this.model.get('markup').trim() != ''){
+			this.showMarkupView();
+		}
 	},
 	handleError: function(){
 		console.log('error', arguments);
 	}
-
-/*	<div id="work-doc-editor" style="display: block;">
-		<form id="work-doc-form" action="." method="post">
-			<textarea id="id_markup" rows="10" placeholder="- Check out sciencesaints.com" cols="40" name="markup"></textarea>
-		</form>
-		<a id="formatting-help-link" href=".">formatting help</a>
-		<button accesskey="s" name="work-doc-form-button" type="button" class="positive">save</button>
-		<button name="work-doc-reset-button" type="button" class="negative">cancel</button>
-	</div>
-*/
 })
 
 banana.views.CompletedItemEditView = Backbone.View.extend({
@@ -250,7 +240,6 @@ banana.views.CompletedItemsView = Backbone.View.extend({
 		this.collection.on('sync', this.handleReset);
 	},
 	handleReset: function(){
-		console.log('reset', this.collection.length)
 		for(var i=0; i < this.childrenViews.length; i++){
 			this.childrenViews[i].remove();
 		}

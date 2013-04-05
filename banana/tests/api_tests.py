@@ -16,7 +16,37 @@ class APITests(APITestCase):
 	def setUp(self):
 		super(APITests, self).setUp()
 		self.user1, self.client1 = create_user(username='alice', password='1234', first_name='Alice', last_name='Flowers')
+		self.work_doc1 = self.user1.work_doc
 		self.user2, self.client2 = create_user(username='bob', password='1234', first_name='Bob', last_name='Smith')
+		self.work_doc2 = self.user2.work_doc
+
+	def test_workdoc(self):
+
+		valid_workdoc_data = {
+			'markup':'- check out sciencesaints.com'
+		}
+		# Create should fail for everyone
+		response = self.api_client.post(self.work_doc1.get_api_url(), data=valid_workdoc_data, format='json')
+		self.assertEqual(response.status_code, 405, 'Response status was %s. Response content: %s' % (response.status_code, response.content))
+		self.api_client.client.login(username='alice', password='1234')
+		response = self.api_client.post(self.work_doc1.get_api_url(), data=valid_workdoc_data, format='json')
+		self.assertEqual(response.status_code, 405, 'Response status was %s. Response content: %s' % (response.status_code, response.content))
+
+		# Read yours and others'
+		response = self.getJSON(self.work_doc2.get_api_url(), self.api_client)
+		response = self.getJSON(self.work_doc1.get_api_url(), self.api_client)
+
+		# Update
+		self.putJSON(self.work_doc1.get_api_url(), valid_workdoc_data, self.api_client)
+		response = self.getJSON(self.work_doc1.get_api_url(), self.api_client)
+		self.assertEqual(response['markup'], valid_workdoc_data['markup'])
+		# Can't update others' WorkDocs
+		response = self.api_client.put(self.work_doc2.get_api_url(), data=valid_workdoc_data, format='json')
+		self.assertEqual(response.status_code, 401, 'Response status was %s. Response content: %s' % (response.status_code, response.content))
+
+		# Delete should fail
+		response = self.api_client.delete(self.work_doc1.get_api_url(), format='json')
+		self.assertEqual(response.status_code, 405, 'Response status was %s. Response content: %s' % (response.status_code, response.content))
 
 	def test_user(self):
 		self.api_client.client.login(username='alice', password='1234')

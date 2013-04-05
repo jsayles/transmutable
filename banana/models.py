@@ -143,6 +143,11 @@ class WorkDoc(MarkedUpModel):
 	def __unicode__(self):
 		return 'WordDoc for %s' % self.user
 
+	@models.permalink
+	def get_absolute_url(self): return ('banana.views.user', [], {'username':self.user.username})
+	def get_api_url(self): 
+		return reverse('api_dispatch_detail', args=['v0.1', 'banana/work-doc', self.id])
+
 User.work_doc = property(lambda u: WorkDoc.objects.get_or_create(user=u)[0])
 User.get_absolute_url = lambda u: reverse('banana.views.user', kwargs={ 'username':u.username })	
 User.has_unused_tada = lambda u: u.date_joined < datetime.datetime.now() - datetime.timedelta(days=2) and CompletedItem.objects.filter(user=u).filter(promoted=True).filter(created__gt=datetime.datetime.now() - datetime.timedelta(days=2)).count() == 0

@@ -29,7 +29,7 @@ window.schema.on('populated', _.once(initPage));
 function initPage(){
 	$('#home-nav').addClass('active');
 
-	window.workDoc = new banana.models.WorkDoc();
+	window.workDoc = new window.schema.api.banana.WorkDoc({'id':'{{user.work_doc.id}}'});
 	window.completedItems = new window.schema.api.banana.CompletedItemCollection();
 	window.gratitudes = new window.schema.api.banana.GratitudeCollection();
 
