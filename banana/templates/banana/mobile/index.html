@@ -5,27 +5,47 @@
 {% block sub-title %}To-do | {% endblock %}
 
 {% block sub-head %}
+<style>
+#edit-work-doc-link {
+	float: right;
+	padding: 1em;
+}
+.work-doc-edit-view textarea {
+	height: inherit;
+}
+</style>
 <script>
-$(document).ready(function() {
-	$('button[name="edit-work-doc-button"]').click(function(){
-		document.location.href = "{% url banana.mobile_views.todo_edit %}";
+var workDocEditView = null;
+window.schema.on('populated', _.once(initPage));
+
+function initPage(){
+	window.workDoc = new window.schema.api.banana.WorkDoc({'id':'{{user.work_doc.id}}'});
+	workDocEditView = new banana.views.WorkDocEditView({ 'model':workDoc });
+	workDoc.fetch();
+	$('#edit-work-doc-link').click(function(){
+		workDocEditView.edit();
+		$('.navbar-fixed-top').css('display', 'none');
+		$('.work-doc-edit-view textarea').css('height', ($(window).height() / 2) - 40 + 'px');
+		$(this).hide();
+		return false;
 	});
-});
+	workDoc.on('edit-completed', function(){
+		$('#edit-work-doc-link').show()
+		$('.navbar-fixed-top').css('display', 'block');
+	})
+	$('#work-doc-edit-row').append(workDocEditView.el);
+	console.log($(window).height())
+}
 </script>
 {% endblock %}
 
 {% block sub-style %}
-#work-doc-controls { float: right; padding: 0px; }
-#work-doc {
-	min-height: 300px;
-}
 {% endblock %}
 
 {% block content %}
-<div id="work-doc" class="rendered-wrapper">
-	<div id="work-doc-controls">
-		<button name="edit-work-doc-button" class="positive">edit</button>
+	<div class="row-fluid">
+		<div class="span12" id="work-doc-edit-row">
+			<a id="edit-work-doc-link"><i class="icon-edit" alt="edit"></i> edit</a>
+		</div>
 	</div>
-	{{ user.work_doc.rendered|safe }}
-</div>
 {% endblock %}

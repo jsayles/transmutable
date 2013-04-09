@@ -141,7 +141,7 @@ class WorkDoc(MarkedUpModel):
 	
 	def flatten(self): return {'user':self.user.username, 'markup':self.markup, 'rendered':self.rendered, 'modified':'%s' % self.modified}
 	def __unicode__(self):
-		return 'WordDoc for %s' % self.user
+		return 'WorkDoc for %s' % self.user
 
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.user', [], {'username':self.user.username})

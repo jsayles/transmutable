@@ -1,0 +1,37 @@
+{% extends "banana/mobile/base.html" %}
+{% load imagetags %}
+{% load banana %}
+
+{% block sub-title %}To-done | {% endblock %}
+
+{% block sub-head %}
+<script>
+var completedItemEditView = null;
+var completedItemsView = null;
+
+window.schema.on('populated', _.once(initPage));
+
+function initPage(){
+	window.completedItems = new window.schema.api.banana.CompletedItemCollection();
+
+	completedItemEditView = new banana.views.CompletedItemEditView({
+		'hasTada':false,
+		'successCallback':function(newModel){
+			window.completedItems.fetch();
+		}
+	});
+	$('#content').append(completedItemEditView.el);
+	completedItemsView = new banana.views.CompletedItemsView({
+		'collection':completedItems
+	});
+	$('#content').append(completedItemsView.el);
+	completedItemsView.collection.fetch();
+}
+</script>
+{% endblock %}
+
+{% block sub-style %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}

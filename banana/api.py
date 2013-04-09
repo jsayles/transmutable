@@ -19,8 +19,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect, HttpResponsePermanentRedirect
 
-from models import CompletedItem, Gratitude, WorkDoc
-from forms import CompletedItemForm, GratitudeForm, WorkDocForm
+from models import CompletedItem, CompletedItemRock, Gratitude, WorkDoc
+from forms import CompletedItemForm, CompletedItemRockForm, GratitudeForm, WorkDocForm
 
 from transmutable import API
 
@@ -87,6 +87,19 @@ class CompletedItemResource(ModelResource):
 		authentication = SessionAuthentication()
 		authorization = UserIsRequestorAuthorization()
 API.register(CompletedItemResource())
+
+class CompletedItemRockResource(ModelResource):
+	completed_item = fields.ForeignKey(CompletedItemResource, 'user')
+	user = fields.ForeignKey(UserResource, 'user')
+	class Meta:
+		resource_name = 'banana/completed-item-rock'
+		queryset = CompletedItemRock.objects.all()
+		include_absolute_url = False
+		allowed_methods = ['get']
+		validation = FormValidation(form_class=CompletedItemRockForm)
+		authentication = SessionAuthentication()
+		authorization = UserIsRequestorAuthorization()
+API.register(CompletedItemRockResource())
 
 class GratitudeResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')

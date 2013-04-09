@@ -15,3 +15,4 @@
 <script src="{{STATIC_URL}}pagedown/Markdown.Converter.js"></script>
 <script src="{{STATIC_URL}}pagedown/Markdown.Sanitizer.js"></script>
 <script src="{{STATIC_URL}}js/search.js"></script>
+<script src="{{STATIC_URL}}js/base.js"></script>
