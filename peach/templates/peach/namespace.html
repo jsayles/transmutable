@@ -11,12 +11,18 @@ window.wikiPageEditorView = null;
 window.schema.on('populated', function(){
 	window.namespace = new window.schema.api.peach.Namespace({'id':{{namespace.id}}});
 	window.wikiPage = new window.schema.api.peach.WikiPage({'id':{{page.id}}});
+	window.user = new window.schema.api.auth.User({'id':{{request.user.id}}});
 
-	// Fetch namespace and then wikiPage and then call initPage
+	// Fetch namespace, wikiPage, and user and then call initPage
+	// TODO make a thing which watches N models and calls back when they're all fetched
 	window.namespace.fetch({
 		'success': function(){ 
-			window.wikiPage.fetch({ 
-				'success': initPage 
+			window.wikiPage.fetch({
+				'success':function(){
+					window.user.fetch({
+						'success': initPage
+					})
+				} 
 			})
 		}
 	})
@@ -28,7 +34,9 @@ window.schema.on('populated', function(){
 function initPage(){
 	//this assumes that window.namespace and window.wikiPage are populated
 	window.wikiPageEditorView = new peach.views.WikiPageEditorView({
-		'model':window.wikiPage
+		'model':window.wikiPage,
+		'namespace':window.namespace,
+		'user':window.user
 	});
 	$('#main-column').append(window.wikiPageEditorView.el);
 }
@@ -47,11 +55,13 @@ function toggleArchive(){
 		<ul class="breadcrumb">
 			<li>Pages</li>
 		</ul>
-
 		<ul>
-		{% for page in namespace.pages.all %}
-			   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
-		{% endfor %}
+		   <li><a title="SplashPage" href="{{ page.namespace.splash_page.get_absolute_url }}">SplashPage</a></li>
+			{% for page in namespace.pages.all %}
+				{% if page.name != 'SplashPage' %}
+				   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
+				{% endif %}
+			{% endfor %}
 		</ul>
 
 		{% if google_ad_settings.namespace_left %}

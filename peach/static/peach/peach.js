@@ -31,9 +31,17 @@ peach.views.WikiEditControlsView = Backbone.View.extend({
 		this.editLink = $.el.a({'href':'#edit'}, $.el.i({'class':'icon-edit', 'alt':'edit'}), 'edit');
 		this.$el.append(this.editLink);
 		$(this.editLink).click(this.editRequested);
-		this.printLink = $.el.a({'href':'#print'}, $.el.i({'class':'icon-print', 'alt':'print'}), 'print');
+		this.printLink = $.el.a(
+			{'target':'_new', 'href':window.urlLoader.urls.peach.username_namespace_name_print(this.options.user.get('username'), this.options.namespace.get('name'), this.model.get('name'))},
+			$.el.i({'class':'icon-print', 'alt':'print'}),
+			'print'
+		);
 		this.$el.append(this.printLink);
-		this.historyLink = $.el.a({'href':'#history'}, $.el.i({'class':'icon-time', 'alt':'history'}), 'history');
+		this.historyLink = $.el.a(
+			{'href':window.urlLoader.urls.peach.username_namespace_name_history(this.options.user.get('username'), this.options.namespace.get('name'), this.model.get('name'))},
+			$.el.i({'class':'icon-time', 'alt':'history'}), 
+			'history'
+		);
 		this.$el.append(this.historyLink);
 		this.deleteLink = $.el.a({'href':'#delete'}, $.el.i({'class':'icon-trash', 'alt':'delete'}), 'delete');
 		this.$el.append(this.deleteLink);
@@ -63,7 +71,7 @@ peach.views.WikiPageEditForm = Backbone.View.extend({
 	prepareForEdit: function(){
 		// save the model content so that a cancellation can restore this state
 		this.restoreContent = this.model.get('content');
-		if(this.model.get('content') == ' '){
+		if(this.model.get('content') == ' '){ // TODO make it possible to save empty strings to WikiPage.content
 			$(this.textArea).val('');
 		} else {
 			$(this.textArea).val(this.model.get('content'));
@@ -92,7 +100,7 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 	className: 'wiki-page-editor-view',
 	initialize: function(){
 		_.bindAll(this);
-		this.wikiEditControlsView = new peach.views.WikiEditControlsView({'model':this.model, 'parent':this});
+		this.wikiEditControlsView = new peach.views.WikiEditControlsView({'model':this.model, 'namespace':this.options.namespace, 'user':this.options.user, 'parent':this});
 		this.$el.append(this.wikiEditControlsView.el);
 		this.wikiPageRenderView = new peach.views.WikiPageRenderView({'model':this.model, 'parent':this});
 		this.$el.append(this.wikiPageRenderView.el);

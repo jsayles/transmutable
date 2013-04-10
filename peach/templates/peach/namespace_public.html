@@ -4,23 +4,21 @@
 {% block sub-title %}{{ namespace.display_name }} | {% endblock %}
 
 {% block sub-style %}
-#left-column ul { margin: 0px; }
-#left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
-#content .author-info { text-align: left; }
 {% endblock %}
 
 {% block content %}
 <div class="row-fluid">
 	<div id="left-column" class="span2">
-		{% with namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
-
-		<h2>Pages</h2>
+		<ul class="breadcrumb">
+			<li>Pages</li>
+		</ul>
 		<ul>
-		{% for page in namespace.pages.all %}
-			{% if page.name != 'SplashPage' %}
-			   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
-			{% endif %}
-		{% endfor %}
+		   <li><a title="SplashPage" href="{{ page.namespace.splash_page.get_absolute_url }}">SplashPage</a></li>
+			{% for page in namespace.pages.all %}
+				{% if page.name != 'SplashPage' %}
+				   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
+				{% endif %}
+			{% endfor %}
 		</ul>
 
 		{% if google_ad_settings.namespace_left %}
@@ -37,6 +35,9 @@
 	</div>
 	<div id="main-column" class="span10">
 		<ul class="breadcrumb">
+			<li>
+				<a href="{{ page.namespace.owner.get_absolute_url }}">{{ page.namespace.owner.get_full_name }}</a> <span class="divider">/</span>
+			</li>
 			<li class="active">
 				{{ namespace.display_name }}
 			</li>
