@@ -2,9 +2,14 @@
 
 .rendered-wrapper { margin: 20px 0px;  }
 
-.wiki-control-links { float: right;  }
-.wiki-control-links a { font-size: 1.2em; margin-left: 1em; }
-.wiki-control-links form { display: inline; margin-right: 15px; }
+.wiki-page-editor-view { width: 100%; }
+.wiki-edit-controls-view { float: right;  }
+.wiki-edit-controls-view a { font-size: 1.2em; margin-left: 1em; }
+.wiki-edit-controls-view a i { padding-right: 0.2em; }
+a[href='#delete'] { color: red; }
+.wiki-page-edit-form form { width: 100%; }
+.wiki-page-edit-form textarea { width: 100%; min-height: 30em;}
+
 
 .printed-page { border-bottom: none; }
 .printed-page a { text-decoration: none; color: #000; }
@@ -14,4 +19,3 @@
 .author-info h3 a { text-decoration: none; }
 .author-info:hover h3 { text-decoration: underline; }
 
-a[href='#delete'] { color: red; }
