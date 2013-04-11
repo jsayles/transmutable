@@ -7,10 +7,25 @@
 .wiki-edit-controls-view a { font-size: 1.2em; margin-left: 1em; }
 .wiki-edit-controls-view a i { padding-right: 0.2em; }
 a[href='#delete'] { color: red; }
-.wiki-page-edit-form form { width: 100%; }
-.wiki-page-edit-form textarea { width: 100%; min-height: 30em;}
+.wiki-page-edit-form form { width: 100%; margin-bottom: 0.1em; }
+.wiki-page-edit-form textarea { width: 98%; min-height: 30em;}
+.wiki-page-edit-form .controls-div { text-align: right; }
+.wiki-page-edit-form .controls-div button { margin-left: 0.5em; }
 
+#content .wiki-page-item-view { position: relative; cursor: pointer; }
+#content .wiki-page-item-view a { cursor: pointer; }
 
+#content .wiki-page-item-view .delete-link {
+	display: none;
+	position: absolute;
+	top: 1em;
+	right: 0.5em;
+	color: red;
+}
+#content .wiki-page-item-view:hover .delete-link { display: block; }
+
+.namespace-pages-view input[type=text] { width: 90%; }
+.namespace-breadcrumb-view li i { padding-left: 0.3em;  }
 .printed-page { border-bottom: none; }
 .printed-page a { text-decoration: none; color: #000; }
 .printed-page h1 a { color: #000; font-size: 1.2em; }

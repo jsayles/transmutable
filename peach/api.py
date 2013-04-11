@@ -96,6 +96,9 @@ class WikiPageResource(ModelResource):
 		queryset = WikiPage.objects.all()
 		resource_name = 'peach/wiki-page'
 		allowed_methods = ['get', 'post', 'put', 'delete']
+		filtering = {
+			'namespace': ALL_WITH_RELATIONS,
+		}
 		validation = FormValidation(form_class=WikiPageForm)
 		authentication = SessionAuthentication()
 		authorization = WikiPageAuthorization()
