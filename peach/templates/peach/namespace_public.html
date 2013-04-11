@@ -12,15 +12,18 @@
 		<ul class="breadcrumb">
 			<li>Pages</li>
 		</ul>
-		<ul>
-		   <li><a title="SplashPage" href="{{ page.namespace.splash_page.get_absolute_url }}">SplashPage</a></li>
-			{% for page in namespace.pages.all %}
-				{% if page.name != 'SplashPage' %}
-				   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
+		<ul class="nav nav-tabs nav-stacked">
+			<li class="wiki-page-item-view active">
+				<a title="SplashPage" href="{{ page.namespace.splash_page.get_absolute_url }}">SplashPage</a>
+			</li>
+			{% for wikiPage in page.namespace.pages.all %}
+				{% if wikiPage.name != 'SplashPage' %}
+					<li class="wiki-page-item-view">
+						<a href="{{wikiPage.get_absolute_url}}">{{wikiPage.name}}</a>
+					</li>
 				{% endif %}
 			{% endfor %}
 		</ul>
-
 		{% if google_ad_settings.namespace_left %}
 			<script type="text/javascript"><!--
 				google_ad_client = "{{ google_ad_settings.namespace_left.ad_client }}";
@@ -31,7 +34,6 @@
 			</script>
 			<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 		{% endif %}
-
 	</div>
 	<div id="main-column" class="span10">
 		<ul class="breadcrumb">

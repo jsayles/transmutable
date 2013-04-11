@@ -44,6 +44,9 @@ class Namespace(models.Model):
 		self.name = slugify(self.display_name)
 		super(Namespace, self).save(*args, **kwargs)
 		
+	@property
+	def splash_page(self): return WikiPage.objects.get_or_create(namespace=self, name='SplashPage')[0]
+
 	def serialize_fields(self): return ['id', 'name', 'display_name', 'owner_username']
 
 	@property

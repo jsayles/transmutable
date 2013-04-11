@@ -37,6 +37,14 @@ peach.views.NamespaceBreadcrumbView = Backbone.View.extend({
 		this.updateIcons();
 		this.model.on('change', this.updateIcons);
 		this.model.on(peach.events.wikiPageRequested, this.handleWikiPageRequested);
+		this.model.on(peach.events.wikiPageDestroyed, this.handleWikiPageDestroyed);
+	},
+	handleWikiPageDestroyed: function(wikiPage){
+		if(!this.wikiPageCrumb) return;
+		if(this.wikiPageCrumb.wikiPage == wikiPage){
+			this.wikiPageCrumb.remove();
+			this.wikiPageCrumb = null;
+		}
 	},
 	handleWikiPageRequested: function(wikiPage){
 		if(this.wikiPageCrumb){
@@ -45,6 +53,7 @@ peach.views.NamespaceBreadcrumbView = Backbone.View.extend({
 		if(wikiPage.get('name') == 'SplashPage') return;
 		this.wikiPageCrumb = $.el.li({'class':'active'}, $.el.span({'class':'divider'}, '/'), wikiPage.get('name'));
 		this.$el.append(this.wikiPageCrumb);
+		this.wikiPageCrumb.wikiPage = wikiPage;
 	},
 	handlePublicToggle: function(){
 		this.model.save({'public':!this.model.get('public')});
@@ -133,9 +142,6 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 			'content':' '
 		};
 		this.collection.create(data,{
-				'success': function(){
-					console.log('success', arguments);
-				},
 				'error': function(){
 					console.log('error', arguments);
 				}
@@ -158,11 +164,9 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 	handleRemove: function(wikiPage){
 		var itemView = this.getItemView(wikiPage);
 		if(!itemView) return;
-		console.log("Remove", itemView);
 		itemView.$el.remove();
 	},
 	handleSync: function(){
-		console.log("Sync");
 		for(var i=0; i < this.wikiPageItemViews.length; i++){
 			this.wikiPageItemViews[i].remove();
 		}

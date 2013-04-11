@@ -1,23 +1,25 @@
 {% extends "peach/base.html" %}
+{% load wikitags %}
 
 {% block sub-title %}{{ page.name }} | {% endblock %}
-
-{% block sub-style %}
-#left-column ul { margin: 0; }
-#left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
-{% endblock %}
 
 {% block content %}
 <div class="row-fluid">
 	<div id="left-column" class="span2">
-		{% with page.namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
-		<h2>Pages</h2>
-		<ul>
-		{% for page in page.namespace.pages.all %}
-			{% if page.name != 'SplashPage' %}
-				<li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
-			{% endif %}
-		{% endfor %}
+		<ul class="breadcrumb">
+			<li>Pages</li>
+		</ul>
+		<ul class="nav nav-tabs nav-stacked">
+			<li class="wiki-page-item-view">
+				<a title="SplashPage" href="{{ page.namespace.splash_page.get_absolute_url }}">SplashPage</a>
+			</li>
+			{% for wikiPage in page.namespace.pages.all %}
+				{% if wikiPage.name != 'SplashPage' %}
+					<li class="wiki-page-item-view{% if wikiPage.name == page.name %} active{% endif %}">
+						<a href="{{wikiPage.get_absolute_url}}">{{wikiPage.name}}</a>
+					</li>
+				{% endif %}
+			{% endfor %}
 		</ul>
 		{% if google_ad_settings.wiki_left %}
 			<script type="text/javascript"><!--
@@ -31,7 +33,22 @@
 		{% endif %}
 	</div>
 	<div id="main-column" class="span10">
-   		{% include "peach/wiki_render.frag" %}
+		<ul class="breadcrumb">
+			<li>
+				<a href="{{ page.namespace.owner.get_absolute_url }}">{{ page.namespace.owner.get_full_name }}</a>
+			</li>
+			<li>
+				<span class="divider">/</span>
+				<a href="{{page.namespace.get_absolute_url}}">
+					{{ page.namespace.display_name }}
+				</a>
+			</li>
+			<li>
+				<span class="divider">/</span>
+				{{ page.name }}
+			</li>
+		</ul>
+		<div class="rendered-wrapper">{{ page.rendered|include_constants|safe }}</div>
 	</div>
 </div>
 {% endblock %}
