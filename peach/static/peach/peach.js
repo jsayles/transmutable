@@ -19,6 +19,80 @@ peach.events.wikiPageCreated = 'wiki-page-created';
 peach.events.wikiPageDestroyed = 'wiki-page-destroyed';
 peach.events.wikiPageRequested = 'wiki-page-requested';
 
+peach.views.NewNotesTourView = Backbone.View.extend({
+	className: 'new-notes-tour-view',
+	initialize: function(options){
+		_.bindAll(this);
+		this.options = options;
+		this.titleRow = $.el.div(
+			{'class':'row-fluid new-notes-tour-title-row'}, 
+			$.el.h2({'class':'span12'}, 'Let\'s get started with notes!'),
+			$.el.p('Create a note to store thoughts about a project you\'re working on.')
+
+		);
+		this.$el.append(this.titleRow);
+	}
+})
+
+peach.views.NewNamespaceTourView = Backbone.View.extend({
+	className: 'new-namespace-tour-view',
+	initialize: function(options){
+		_.bindAll(this);
+		this.options = options;
+		this.titleRow = $.el.div(
+			{'class':'row-fluid new-namespace-tour-title-row'}, 
+			$.el.h2({'class':'span12'}, 'Now add some content.'),
+			$.el.p('Write up your latest, brilliant thoughts and perhaps make a list or two.')
+		);
+		this.$el.append(this.titleRow);
+
+		this.collection.on(peach.events.editCompleted, this.handleEditCompleted);
+		this.collection.on(peach.events.wikiPageCreated, this.handlePageCreated);
+	},
+	handleEditCompleted: function(){
+		$(this.titleRow).empty().append($.el.h2({'class':'span12'}, 'Now, add another page over on the left.'), $.el.p('(don\'t worry, you can delete it later)'));
+	},
+	handlePageCreated: function(){
+		$(this.titleRow).empty().append($.el.h2({'class':'span12'}, 'You did it. Keep going!'));
+		setTimeout(function(){
+			$('.new-namespace-tour-view').hide(400);
+		}, 5000);
+	}
+})
+
+peach.views.CreateNamespaceForm = Backbone.View.extend({
+	className: 'create-namespace-view',
+	initialize: function(options){
+		_.bindAll(this);
+		this.options = options;
+		this.newNamespaceInput = $.el.input({'type':'text', 'placeholder':'Type a Project Name and hit Enter'});
+		this.$el.append(this.newNamespaceInput);
+		$(this.newNamespaceInput).keyup(this.handleInputChange);		
+	},
+	handleInputChange: function(event){
+		if(event.keyCode != 13) return;
+		var newName = $(this.newNamespaceInput).val().trim();
+		if(!newName) return;
+		$(this.newNamespaceInput).val('');
+		var namespace = new window.schema.api.peach.Namespace({
+			'display_name':newName
+		});
+
+		namespace.save(null,{
+			'success':_.bind(function(model){
+				if(this.options.saveCallback){
+					this.options.saveCallback(model);
+				}
+			}, this),
+			'error': _.bind(function(){
+				if(this.options.saveCallback){
+					this.options.saveCallback(null);
+				}
+			}, this)
+		});
+	}
+})
+
 peach.views.NamespaceBreadcrumbView = Backbone.View.extend({
 	className: 'namespace-breadcrumb-view breadcrumb',
 	tagName: 'ul',
@@ -123,7 +197,6 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 		this.newWikiPageInput = $.el.input({'type':'text', 'placeholder':'new page name'});
 		this.$el.append(this.newWikiPageInput);
 		$(this.newWikiPageInput).keyup(this.handleNewWikiPageInputChange);
-		this.collection = new window.schema.api.peach.WikiPageCollection(null, {'filters':{'namespace':this.model.get('id')}});
 		this.collection.on('sync', this.handleSync);
 		this.collection.fetch();
 		this.collection.on('remove', this.handleRemove);
@@ -142,6 +215,9 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 			'content':' '
 		};
 		this.collection.create(data,{
+				'success':_.bind(function(){
+					this.collection.trigger(peach.events.wikiPageCreated, this);
+				}, this),
 				'error': function(){
 					console.log('error', arguments);
 				}
@@ -229,7 +305,7 @@ peach.views.WikiPageEditForm = Backbone.View.extend({
 		this.form = $.el.form({'action':'.', 'method':'put'});
 		this.$el.append(this.form);
 
-		this.textArea = this.form.append($.el.textarea());
+		this.textArea = this.form.append($.el.textarea({'placeholder':'Here are a few thoughts on my new project...'}));
 		$(this.textArea).keyup(this.handleKeyUp);
 
 		this.controlsDiv = $.el.div({'class':'controls-div'});
@@ -275,7 +351,7 @@ peach.views.WikiPageEditForm = Backbone.View.extend({
 		console.log("Error", arguments);
 	},
 	handleSaveSuccess: function(){
-		this.model.trigger(peach.events.editCompleted);
+		this.model.trigger(peach.events.editCompleted, this.model);
 	}
 })
 

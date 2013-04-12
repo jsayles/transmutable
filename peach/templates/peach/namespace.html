@@ -5,8 +5,11 @@
 {% block sub-head %}
 <script>
 window.namespace = null;
+window.wikiPageCollection = null;
 window.namespaceEditorSwitcherView = null;
 window.namespaceBreadcrumbView = null;
+window.newNamespaceTourView = null;
+window.newUser = document.location.search == '?new=true';
 
 window.schema.on('populated', function(){
 	window.namespace = new window.schema.api.peach.Namespace({'id':{{namespace.id}}});
@@ -25,6 +28,16 @@ window.schema.on('populated', function(){
 
 function initPage(){
 	//this assumes that window.namespace and window.user are populated
+	window.wikiPageCollection = new window.schema.api.peach.WikiPageCollection(null, {'filters':{'namespace':window.namespace.get('id')}});
+
+	if(newUser){
+		window.newNamespaceTourView = new peach.views.NewNamespaceTourView({
+			'model':window.namespace,
+			'collection':window.wikiPageCollection
+		});
+		$('#content').prepend(window.newNamespaceTourView.el);
+	}
+
 	window.namespaceBreadcrumbView = new peach.views.NamespaceBreadcrumbView({
 		'model':window.namespace
 	});
@@ -37,7 +50,8 @@ function initPage(){
 	$('#main-column').append(window.namespaceEditorSwitcherView.el);
 	
 	window.namespacePagesView = new peach.views.NamespacePagesView({
-		'model':window.namespace
+		'model':window.namespace,
+		'collection':window.wikiPageCollection
 	});
 	$('#left-column .breadcrumb').after(window.namespacePagesView.el);
 	

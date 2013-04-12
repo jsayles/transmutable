@@ -26,6 +26,9 @@ a[href='#delete'] { color: red; }
 
 .namespace-pages-view input[type=text] { width: 90%; }
 .namespace-breadcrumb-view li i { padding-left: 0.3em;  }
+.create-namespace-view input {
+	min-width: 20em;
+}
 .printed-page { border-bottom: none; }
 .printed-page a { text-decoration: none; color: #000; }
 .printed-page h1 a { color: #000; font-size: 1.2em; }
@@ -34,3 +37,16 @@ a[href='#delete'] { color: red; }
 .author-info h3 a { text-decoration: none; }
 .author-info:hover h3 { text-decoration: underline; }
 
+/*
+	=========================================
+	New Notes Tour
+	=========================================
+*/
+.new-notes-tour-view, .new-namespace-tour-view {
+	text-align: center;
+}
+.new-namespace-copy {
+	font-size: 0.8em;
+	color: #444;
+	font-weight: normal;
+}
