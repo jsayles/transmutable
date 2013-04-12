@@ -16,9 +16,10 @@
 </style>
 <script>
 var workDocEditView = null;
-window.schema.on('populated', _.once(initPage));
+window.schema.once('populated',initPage);
 
 function initPage(){
+	$('#index-nav').addClass('active');
 	window.workDoc = new window.schema.api.banana.WorkDoc({'id':'{{user.work_doc.id}}'});
 	workDocEditView = new banana.views.WorkDocEditView({ 'model':workDoc });
 	workDoc.fetch();

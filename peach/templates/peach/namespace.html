@@ -15,15 +15,9 @@ window.schema.on('populated', function(){
 	window.namespace = new window.schema.api.peach.Namespace({'id':{{namespace.id}}});
 	window.user = new window.schema.api.auth.User({'id':{{request.user.id}}});
 
-	// Fetch namespace, and user and then call initPage
-	// TODO make a thing which watches N models and calls back when they're all fetched
-	window.namespace.fetch({
-		'success': function(){ 
-			window.user.fetch({
-				'success': initPage
-			})
-		}
-	})
+	window.fetcher = new phlogiston.Fetcher(null, window.namespace, window.user);
+	window.fetcher.once(phlogiston.events.fetchComplete, initPage);
+	window.fetcher.fetch();
 });
 
 function initPage(){

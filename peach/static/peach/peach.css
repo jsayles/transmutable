@@ -3,6 +3,8 @@
 .rendered-wrapper { margin: 20px 0px;  }
 
 .wiki-page-editor-view { width: 100%; }
+#content .wiki-page-edit-form textarea { min-height: 10em;}
+
 .wiki-edit-controls-view { float: right;  }
 .wiki-edit-controls-view a { font-size: 1.2em; margin-left: 1em; }
 .wiki-edit-controls-view a i { padding-right: 0.2em; }

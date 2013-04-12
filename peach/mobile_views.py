@@ -52,7 +52,7 @@ def namespace(request, namespace):
 		create_wiki_page_form = CreateWikiPageForm(request.POST, instance=WikiPage(namespace=ns))
 		if create_wiki_page_form.is_valid() and WikiPage.objects.filter(namespace=ns, name=create_wiki_page_form.cleaned_data['name']).count() == 0:
 			page = create_wiki_page_form.save()
-			return HttpResponseRedirect(reverse('peach.mobile_views.wiki_edit', kwargs={'namespace':namespace, 'name':page.name}))
+			return HttpResponseRedirect(reverse('peach.mobile_views.wiki', kwargs={'namespace':namespace, 'name':page.name}))
 	else:
 		create_wiki_page_form = CreateWikiPageForm(instance=WikiPage(namespace=ns))
 	if not ns.can_read(request.user): return HttpResponseRedirect(reverse('peach.mobile_views.index'))
@@ -62,8 +62,7 @@ def namespace(request, namespace):
 def wiki(request, namespace, name):
 	ns = get_object_or_404(Namespace, owner=request.user, name=namespace)
 	if not ns.can_read(request.user): return HttpResponseRedirect(reverse('peach.mobile_views.index'))
-	page, created = WikiPage.objects.get_or_create(namespace=ns, name=name)
-	if created or page.content == '': return HttpResponseRedirect(reverse('peach.mobile_views.wiki_edit', kwargs={'namespace':namespace, 'name':name}))
+	page = get_object_or_404(WikiPage, namespace=ns, name=name)
 	return render_to_response('peach/mobile/wiki.html', { 'page':page }, context_instance=RequestContext(request))
 
 

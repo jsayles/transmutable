@@ -2,15 +2,45 @@
 {% block sub-title %}{{ namespace.display_name }} | {% endblock %}
 
 {% block sub-head %}
+<style>
+	.wiki-page-edit-form textarea { min-height: 10em;}
+</style>
+
 <script>
-$(document).ready(function() {
-});
+window.fetcher = null;
+window.namespace = null;
+window.wikiPage = null;
+window.user = null;
+window.wikiPageEditorView = null;
+
+window.schema.once('populated', initModels);
+
+function initModels(){
+	$('#notes-nav').addClass('active');
+	window.namespace = new window.schema.api.peach.Namespace({'id':{{namespace.id}}});
+	window.wikiPage = new window.schema.api.peach.WikiPage({'id':{{namespace.splash_page.id}}});
+	window.user = new window.schema.api.auth.User({'id':{{namespace.owner.id}}});
+
+	window.fetcher = new phlogiston.Fetcher(null, window.namespace, window.wikiPage, window.user);
+	window.fetcher.once(phlogiston.events.fetchComplete, initPage);
+	window.fetcher.fetch();
+}
+
+function initPage(){
+	window.wikiPageEditorView = new peach.views.WikiPageEditorView({
+		'isMobile':true,
+		'model':window.wikiPage,
+		'namespace':window.namespace,
+		'user':window.user
+	});
+	$('#content .breadcrumb').after(window.wikiPageEditorView.el);
+
+}
 </script>
 {% endblock %}
 
 {% block sub-style %}
 .page-li { display: block; float: left; padding-right: 30px; padding-bottom: 30px; }
-#wiki-content { display: block; min-height: 100px; }
 {% endblock %}
 
 {% block content %}
@@ -20,20 +50,11 @@ $(document).ready(function() {
 		</li>
 	</ul>
 
-<div id="wiki-content">
-{% with "true" as hide_title %}
-	{% with "true" as is_mobile %}
-		{% include "peach/wiki_render.frag" %}
-	{% endwith %}
-{% endwith %}
-</div>
-<hr />
-
-<h3>Pages:</h3>
-<ul>
-	{% for page in wiki_pages %}
-	<li class="page-li"><a href="{% url peach.mobile_views.wiki namespace.name page.name %}">{{ page.name }}</a></li>
-	{% endfor %}
-</ul>
-<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
+	<h4>Pages:</h4>
+	<ul>
+		{% for page in wiki_pages %}
+		<li class="page-li"><a href="{% url peach.mobile_views.wiki namespace.name page.name %}">{{ page.name }}</a></li>
+		{% endfor %}
+	</ul>
+	<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
 {% endblock %}

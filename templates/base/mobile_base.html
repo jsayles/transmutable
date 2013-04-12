@@ -40,13 +40,23 @@
 					<a class="brand" href="{% url banana.mobile_views.index %}">{{ site.name }}</a>
 					<div class="nav-collapse">
 						<ul class="nav">
-							<li><a href="{% url banana.mobile_views.index %}">To-do</a></li>
-							<li><a href="{% url banana.mobile_views.completed_items %}">To-done</a></li>
-							<li><a href="{% url peach.mobile_views.index %}">Notes</a></li>
-							<li><a href="{% url banana.mobile_views.activity %}">Activity</a></li>
+							<li id="index-nav">
+								<a href="{% url banana.mobile_views.index %}">To-do</a>
+							</li>
+							<li id="completed-items-nav">
+								<a href="{% url banana.mobile_views.completed_items %}">To-done</a>
+							</li>
+							<li id="notes-nav">
+								<a href="{% url peach.mobile_views.index %}">Notes</a>
+							</li>
+							<li id="activity-nav">
+								<a href="{% url banana.mobile_views.activity %}">Activity</a>
+							</li>
 						</ul>
 						{% if request.user.is_authenticated %}
-							<p class="navbar-text pull-right">/ <a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></p>
+							<p class="navbar-text pull-right"> 
+								<a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a>
+							</p>
 						{% else %}
 							<p class="navbar-text pull-right"><a href="{% url django.contrib.auth.views.login %}">login</a></p>
 						{% endif %}

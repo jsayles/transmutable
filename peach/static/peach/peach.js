@@ -276,22 +276,24 @@ peach.views.WikiEditControlsView = Backbone.View.extend({
 		_.bindAll(this);
 
 		this.editLink = $.el.a($.el.i({'class':'icon-edit', 'title':'edit (alt-o)', 'alt':'edit'}), 'edit');
-		this.$el.append(this.editLink);
 		$(this.editLink).click(this.editRequested);
 		this.printLink = $.el.a(
 			{'target':'_new', 'accessKey':'p', 'href':window.urlLoader.urls.peach.username_namespace_name_print(this.options.user.get('username'), this.options.namespace.get('name'), this.model.get('name'))},
 			$.el.i({'class':'icon-print', 'alt':'print'}),
 			'print'
 		);
-		this.$el.append(this.printLink);
 		this.historyLink = $.el.a(
 			{'href':window.urlLoader.urls.peach.username_namespace_name_history(this.options.user.get('username'), this.options.namespace.get('name'), this.model.get('name'))},
 			$.el.i({'class':'icon-time', 'alt':'history'}), 
 			'history'
 		);
-		this.$el.append(this.historyLink);
 		this.deleteLink = $.el.a({'href':'#delete'}, $.el.i({'class':'icon-trash', 'alt':'delete'}), 'delete');
-		this.$el.append(this.deleteLink);
+		this.$el.append(this.editLink);
+		if(!this.options.isMobile){
+			this.$el.append(this.printLink);
+			this.$el.append(this.historyLink);
+			this.$el.append(this.deleteLink);
+		}
 	},
 	editRequested: function(){
 		this.model.trigger(peach.events.editRequested);
@@ -305,7 +307,7 @@ peach.views.WikiPageEditForm = Backbone.View.extend({
 		this.form = $.el.form({'action':'.', 'method':'put'});
 		this.$el.append(this.form);
 
-		this.textArea = this.form.append($.el.textarea({'placeholder':'Here are a few thoughts on my new project...'}));
+		this.textArea = this.form.append($.el.textarea({'placeholder':'Here are a few thoughts on my project...'}));
 		$(this.textArea).keyup(this.handleKeyUp);
 
 		this.controlsDiv = $.el.div({'class':'controls-div'});
@@ -359,11 +361,22 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 	className: 'wiki-page-editor-view',
 	initialize: function(){
 		_.bindAll(this);
-		this.wikiEditControlsView = new peach.views.WikiEditControlsView({'model':this.model, 'namespace':this.options.namespace, 'user':this.options.user, 'parent':this});
+		this.wikiEditControlsView = new peach.views.WikiEditControlsView({
+			'model':this.model, 
+			'namespace':this.options.namespace, 
+			'user':this.options.user, 
+			'isMobile':this.options.isMobile
+		});
 		this.$el.append(this.wikiEditControlsView.el);
-		this.wikiPageRenderView = new peach.views.WikiPageRenderView({'model':this.model, 'parent':this});
+		this.wikiPageRenderView = new peach.views.WikiPageRenderView({
+			'model':this.model,
+			'isMobile':this.options.isMobile
+		});
 		this.$el.append(this.wikiPageRenderView.el);
-		this.wikiPageEditForm = new peach.views.WikiPageEditForm({'model':this.model, 'parent':this})
+		this.wikiPageEditForm = new peach.views.WikiPageEditForm({
+			'model':this.model,
+			'isMobile':this.options.isMobile
+		})
 		this.$el.append(this.wikiPageEditForm.el);
 		$(this.wikiPageEditForm.el).hide();
 

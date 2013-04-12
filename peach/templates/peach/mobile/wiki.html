@@ -3,13 +3,38 @@
 
 {% block sub-head %}
 <script>
-$(document).ready(function() {
-});
+window.fetcher = null;
+window.namespace = null;
+window.wikiPage = null;
+window.user = null;
+window.wikiPageEditorView = null;
+
+window.schema.once('populated', initModels);
+
+function initModels(){
+	$('#notes-nav').addClass('active');
+	window.namespace = new window.schema.api.peach.Namespace({'id':{{page.namespace.id}}});
+	window.wikiPage = new window.schema.api.peach.WikiPage({'id':{{page.id}}});
+	window.user = new window.schema.api.auth.User({'id':{{page.namespace.owner.id}}});
+
+	window.fetcher = new phlogiston.Fetcher(null, window.namespace, window.wikiPage, window.user);
+	window.fetcher.once(phlogiston.events.fetchComplete, initPage);
+	window.fetcher.fetch();
+}
+
+function initPage(){
+	window.wikiPageEditorView = new peach.views.WikiPageEditorView({
+		'isMobile':true,
+		'model':window.wikiPage,
+		'namespace':window.namespace,
+		'user':window.user
+	});
+	$('#content .breadcrumb').after(window.wikiPageEditorView.el);
+}
 </script>
 {% endblock %}
 
 {% block sub-style %}
-#content .rendered-wrapper { min-height: 100px; }
 {% endblock %}
 
 {% block content %}
@@ -22,10 +47,4 @@ $(document).ready(function() {
 			{{ page.name }}
 		</li>
 	</ul>
-
-	{% with "true" as hide_title %}
-		{% with "true" as is_mobile %}
-			{% include "peach/wiki_render.frag" %}
-		{% endwith %}
-	{% endwith %}
 {% endblock %}

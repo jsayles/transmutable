@@ -6,8 +6,11 @@
 
 {% block sub-head %}
 <script>
-$(document).ready(function() {
-});
+window.schema.once('populated', initPage);
+
+function initPage(){
+	$('#activity-nav').addClass('active');
+}
 </script>
 {% endblock %}
 

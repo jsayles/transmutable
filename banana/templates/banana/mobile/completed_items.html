@@ -9,9 +9,10 @@
 var completedItemEditView = null;
 var completedItemsView = null;
 
-window.schema.on('populated', _.once(initPage));
+window.schema.once('populated', initPage);
 
 function initPage(){
+	$('#completed-items-nav').addClass('active');
 	window.completedItems = new window.schema.api.banana.CompletedItemCollection();
 
 	completedItemEditView = new banana.views.CompletedItemEditView({
