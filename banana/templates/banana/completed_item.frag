@@ -36,12 +36,14 @@
 		</div>
 	{% elif request.user.is_authenticated and not completed_item.user == request.user %}
 		<!-- I am logged in, it is not my completed item, but I have yet to rock it -->
+		<!--
 		<div class="completed-item-rock">
 			<a href="." onclick="rockCompletedItem({{ completed_item.id }}, {{ completed_item.rock_count}}, $(this).parent()); return false;">
 				Rock!
 				{% if completed_item.rock_count %}({{ completed_item.rock_count}}){% endif %}
 			</a>
 		</div>
+		-->
 	{% elif completed_item.rock_count %}
 		<!-- I am not logged in or it is my completed item, so show the rock count if there is one -->
 		<div class="completed-item-rock">
