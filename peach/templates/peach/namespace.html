@@ -33,12 +33,14 @@ function initPage(){
 	}
 
 	window.namespaceBreadcrumbView = new peach.views.NamespaceBreadcrumbView({
-		'model':window.namespace
+		'model':window.namespace,
+		'collection':window.wikiPageCollection
 	});
 	$('#main-column').append(window.namespaceBreadcrumbView.el);
 
 	window.namespaceEditorSwitcherView = new peach.views.NamespaceEditorSwitcherView({
 		'model':window.namespace,
+		'collection':window.wikiPageCollection,
 		'user':window.user
 	});
 	$('#main-column').append(window.namespaceEditorSwitcherView.el);
@@ -51,7 +53,16 @@ function initPage(){
 	
 	window.namespacePagesView.collection.once('sync', function(){
 		window.namespace.trigger(peach.events.wikiPageRequested, window.namespacePagesView.collection.at(0));
+	});
+
+	// If the namespace is deleted, go to the notes index
+	window.namespace.on(peach.events.namespaceDestroyed, function(){
+		document.location.href = window.urlLoader.urls.peach.index();
 	})
+}
+
+function handleDialogButtonPress(){
+	console.log('args', arguments);
 }
 
 function togglePublicity(){

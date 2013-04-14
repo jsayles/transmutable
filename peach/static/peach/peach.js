@@ -18,6 +18,54 @@ peach.events.editCompleted = 'edit-completed';
 peach.events.wikiPageCreated = 'wiki-page-created';
 peach.events.wikiPageDestroyed = 'wiki-page-destroyed';
 peach.events.wikiPageRequested = 'wiki-page-requested';
+peach.events.dialogButtonPressed = 'dialog-button-pressed';
+
+peach.views.ModalDialog = Backbone.View.extend({
+	className: 'modal-dialog',
+	initialize: function(attributes, options){
+		/*
+		this.options.title = null
+		this.options.message = string or element
+		this.options.buttons = [ [name,],  ]
+		this.options.danger = false
+		*/
+		_.bindAll(this);
+		this.options = options;
+
+		this.message = $.el.div({
+			'class':'modal hide fade',
+			'id':'delete',
+			'tabindex':'-1', 
+			'role':'dialog', 
+			'aria-labelledby':'deleteLabel',
+			'aria-hidden':'true'
+		});
+		this.header = this.message.append($.el.div({'class':'modal-header'}, 
+			$.el.button({'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true', 'class':'close'}, 'x'),
+			$.el.h3({'id':'deleteLabel'}, this.options.title)
+		));
+		this.body = this.message.append($.el.div({'class':'modal-body center'}, this.options.message));
+		this.footer = this.message.append($.el.div({'class':'modal-footer'}));
+		for(var i=0; i < this.options.buttons.length; i++){
+			var buttonOptions = {
+				'class':'btn',
+				'data-dismiss':'modal',
+				'aria-hidden':'true'
+			}
+			if(i == this.options.buttons.length - 1 && this.options.danger){
+				buttonOptions['class'] += ' btn-danger'
+			}
+			var button = this.footer.append($.el.button(buttonOptions, this.options.buttons[i][0]));
+			$(button).click(this.handleButtonClicked);
+		}
+	},
+	handleButtonClicked: function(event){
+		this.trigger(peach.events.dialogButtonPressed, event.target.textContent);
+	},
+	goModal: function(){
+		$(this.message).modal('show');
+	}
+})
 
 peach.views.NewNotesTourView = Backbone.View.extend({
 	className: 'new-notes-tour-view',
@@ -108,10 +156,34 @@ peach.views.NamespaceBreadcrumbView = Backbone.View.extend({
 		this.archiveToggleIcon = $.el.i({'class':'icon-folder-open-alt', 'title':'toggle archive'});
 		this.archiveToggleItem = this.nsCrumb.append($.el.a(this.archiveToggleIcon));
 		$(this.archiveToggleItem).click(this.handleArchiveToggle);
+
+		var deleteMessage = $.el.p('This will ', $.el.strong('permanently delete'), ' this ',  $.el.strong('entire note'), ' and all of its pages.');
+		this.deleteDialog = new peach.views.ModalDialog(null, {
+			'title':'Are you sure?',
+			'message':deleteMessage,
+			'buttons':[['Cancel'], ['Delete']],
+			'danger': true
+		});
+		this.deleteDialog.on(peach.events.dialogButtonPressed, this.handleDialogButtonPress);
+
+		this.deleteLink = $.el.a({'href':'#delete'}, $.el.i({'class':'icon-trash', 'alt':'delete'}));
+		$(this.deleteLink).click(_.bind(function(){
+			this.deleteDialog.goModal();
+		}, this));
+		this.nsCrumb.append(this.deleteLink);
+
 		this.updateIcons();
 		this.model.on('change', this.updateIcons);
 		this.model.on(peach.events.wikiPageRequested, this.handleWikiPageRequested);
 		this.model.on(peach.events.wikiPageDestroyed, this.handleWikiPageDestroyed);
+	},
+	handleDialogButtonPress: function(buttonName){
+		if(buttonName != 'Delete') return;
+		this.model.destroy({
+			'success': _.bind(function(){
+				this.model.trigger(peach.events.namespaceDestroyed, this.model);
+			}, this)
+		})
 	},
 	handleWikiPageDestroyed: function(wikiPage){
 		if(!this.wikiPageCrumb) return;
@@ -149,15 +221,28 @@ peach.views.WikiPageItemView = Backbone.View.extend({
 		this.link = $.el.a(this.model.get('name'));
 		this.$el.append(this.link);
 		$(this.link).click(this.handleSelection);
-		this.options.namespace.on(peach.events.wikiPageRequested, this.handleWikiPageRequested);
+		this.listenTo(this.options.namespace, peach.events.wikiPageRequested, this.handleWikiPageRequested);
+
+
+		var deleteMessage = $.el.p('This will permanently delete this page, ', this.model.get('name'), '.');
+		this.deleteDialog = new peach.views.ModalDialog(null, {
+			'title':'Are you sure?',
+			'message':deleteMessage,
+			'buttons':[['Cancel'], ['Delete']],
+			'danger': true
+		});
+		this.listenTo(this.deleteDialog, peach.events.dialogButtonPressed, this.handleDialogButtonPress);
 
 		this.deleteLink = $.el.i({'class':'icon-trash delete-link'});
+		$(this.deleteLink).click(_.bind(function(){
+			this.deleteDialog.goModal();
+		}, this));
 		if(this.model.get('name') != "SplashPage"){
 			this.$el.append(this.deleteLink);
-			$(this.deleteLink).click(this.handleDelete);
 		}
 	},
-	handleDelete: function(){
+	handleDialogButtonPress: function(buttonName){
+		if(buttonName != 'Delete') return;
 		this.model.destroy({
 			'success':_.bind(function(wikiPage){
 				this.options.namespace.trigger(peach.events.wikiPageDestroyed, wikiPage);
@@ -197,7 +282,7 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 		this.newWikiPageInput = $.el.input({'type':'text', 'placeholder':'new page name'});
 		this.$el.append(this.newWikiPageInput);
 		$(this.newWikiPageInput).keyup(this.handleNewWikiPageInputChange);
-		this.collection.on('sync', this.handleSync);
+		this.collection.once('sync', this.handleSync);
 		this.collection.fetch();
 		this.collection.on('remove', this.handleRemove);
 	},
@@ -215,8 +300,11 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 			'content':' '
 		};
 		this.collection.create(data,{
-				'success':_.bind(function(){
-					this.collection.trigger(peach.events.wikiPageCreated, this);
+				'success':_.bind(function(wikiPage){
+					this.collection.trigger(peach.events.wikiPageCreated, wikiPage);
+					setTimeout(_.bind(function(){
+						namespace.trigger(peach.events.wikiPageRequested, wikiPage);
+					}, {'namespace':this.model, 'wikiPage':wikiPage}), 500);
 				}, this),
 				'error': function(){
 					console.log('error', arguments);
@@ -240,6 +328,7 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 	handleRemove: function(wikiPage){
 		var itemView = this.getItemView(wikiPage);
 		if(!itemView) return;
+		this.wikiPageItemViews = _.without(this.wikiPageItemViews, itemView);
 		itemView.$el.remove();
 	},
 	handleSync: function(){
@@ -250,6 +339,7 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 		for(var i=0; i < this.collection.length; i++){
 			this.addOne(this.collection.at(i));
 		}
+		this.collection.on('add', this.addOne);
 	}
 });
 
@@ -287,12 +377,11 @@ peach.views.WikiEditControlsView = Backbone.View.extend({
 			$.el.i({'class':'icon-time', 'alt':'history'}), 
 			'history'
 		);
-		this.deleteLink = $.el.a({'href':'#delete'}, $.el.i({'class':'icon-trash', 'alt':'delete'}), 'delete');
+
 		this.$el.append(this.editLink);
 		if(!this.options.isMobile){
 			this.$el.append(this.printLink);
 			this.$el.append(this.historyLink);
-			this.$el.append(this.deleteLink);
 		}
 	},
 	editRequested: function(){
@@ -420,6 +509,7 @@ peach.views.NamespaceEditorSwitcherView = Backbone.View.extend({
 		if(this.wikiPageEditorView.model == wikiPage){
 			this.wikiPageEditorView.remove();
 			this.wikiPageEditorView = null;
+			this.model.trigger(peach.events.wikiPageRequested, this.collection.at(0));
 		}
 	},
 	handleWikiPageRequested: function(wikiPage){
