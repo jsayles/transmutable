@@ -8,23 +8,20 @@
 		<link rel="shortcut icon" href="{{STATIC_URL}}favicon.png" />
 		<link rel="apple-touch-icon" href="{{STATIC_URL}}favicon.png" />
 
-
 		<title>{% block title %}{% block sub-title %}{% endblock %}{{ site.name }}{% endblock %}</title>
 
 		{% include 'base/common_styles.frag' %}
-		<link href="{{STATIC_URL}}css/mobile_base.css" rel="stylesheet" />
-		{% block extra-links %}{% endblock %}
-
-		{% include 'base/common_scripts.frag' %}
-		<script src="{{STATIC_URL}}js/base.js"></script>
-
+		<link href="{{STATIC_URL}}css/base.css" rel="stylesheet" />
 		<style type="text/css">
+			.update-meta, .completed-item-rock { display: none; }
 			{% block app-style %}{% endblock %}
 			{% block sub-style%}{% endblock %}
 		</style>
+		{% block extra-links %}{% endblock %}
 		<!--[if lt IE 9]>
 			<script src="{{STATIC_URL}}js/ie_html5.js"></script>
 		<![endif]-->
+		{% include 'base/common_scripts.frag' %}
 
 		{% block feed-link %}{% endblock %}
 		{% block app-head %}{% endblock %}
@@ -43,13 +40,23 @@
 					<a class="brand" href="{% url banana.mobile_views.index %}">{{ site.name }}</a>
 					<div class="nav-collapse">
 						<ul class="nav">
-							<li><a class="" href="{% url banana.mobile_views.index %}">To-do</a></li>
-							<li><a href="{% url banana.mobile_views.todone %}">To-done</a></li>
-							<li><a href="{% url peach.mobile_views.index %}">Notes</a></li>
-							<li><a href="{% url banana.mobile_views.activity %}">Activity</a></li>
+							<li id="index-nav">
+								<a href="{% url banana.mobile_views.index %}">To-do</a>
+							</li>
+							<li id="completed-items-nav">
+								<a href="{% url banana.mobile_views.completed_items %}">To-done</a>
+							</li>
+							<li id="notes-nav">
+								<a href="{% url peach.mobile_views.index %}">Notes</a>
+							</li>
+							<li id="activity-nav">
+								<a href="{% url banana.mobile_views.activity %}">Activity</a>
+							</li>
 						</ul>
 						{% if request.user.is_authenticated %}
-							<p class="navbar-text pull-right">/ <a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a></p>
+							<p class="navbar-text pull-right"> 
+								<a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a>
+							</p>
 						{% else %}
 							<p class="navbar-text pull-right"><a href="{% url django.contrib.auth.views.login %}">login</a></p>
 						{% endif %}
@@ -60,13 +67,17 @@
 
 		<div id="content" class="container-fluid">
 			{% block content %}{% endblock %}
-			<hr>
-
-			{% block footer %}<footer>
-				<a href="{% url banana.views.index %}">full site</a>
-				{% block sub-footer %}{% endblock %}
-			</footer>{% endblock %}
-		</div><!--/.fluid-container-->
+		</div><!--/.container-fluid-->
+		{% block footer %}
+		<footer class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<a href="{% url banana.views.index %}">full site</a>
+					{% block sub-footer %}{% endblock %}
+				</div>
+			</div>
+		</footer>
+		{% endblock %}
 	{% endblock %}</body>
 
 </html>

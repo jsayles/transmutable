@@ -44,6 +44,9 @@ class Namespace(models.Model):
 		self.name = slugify(self.display_name)
 		super(Namespace, self).save(*args, **kwargs)
 		
+	@property
+	def splash_page(self): return WikiPage.objects.get_or_create(namespace=self, name='SplashPage')[0]
+
 	def serialize_fields(self): return ['id', 'name', 'display_name', 'owner_username']
 
 	@property
@@ -57,6 +60,9 @@ class Namespace(models.Model):
 		return False
 	def can_update(self, user): return self.owner == user
 	def can_delete(self, user): return self.owner == user
+
+	def get_api_url(self): 
+		return reverse('api_dispatch_detail', args=['v0.1', 'peach/namespace', self.id])
 
 	@models.permalink
 	def get_absolute_url(self): return ('peach.views.namespace', [], { 'username':self.owner.username, 'namespace':self.name })
@@ -91,9 +97,8 @@ class WikiPage(models.Model):
 		if self.name == "SplashPage": return ('peach.mobile_views.namespace', [], { 'namespace':self.namespace.name })
 		return ('peach.mobile_views.wiki', [], { 'namespace':self.namespace.name, 'name':self.name })
 
-	@models.permalink
-	def get_edit_url(self):
-		return ('peach.views.wiki_edit', [], { 'username':self.namespace.owner.username, 'namespace':self.namespace.name, 'name':self.name })
+	def get_api_url(self): 
+		return reverse('api_dispatch_detail', args=['v0.1', 'peach/wiki-page', self.id])
 
 	def __unicode__(self): return self.name
 

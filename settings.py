@@ -62,7 +62,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.contrib.messages.context_processors.messages',
 	'person.context_processors.person_context',
 	'context_processors.site',
-	'backbone.context_processors.search_form',
+	'context_processors.search_form',
 )
 
 ROOT_URLCONF = 'urls'
@@ -75,13 +75,14 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'django.contrib.admin',
 	'django.contrib.admindocs',
+	'tastypie',
 	'gunicorn',
 	'south',
 	'person',
 	'banana',
 	'apple',
 	'peach',
-	'backbone'
+	'phlogiston',
 )
 
 from local_settings import *

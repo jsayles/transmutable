@@ -2,10 +2,35 @@
 
 .rendered-wrapper { margin: 20px 0px;  }
 
-.wiki-control-links { float: right;  }
-.wiki-control-links a { font-size: 1.2em; margin-left: 1em; }
-.wiki-control-links form { display: inline; margin-right: 15px; }
+.wiki-page-editor-view { width: 100%; }
+#content .wiki-page-edit-form textarea { min-height: 10em;}
 
+.wiki-edit-controls-view { float: right;  }
+.wiki-edit-controls-view a { font-size: 1.2em; margin-left: 1em; }
+.wiki-edit-controls-view a i { padding-right: 0.2em; }
+a[href='#delete'] { color: red; }
+.wiki-page-edit-form form { width: 100%; margin-bottom: 0.1em; }
+.wiki-page-edit-form textarea { width: 98%; min-height: 30em;}
+.wiki-page-edit-form .controls-div { text-align: right; }
+.wiki-page-edit-form .controls-div button { margin-left: 0.5em; }
+
+#content .wiki-page-item-view { position: relative; cursor: pointer; }
+#content .wiki-page-item-view a { cursor: pointer; }
+
+#content .wiki-page-item-view .delete-link {
+	display: none;
+	position: absolute;
+	top: 1em;
+	right: 0.5em;
+	color: red;
+}
+#content .wiki-page-item-view:hover .delete-link { display: block; }
+
+.namespace-pages-view input[type=text] { width: 90%; }
+.namespace-breadcrumb-view li i { padding-left: 0.3em;  }
+.create-namespace-view input {
+	min-width: 20em;
+}
 .printed-page { border-bottom: none; }
 .printed-page a { text-decoration: none; color: #000; }
 .printed-page h1 a { color: #000; font-size: 1.2em; }
@@ -14,4 +39,16 @@
 .author-info h3 a { text-decoration: none; }
 .author-info:hover h3 { text-decoration: underline; }
 
-a[href='#delete'] { color: red; }
+/*
+	=========================================
+	New Notes Tour
+	=========================================
+*/
+.new-notes-tour-view, .new-namespace-tour-view {
+	text-align: center;
+}
+.new-namespace-copy {
+	font-size: 0.8em;
+	color: #444;
+	font-weight: normal;
+}

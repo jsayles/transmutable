@@ -8,23 +8,5 @@
 <style>
 .completed-item-meta-button { padding: 2px 10px 2px 10px; }
 </style>
-
-<script>
-function rockCompletedItem(itemID, rock_count, element){
-	try {
-		$.post(
-			'{% url banana.views.completed_item_rock %}',
-			'completed_item_id=' + itemID,
-			function(data) { 
-				$(element).html('Rocked! (' + (rock_count + 1) + ')');
-			},
-			'json'
-		);
-		return false;
-	} catch(er) {
-		console.log('error', er);
-		return false;
-	}
-}
-</script>
+<script src="{{STATIC_URL}}banana/banana.js"></script>
 {% endblock %}

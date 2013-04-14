@@ -11,74 +11,89 @@
 	padding-right: 8px;
 	min-height: 8em;
 }
+{% if not request.user.namespaces.all %}
+	.create-namespace-view {
+		text-align: center;
+	}
+{% endif %}
 {% endblock %}
 
 {% block sub-head %}
 <script>
-$(document).ready(function(){
-	$('#notes-nav').addClass('active');
-	$('#id_display_name').focus();
+window.newNotesTourView = null;
+window.newUser = {% if request.user.namespaces.all %}false{% else %}true{% endif %};
+window.createNamespaceForm = null;
 
-});
+window.schema.on('populated', _.once(initPage));
+
+function initPage(){
+	$('#notes-nav').addClass('active');
+
+	window.createNamespaceForm = new peach.views.CreateNamespaceForm({
+		'saveCallback':handleNamespaceCreated
+	});
+	$('#content').prepend(window.createNamespaceForm.el);
+
+	if(newUser){
+		window.newNotesTourView = new peach.views.NewNotesTourView();
+		$('#content').prepend(window.newNotesTourView.el);
+	}
+}
+
+function handleNamespaceCreated(namespace){
+	var namespaceUrl = window.urlLoader.urls.peach.username_namespace('{{request.user.username}}', namespace.get('name'));
+	if(newUser){
+		namespaceUrl += '?new=true';
+	}
+	document.location.href = namespaceUrl;
+}
 </script>
 {% endblock %}
 
 {% block content %}
-{% if not request.user.namespaces.all %}
-	<div class="row-fluid">
-		<div class="span12 welcome-title">
-			<h2>This is the place for your ideas.</h2>
+	{% if request.user.namespaces.all %}
+		<div class="row-fluid">
+			<ul id="public-list" class="namespace-list span4">
+				<h3 class="section-title">Public</h3>
+				{% if not request.user.namespaces.public_not_archived %}
+					<div class='alert alert-info'>
+						Notes which are visible to anyone.
+					</div>
+				{% endif %}
+				{% for namespace in request.user.namespaces.public_not_archived %}
+					<li>
+						<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+			<ul id="private-list" class="namespace-list span4">
+				<h3 class="section-title">Private</h3>
+				{% if not request.user.namespaces.private_not_archived %}
+					<div class='alert alert-info'>
+						Notes which are visible only to you.
+					</div>
+				{% endif %}
+				{% for namespace in request.user.namespaces.private_not_archived %}
+					<li>
+						<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+			<ul id="archive-list" class="namespace-list span4">
+				<h3 class="section-title">Archive</h3>
+				{% if not request.user.namespaces.archived %}
+					<div class='alert alert-info'>
+						<p>Archived notes (public or private) don't show up in your list of notes.</p>
+						<p>Public notes are still public, regardless of whether they are archived.</p>
+					</div>
+				{% endif %}
+				{% for namespace in request.user.namespaces.archived %}
+					<li>
+						<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+					</li>
+				{% endfor %}
+			</ul>
 		</div>
-	</div>
-
-{% endif %}
-
-<h1>
-	Notes
-	<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
-</h1>
-
-<div class="row-fluid">
-	<ul id="public-list" class="namespace-list span4">
-		<h3 class="section-title">Public</h3>
-		{% if not request.user.namespaces.public_not_archived %}
-			<div class='alert alert-info'>
-				Notes which are visible to anyone.
-			</div>
-		{% endif %}
-		{% for namespace in request.user.namespaces.public_not_archived %}
-			<li>
-				<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-			</li>
-		{% endfor %}
-	</ul>
-	<ul id="private-list" class="namespace-list span4">
-		<h3 class="section-title">Private</h3>
-		{% if not request.user.namespaces.private_not_archived %}
-			<div class='alert alert-info'>
-				Notes which are visible only to you.
-			</div>
-		{% endif %}
-		{% for namespace in request.user.namespaces.private_not_archived %}
-			<li>
-				<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-			</li>
-		{% endfor %}
-	</ul>
-	<ul id="archive-list" class="namespace-list span4">
-		<h3 class="section-title">Archive</h3>
-		{% if not request.user.namespaces.archived %}
-			<div class='alert alert-info'>
-				<p>Archived notes (public or private) don't show up in your list of notes.</p>
-				<p>Public notes are still public, regardless of whether they are archived.</p>
-			</div>
-		{% endif %}
-		{% for namespace in request.user.namespaces.archived %}
-			<li>
-				<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-			</li>
-		{% endfor %}
-	</ul>
-</div>
+	{% endif %}
 {% endblock %}
 

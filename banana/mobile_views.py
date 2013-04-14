@@ -28,12 +28,11 @@ from django.utils import feedgenerator
 from django.utils.encoding import smart_str
 
 from models import CompletedItem, CompletedItemRock, WorkDoc
-from forms import WorkDocForm, CompletedItemForm, RockCompletedItemForm
 from peach.forms import NamespaceForm
 
 @login_required
 def index(request): #aka to-do
-	return render_to_response('banana/mobile/index.html', { }, context_instance=RequestContext(request))
+	return render_to_response('banana/mobile/index.html', {}, context_instance=RequestContext(request))
 
 @login_required
 def activity(request):
@@ -41,28 +40,8 @@ def activity(request):
 
 @login_required
 def notes(request):
-	return render_to_response('banana/mobile/notes.html', { }, context_instance=RequestContext(request))
+	return render_to_response('banana/mobile/notes.html', {}, context_instance=RequestContext(request))
 
 @login_required
-def todone(request):
-	if request.method == 'POST':
-		completed_form = CompletedItemForm(request.POST, instance=CompletedItem(user=request.user))
-		if completed_form.is_valid():
-			item = completed_form.save()
-			completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
-		else:
-			print 'not valid'
-	else:
-		completed_form = CompletedItemForm(instance=CompletedItem(user=request.user))
-	return render_to_response('banana/mobile/todone.html', { 'completed_form':completed_form }, context_instance=RequestContext(request))
-
-@login_required
-def todo_edit(request):
-	if request.method == 'POST':
-		workdoc_form = WorkDocForm(request.POST)
-		if workdoc_form.is_valid():
-			request.user.work_doc.save_markup(workdoc_form.cleaned_data['markup'])
-			return HttpResponseRedirect(reverse('banana.mobile_views.index'))
-	else:
-		workdoc_form = WorkDocForm(instance=request.user.work_doc)
-	return render_to_response('banana/mobile/todo_edit.html', { 'workdoc_form':workdoc_form }, context_instance=RequestContext(request))
+def completed_items(request):
+	return render_to_response('banana/mobile/completed_items.html', {}, context_instance=RequestContext(request))

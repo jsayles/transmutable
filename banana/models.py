@@ -84,8 +84,12 @@ class Gratitude(MarkedUpModel):
 	def can_update(self, user): return self.user == user
 	def can_delete(self, user): return self.user == user
 
+	def get_api_url(self): 
+		return reverse('api_dispatch_detail', args=['v0.1', 'banana/gratitude', self.id])
+
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.gratitude', [], { 'id':self.id })
+
 
 class CompletedItem(MarkedUpModel):
 	"""Something which a user has completed, mostly items taked off of the work doc."""
@@ -111,6 +115,9 @@ class CompletedItem(MarkedUpModel):
 	@property
 	def rock_count(self): return CompletedItemRock.objects.filter(completed_item=self).count()
 	
+	def get_api_url(self): 
+		return reverse('api_dispatch_detail', args=['v0.1', 'banana/completed-item', self.id])
+
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'id':self.id })
 	def __unicode__(self): return 'CompletedItem for %s' % self.user
@@ -134,9 +141,17 @@ class WorkDoc(MarkedUpModel):
 	
 	def flatten(self): return {'user':self.user.username, 'markup':self.markup, 'rendered':self.rendered, 'modified':'%s' % self.modified}
 	def __unicode__(self):
-		return 'WordDoc for %s' % self.user
+		return 'WorkDoc for %s' % self.user
+
+	@models.permalink
+	def get_absolute_url(self): return ('banana.views.user', [], {'username':self.user.username})
+	def get_api_url(self): 
+		return reverse('api_dispatch_detail', args=['v0.1', 'banana/work-doc', self.id])
 
 User.work_doc = property(lambda u: WorkDoc.objects.get_or_create(user=u)[0])
 User.get_absolute_url = lambda u: reverse('banana.views.user', kwargs={ 'username':u.username })	
 User.has_unused_tada = lambda u: u.date_joined < datetime.datetime.now() - datetime.timedelta(days=2) and CompletedItem.objects.filter(user=u).filter(promoted=True).filter(created__gt=datetime.datetime.now() - datetime.timedelta(days=2)).count() == 0
+User.get_api_url = lambda u: reverse('api_dispatch_detail', args=['v0.1', 'auth/user', u.id])
+
+
 # Copyright 2011 Trevor F. Smith (http://trevor.smith.name/) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

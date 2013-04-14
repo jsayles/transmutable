@@ -1,10 +1,13 @@
 {% extends "peach/mobile/base.html" %}
-{% block sub-title %}Plans | {% endblock %}
+{% block sub-title %}Notes | {% endblock %}
 
 {% block sub-head %}
 <script>
-$(document).ready(function() {
-});
+window.schema.once('populated', this.initPage);
+
+function initPage(){
+	$('#notes-nav').addClass('active');
+}
 </script>
 {% endblock %}
 
@@ -14,16 +17,14 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-<ul id="namespace-list">
-{% for namespace in request.user.namespaces.all %}
-	{% if not namespace.archive %}
-		<li><a href="{% url peach.mobile_views.namespace namespace.name %}">{{ namespace.display_name }}</a></li>
-	{% endif %}
-{% endfor %}
-	<li>
-		<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
-	</li>
-</ul>
+	<ul id="namespace-list">
+	{% for namespace in request.user.namespaces.all %}
+		{% if not namespace.archive %}
+			<li><a href="{% url peach.mobile_views.namespace namespace.name %}">{{ namespace.display_name }}</a></li>
+		{% endif %}
+	{% endfor %}
+		<li>
+			<form id="namespace-form" action="." method="post">{% for field in namespace_form %}{{ field }}{% endfor %}</form>
+		</li>
+	</ul>
 {% endblock %}
-
-{% block footer %}{% endblock %}

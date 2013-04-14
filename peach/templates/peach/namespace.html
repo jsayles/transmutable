@@ -2,40 +2,81 @@
 {% load imagetags %}
 {% block sub-title %}{{ namespace.display_name }} | {% endblock %}
 
-{% block sub-style %}
-#left-column .column-button { display: block; width: 99%; margin: 1em 0; }
-#left-column ul { margin: 0px; }
-#left-column li { list-style: none; margin-left: 0px; padding-bottom: 8px; }
-#left-column input { width: 94%; }
-{% endblock %}
-
 {% block sub-head %}
 <script>
-$(document).ready(function(){
-	$('#toggle-public').click(function(){ togglePublicity(); });
-	$('#toggle-archive').click(function(){ toggleArchive(); });
+window.namespace = null;
+window.wikiPageCollection = null;
+window.namespaceEditorSwitcherView = null;
+window.namespaceBreadcrumbView = null;
+window.newNamespaceTourView = null;
+window.newUser = document.location.search == '?new=true';
+
+window.schema.on('populated', function(){
+	window.namespace = new window.schema.api.peach.Namespace({'id':{{namespace.id}}});
+	window.user = new window.schema.api.auth.User({'id':{{request.user.id}}});
+
+	window.fetcher = new phlogiston.Fetcher(null, window.namespace, window.user);
+	window.fetcher.once(phlogiston.events.fetchComplete, initPage);
+	window.fetcher.fetch();
 });
 
+function initPage(){
+	//this assumes that window.namespace and window.user are populated
+	window.wikiPageCollection = new window.schema.api.peach.WikiPageCollection(null, {'filters':{'namespace':window.namespace.get('id')}});
+
+	if(newUser){
+		window.newNamespaceTourView = new peach.views.NewNamespaceTourView({
+			'model':window.namespace,
+			'collection':window.wikiPageCollection
+		});
+		$('#content').prepend(window.newNamespaceTourView.el);
+	}
+
+	window.namespaceBreadcrumbView = new peach.views.NamespaceBreadcrumbView({
+		'model':window.namespace,
+		'collection':window.wikiPageCollection
+	});
+	$('#main-column').append(window.namespaceBreadcrumbView.el);
+
+	window.namespaceEditorSwitcherView = new peach.views.NamespaceEditorSwitcherView({
+		'model':window.namespace,
+		'collection':window.wikiPageCollection,
+		'user':window.user
+	});
+	$('#main-column').append(window.namespaceEditorSwitcherView.el);
+	
+	window.namespacePagesView = new peach.views.NamespacePagesView({
+		'model':window.namespace,
+		'collection':window.wikiPageCollection
+	});
+	$('#left-column .breadcrumb').after(window.namespacePagesView.el);
+	
+	window.namespacePagesView.collection.once('sync', function(){
+		window.namespace.trigger(peach.events.wikiPageRequested, window.namespacePagesView.collection.at(0));
+	});
+
+	// If the namespace is deleted, go to the notes index
+	window.namespace.on(peach.events.namespaceDestroyed, function(){
+		document.location.href = window.urlLoader.urls.peach.index();
+	})
+}
+
+function handleDialogButtonPress(){
+	console.log('args', arguments);
+}
+
 function togglePublicity(){
-	$.ajax({
-		url: '.', type:'POST', data: {'toggle_namespace_public_action':'True'},
-		error: function(){
-			document.location.href = '{{namespace.get_absolute_url}}';
-		},
-		success: function(){
-			document.location.href = '{{namespace.get_absolute_url}}';
+	window.namespace.save({'public':!window.namespace.get('public')}, {
+		'success': function(){
+			$('a[href=#toggle-public] i').removeClass().addClass(window.namespace.get('public') ? 'icon-unlock' : 'icon-lock');
 		}
 	});
 }
 
 function toggleArchive(){
-	$.ajax({
-		url: '.', type:'POST', data: {'toggle_namespace_archive_action':'True'},
-		error: function(){
-			document.location.href = '{{namespace.get_absolute_url}}';
-		},
-		success: function(){
-			document.location.href = '{{namespace.get_absolute_url}}';
+	window.namespace.save({'archive':!window.namespace.get('archive')}, {
+		'success': function(){
+			$('a[href=#toggle-archive] i').removeClass().addClass(window.namespace.get('archive') ? 'icon-folder-close-alt' : 'icon-folder-open-alt');
 		}
 	});
 }
@@ -45,39 +86,9 @@ function toggleArchive(){
 {% block content %}
 <div class="row-fluid">
 	<div id="left-column" class="span2">
-		{% with namespace.owner as author %}{% include "peach/author_info.frag" %}{% endwith %}
-
-		<h2>Pages</h2>
-		<ul>
-		{% for page in namespace.pages.all %}
-			{% if page.name != 'SplashPage' %}
-			   <li><a title="{{ page.name }}" href="{{ page.get_absolute_url }}">{{ page.name }}</a></li>
-			{% endif %}
-		{% endfor %}
-		{% if request.user == namespace.owner %}
-			<li>
-				<form action="." method="post" id="create-wiki-page-form">{% for field in create_wiki_page_form %}{{ field }}{% endfor %}
-			</li>
-		{% endif %}
+		<ul class="breadcrumb">
+			<li>Pages</li>
 		</ul>
-
-		{% if request.user == namespace.owner %}
-			<button type="button" class="column-button btn" id="toggle-public">
-			{% if namespace.public %}
-				Make private
-			{% else %}
-				Make public
-			{% endif %}
-			</button>
-		
-			<button type="button" class="column-button btn" id="toggle-archive">
-			{% if namespace.archive %}
-				Unarchive
-			{% else %}
-				Archive
-			{% endif %}
-			</button>			
-		{% endif %}
 
 		{% if google_ad_settings.namespace_left %}
 			<script type="text/javascript"><!--
@@ -92,15 +103,6 @@ function toggleArchive(){
 
 	</div>
 	<div id="main-column" class="span10">
-		<ul class="breadcrumb">
-			{% if request.user.is_authenticated %}
-			<li>
-				<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
-			</li>
-			{% endif %}			
-			<li class="active">{{ namespace.display_name }}</li>
-		</ul>
-		{% with "true" as hide_title %}{% include "peach/wiki_render.frag" %}{% endwith %}
 	</div>
 </div>
 {% endblock %}

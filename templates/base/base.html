@@ -12,17 +12,15 @@
 
 		{% include 'base/common_styles.frag' %}
 		<link href="{{STATIC_URL}}css/base.css" rel="stylesheet" />
-		{% include 'base/common_scripts.frag' %}
-		<script src="{{STATIC_URL}}js/base.js"></script>
-		{% block extra-links %}{% endblock %}
-
 		<style type="text/css">
 			{% block app-style %}{% endblock %}
 			{% block sub-style%}{% endblock %}
 		</style>
+		{% block extra-links %}{% endblock %}
 		<!--[if lt IE 9]>
 			<script src="{{STATIC_URL}}js/ie_html5.js"></script>
 		<![endif]-->
+		{% include 'base/common_scripts.frag' %}
 
 		{% block feed-link %}{% endblock %}
 		{% block app-head %}{% endblock %}
@@ -102,18 +100,22 @@
 		{% endblock %}
 		<div id="content" class="container-fluid">
 			{% block content %}{% endblock %}
-			{% block footer %}
-				<footer>
-					{% if terms_of_service_url %}
-						<a href="{{ terms_of_service_url }}">terms of service</a>
-					{% endif %}
-					{% if privacy_policy_url %}
-						<a href="{{ privacy_policy_url }}">privacy policy</a>
-					{% endif %}
-					{% block sub-footer %}{% endblock %}
-				</footer>
-			{% endblock %}
 		</div><!--/.fluid-container-->
+		{% block footer %}
+			<footer class="container-fluid">
+				<div class="row-fluid">
+					<div class="span12">
+						{% if terms_of_service_url %}
+							<a href="{{ terms_of_service_url }}">terms of service</a>
+						{% endif %}
+						{% if privacy_policy_url %}
+							<a href="{{ privacy_policy_url }}">privacy policy</a>
+						{% endif %}
+						{% block sub-footer %}{% endblock %}
+					</div>
+				</div>
+			</footer>
+		{% endblock %}
 
 		{% if google_analytics_account %}
 			<script type="text/javascript">

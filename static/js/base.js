@@ -38,13 +38,7 @@ $.isMobile = function(){
 	return navigator.userAgent.toLowerCase().match(/(iPhone|iPod|iPad|blackberry|android|htc|kindle|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone)/i);
 };
 
-window.log = function(){
-	log.history = log.history || []; 
-	log.history.push(arguments);
-	if(this.console){
-		console.log( Array.prototype.slice.call(arguments) );
-	}
-};
+window.console = console||{'log':function(){}}; // Because IE does not create the console API until you actually show the console UI!
 
 (function(doc){
 	var write = doc.write;
@@ -53,7 +47,20 @@ window.log = function(){
 	};
 })(document);
 
-//$(document).ready(function(){
-//	transmutable.initSearch();
-//});
+window.schema = new phlogiston.TastyPieSchema(null, {'url':'/api/v0.1/'});
+window.urlLoader = new phlogiston.UrlLoader(null, {'url':'/phlogiston/url/'})
 
+$(document).ready(function(){
+	window.urlLoader.on('populated', function(){
+		window.schema.fetch({
+			'error': function(){
+				console.log("Could not fetch the tasty pie schema", arguments);
+			}
+		});
+	});
+	window.urlLoader.fetch({
+		'error': function(){ console.log("Could not fetch the url loader data", arguments); }
+	});
+
+	//transmutable.initSearch();
+});

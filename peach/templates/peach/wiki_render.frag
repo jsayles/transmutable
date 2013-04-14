@@ -5,13 +5,9 @@ window.pageId = {{page.id}};
 window.isNamespace = {% if page.name == "SplashPage" %}true{% else %}false{% endif %};
 
 $(document).ready(function() {
-	{% if is_mobile %}
+	{% if not is_mobile %}
 		$('button[name="edit-button"]').click(function(){
-			document.location.href = "{% url peach.mobile_views.wiki_edit page.namespace.name page.name %}";
-		});
-	{% else %}
-		$('button[name="edit-button"]').click(function(){
-			document.location.href = "{% url peach.views.wiki_edit page.namespace.owner.username page.namespace.name page.name %}";
+			// TODO Handle this button
 		});
 		$('button[name="print-button"]').click(function(){
 			document.location.href = "{% url peach.views.wiki_print page.namespace.owner.username page.namespace.name page.name %}";
@@ -22,7 +18,7 @@ $(document).ready(function() {
 		$('button[name="delete-button"]').click(function(event){
 			event.preventDefault();
 			if(window.isNamespace){
-				var namespace = new transmutable.Namespace({ id:{{page.namespace.id}} });
+				var namespace = new window.schema.api.peach.Namespace({ id:{{page.namespace.id}} });
 				namespace.destroy({
 					'success':function(){
 						document.location.href = "{% url peach.views.index %}";
@@ -49,7 +45,7 @@ $(document).ready(function() {
 
 	{% if not hide_title %}
 		<ul class="breadcrumb">
-			{% if request.user.is_authenticated %}
+			{% if page.namespace.owner == request.user %}
 			<li>
 				<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
 			</li>
@@ -61,7 +57,7 @@ $(document).ready(function() {
 
 	{% if request.user.is_authenticated and page.namespace.owner.username == request.user.username %}
 		<div class="wiki-control-links">
-		<a href="{% url peach.views.wiki_edit page.namespace.owner.username page.namespace.name page.name %}">
+		<a href="#edit">
 			<i class="icon-edit" alt="edit"></i> edit
 		</a>
 		{% if not is_mobile %}

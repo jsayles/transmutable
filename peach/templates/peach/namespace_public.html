@@ -1,7 +1,10 @@
 {% extends "peach/base.html" %}
+{% load imagetags %}
 {% load wikitags %}
+{% block sub-title %}{{ namespace.display_name }} | {% endblock %}
 
-{% block sub-title %}{{ page.name }} | {% endblock %}
+{% block sub-style %}
+{% endblock %}
 
 {% block content %}
 <div class="row-fluid">
@@ -10,18 +13,18 @@
 			<li>Pages</li>
 		</ul>
 		<ul class="nav nav-tabs nav-stacked">
-			<li class="wiki-page-item-view">
+			<li class="wiki-page-item-view active">
 				<a title="SplashPage" href="{{ page.namespace.splash_page.get_absolute_url }}">SplashPage</a>
 			</li>
 			{% for wikiPage in page.namespace.pages.all %}
 				{% if wikiPage.name != 'SplashPage' %}
-					<li class="wiki-page-item-view{% if wikiPage.name == page.name %} active{% endif %}">
+					<li class="wiki-page-item-view">
 						<a href="{{wikiPage.get_absolute_url}}">{{wikiPage.name}}</a>
 					</li>
 				{% endif %}
 			{% endfor %}
 		</ul>
-		{% if google_ad_settings.wiki_left %}
+		{% if google_ad_settings.namespace_left %}
 			<script type="text/javascript"><!--
 				google_ad_client = "{{ google_ad_settings.namespace_left.ad_client }}";
 				google_ad_slot = "{{ google_ad_settings.namespace_left.ad_slot }}";
@@ -35,17 +38,10 @@
 	<div id="main-column" class="span10">
 		<ul class="breadcrumb">
 			<li>
-				<a href="{{ page.namespace.owner.get_absolute_url }}">{{ page.namespace.owner.get_full_name }}</a>
+				<a href="{{ page.namespace.owner.get_absolute_url }}">{{ page.namespace.owner.get_full_name }}</a> <span class="divider">/</span>
 			</li>
-			<li>
-				<span class="divider">/</span>
-				<a href="{{page.namespace.get_absolute_url}}">
-					{{ page.namespace.display_name }}
-				</a>
-			</li>
-			<li>
-				<span class="divider">/</span>
-				{{ page.name }}
+			<li class="active">
+				{{ namespace.display_name }}
 			</li>
 		</ul>
 		<div class="rendered-wrapper">{{ page.rendered|include_constants|safe }}</div>

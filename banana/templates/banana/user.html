@@ -15,22 +15,24 @@
 var newUserTourView = null;
 var newUser = {% if not user.completed_items.all and not user.work_doc.rendered and not user.gratitudes.all %}true{% else %}false{% endif %};
 
-var workDoc = new banana.models.WorkDoc();
 var workDocEditView = null;
 
 var hasUnusedTada = '{{user.has_unused_tada}}' == 'True';
 var completedItemEditView = null;
-var completedItems = new banana.models.CompletedItemCollection();
 var completedItemsView = null;
 
 var gratitudeEditView = null;
-var gratitudes = new banana.models.GratitudeCollection();
 var gratitudesView = null;
 
-transmutable.URL_LOADER.on('change', _.once(initPage));
+window.schema.on('populated', _.once(initPage));
 
 function initPage(){
 	$('#home-nav').addClass('active');
+
+	window.workDoc = new window.schema.api.banana.WorkDoc({'id':'{{user.work_doc.id}}'});
+	window.completedItems = new window.schema.api.banana.CompletedItemCollection();
+	window.gratitudes = new window.schema.api.banana.GratitudeCollection();
+
 	if(newUser){
 		newUserTourView = new banana.views.NewUserTourView({'siteName':'{{ site.name }}'});
 		$('#content').prepend(newUserTourView.el);
@@ -39,7 +41,6 @@ function initPage(){
 	workDocEditView = new banana.views.WorkDocEditView({ 'model':workDoc });
 	workDoc.fetch();
 	$('#edit-work-doc-link').click(function(){
-		console.log("Clicker")
 		workDocEditView.edit();
 		$(this).hide();
 		return false;
