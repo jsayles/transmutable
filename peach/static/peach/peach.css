@@ -2,13 +2,13 @@
 
 .rendered-wrapper { margin: 20px 0px;  }
 
-.wiki-page-editor-view { width: 100%; }
-#content .wiki-page-edit-form textarea { min-height: 10em;}
 
 .wiki-edit-controls-view { float: right;  }
 .wiki-edit-controls-view a { font-size: 1.2em; margin-left: 1em; }
 .wiki-edit-controls-view a i { padding-right: 0.2em; }
 a[href='#delete'] { color: red; }
+.wiki-page-editor-view { width: 100%; }
+.mobile .wiki-page-edit-form textarea { min-height: 10em;}
 .wiki-page-edit-form form { width: 100%; margin-bottom: 0.1em; }
 .wiki-page-edit-form textarea { width: 98%; min-height: 30em;}
 .wiki-page-edit-form .controls-div { text-align: right; }
