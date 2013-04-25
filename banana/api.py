@@ -26,10 +26,13 @@ from transmutable import API, UserResource, UserIsRequestorAuthorization
 
 class CompletedItemResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
+	rocks = fields.ToManyField('banana.api.CompletedItemRockResource', 'rocks', null=True)
+	rock_users = fields.ToManyField(UserResource, 'rock_users', null=True, full=True)
 	class Meta:
 		resource_name = 'banana/completed-item'
 		queryset = CompletedItem.objects.all()
 		include_absolute_url = True
+		fields = ['created', 'id', 'link', 'markup', 'modified', 'promoted', 'rendered', 'resource_uri', 'user']
 		allowed_methods = ['get', 'post', 'put', 'delete']
 		validation = FormValidation(form_class=CompletedItemForm)
 		authentication = SessionAuthentication()
@@ -37,14 +40,14 @@ class CompletedItemResource(ModelResource):
 API.register(CompletedItemResource())
 
 class CompletedItemRockResource(ModelResource):
-	completed_item = fields.ForeignKey(CompletedItemResource, 'user')
+	completed_item = fields.ForeignKey(CompletedItemResource, 'completed_item')
 	user = fields.ForeignKey(UserResource, 'user')
 	class Meta:
 		resource_name = 'banana/completed-item-rock'
 		queryset = CompletedItemRock.objects.all()
 		include_absolute_url = False
-		allowed_methods = ['get']
-		validation = FormValidation(form_class=CompletedItemRockForm)
+		allowed_methods = ['get', 'post', 'put', 'delete']
+		#validation = FormValidation(form_class=CompletedItemRockForm)
 		authentication = SessionAuthentication()
 		authorization = UserIsRequestorAuthorization()
 API.register(CompletedItemRockResource())

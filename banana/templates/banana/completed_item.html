@@ -40,7 +40,9 @@ a[href="#delete"] { float: right; color: grey; }
 <div class="row">
 	<div id="user-info" class="span2 offset3">
 		{% if completed_item.user.get_profile.photo %}
-			<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" /></a>
+			<a href="{{ completed_item.user.get_absolute_url }}">
+				<img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" />
+			</a>
 		{% else %}
 			<a href="{{ completed_item.user.get_absolute_url }}"><img class="person-photo" src="{{STATIC_URL}}person/BlankIcon150x150.jpg" width="150" height="150" /></a>
 		{% endif %}
@@ -51,7 +53,21 @@ a[href="#delete"] { float: right; color: grey; }
 
 	<div class="span4">
 		<h3 class='section-title'>What I did:</h3>
-		{% completed_item_widget %}
+		{% with "true" as hide_rocks %}
+			{% completed_item_widget %}
+		{% endwith %}
+
+		{% if completed_item.rock_users %}
+			<h4 class='section-title'>Who rocked it:</h4>
+
+			<div class='rock-users-view update-view'>
+				{% for user in completed_item.rock_users %}
+					<a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a>{% if forloop.revcounter != 1 %}, {% endif %}
+				{% endfor %}
+			</div>
+		{% endif %}
+
+
 		{% if request.user == completed_item.user %}
 			<a href="#delete" role="button" data-toggle="modal"><i class="icon-trash" alt="delete"></i></a>
 			<div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">

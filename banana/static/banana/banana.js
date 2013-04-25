@@ -10,6 +10,22 @@ window.schema.once('populated', function(){
 	window.schema.api.banana.GratitudeCollection.prototype.comparator = createdComparator;
 });
 
+function rockCompletedItem(completedItemResourceURL, completedItemRockCount, parentElement){
+	var rock = new window.schema.api.banana.CompletedItemRock({
+		'completed_item':completedItemResourceURL
+	});
+	$(parentElement).html('Rocking...');
+	rock.save(null, {
+		'success':_.bind(function(){
+			$(parentElement).html("Rocked! (" + (completedItemRockCount + 1) + ")");
+		}, {'parenteElement':parentElement, 'completedItemRockCount':completedItemRockCount}),
+		'error':_.bind(function(){
+			console.log("Error", arguments);
+			$(parentElement).html('Failed to rock. :-(');
+		}, {'parenteElement':parentElement})
+	})
+}
+
 banana.views.NewUserTourView = Backbone.View.extend({
 	className: 'new-user-tour-view',
 	initialize: function(options){
@@ -224,9 +240,9 @@ banana.views.CompletedItemView = Backbone.View.extend({
 		if(this.model.get('promoted')){
 			this.$el.addClass('promoted');
 		}
-
-		if(this.model.get('rock_count') > 0){
-			this.$el.append($.el.div({'class':'completed-item-rock'}, 'Rocked! (' + this.model.get('rock_count') + ')'))
+		var rocks = this.model.get('rock_users', []);
+		if(rocks.length > 0){
+			this.$el.append($.el.div({'class':'completed-item-rock'}, 'Rocked! (' + rocks.length + ')'));
 		}
 	}
 });

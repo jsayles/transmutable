@@ -68,6 +68,7 @@ class UserIsRequestorAuthorization(Authorization):
 class UserResource(ModelResource):
 	class Meta:
 		queryset = User.objects.all()
+		include_absolute_url = True
 		resource_name = 'auth/user'
 		fields = ['username', 'first_name', 'last_name', 'id']
 		allowed_methods = ['get']

@@ -14,7 +14,7 @@ admin.site.register(CompletedItem, CompletedItemAdmin)
 
 class CompletedItemRockAdmin(admin.ModelAdmin):
 	pass
-	#list_display = ('user', 'modified')
+	list_display = ('user', 'completed_item')
 admin.site.register(CompletedItemRock, CompletedItemRockAdmin)
 
 class WorkDocAdmin(admin.ModelAdmin):

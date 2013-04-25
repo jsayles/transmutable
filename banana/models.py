@@ -113,6 +113,9 @@ class CompletedItem(MarkedUpModel):
 		return CompletedItemRock.objects.filter(completed_item=self, user=user).count() == 1
 
 	@property
+	def rock_users(self): return User.objects.filter(rocks__completed_item=self)
+
+	@property
 	def rock_count(self): return CompletedItemRock.objects.filter(completed_item=self).count()
 	
 	def get_api_url(self): 
@@ -120,14 +123,18 @@ class CompletedItem(MarkedUpModel):
 
 	@models.permalink
 	def get_absolute_url(self): return ('banana.views.completed_item', [], { 'id':self.id })
-	def __unicode__(self): return 'CompletedItem for %s' % self.user
+	def __unicode__(self): return 'CompletedItem %s for %s' % (self.id, self.user)
 
 class CompletedItemRock(models.Model):
 	"""Indicates that someone other than the completed item owner thinks that the completed item rocks."""
 	completed_item = models.ForeignKey(CompletedItem, blank=False, null=False, related_name='rocks')
-	user = models.ForeignKey(User, blank=False, null=False)
+	user = models.ForeignKey(User, blank=False, null=False, related_name='rocks')
 	created = models.DateTimeField(auto_now_add=True)
-	def flatten(self): return {'user':self.user.username, 'completed_item':self.completed_item.flatten(), 'created':'%s' % self.created}
+
+	def __unicode__(self): return 'CompletedItemRock %s for %s' % (self.id, self.user)
+
+	class Meta:
+		unique_together = (("completed_item", "user"),)
 
 class WorkDoc(MarkedUpModel):
 	"""A markdown document displaying a person's current work queue."""
