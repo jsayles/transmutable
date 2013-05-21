@@ -23,7 +23,7 @@ import django.contrib.contenttypes.models as content_type_models
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect, HttpResponsePermanentRedirect
-
+from django.middleware.csrf import _get_new_csrf_key 
 from models import *
 from forms import *
 
@@ -70,7 +70,19 @@ def invite(request, secret):
 			auth.login(request, user)
 			invite.used_by = user
 			invite.save()
-			return HttpResponseRedirect(reverse('banana.views.user', kwargs={'username':user.username}))
+			response = HttpResponseRedirect(reverse('banana.views.user', kwargs={'username':user.username}))
+			# This is nasty but necessary because otherwise the session has no csrf cookie and thus cannot POST, which makes for a really bad user experience.
+			if not "CSRF_COOKIE" in request.META:
+				request.META["CSRF_COOKIE"] = _get_new_csrf_key()
+				print 'Set new csrf cookie', request.META['CSRF_COOKIE']
+				response.set_cookie(settings.CSRF_COOKIE_NAME,
+									request.META["CSRF_COOKIE"],
+									max_age = 60 * 60 * 24 * 7 * 52,
+									domain=settings.CSRF_COOKIE_DOMAIN,
+									path=settings.CSRF_COOKIE_PATH,
+									secure=settings.CSRF_COOKIE_SECURE
+									)
+			return response
 	else:
 		registration_form = UserCreationForm()
 	return render_to_response('person/invite.html', { 'registration_form':registration_form, 'invite':invite }, context_instance=RequestContext(request))
