@@ -20,16 +20,29 @@
 #registration-form span.helptext { display: none; }
 #registration-form input[type=text], #registration-form input[type=password] { width: 195px; }
 .hero-unit {
-	padding: 20px;
-	height: 355px;
+	padding: 2em;
 	background-image: url('{{STATIC_URL}}banana/logo.svg');
 	background-repeat: no-repeat;
-	background-position: 98% 50%;
-	text-shadow: 2px 1px 0px whiteSmoke;
+	background-position: -19% 1433%;
+	text-shadow: 1px 1px 9px #eee;
 }
 .hero-unit h1 {
-	margin-top: 20%;
+	font-size: 4em;
+	text-align: center;
 }
+.hero-unit ul {
+	text-align: center;
+	list-style: none;
+	font-size: 1.2em;
+}
+.hero-unit li {
+	margin-top: 0.5em;
+}
+.hero-unit .btn {
+	margin-left: 44%;
+	margin-top: 1em;	
+}
+
 #recent-todones-title {
 	margin: 0 0 0.5em 0;
 	line-height: 1em;
@@ -38,52 +51,56 @@
 {% endblock %}
 
 {% block content %}
-	
 	  <div class="row-fluid">
-		<div class="span9">
+		<div class="span12">
 		  <div class="hero-unit">
-			<h1>Work in public!</h1>
-			<p>Emerge from behind your intellectual firewall and share your work.</p>
+		  	<div class="call-to-arms">
+				<h1>Get Cotivated!</h1>
+				<ul>
+					<li>Purge your mind of open loops and nagging thoughts.</li>
+					<li>Feel the satisfaction of hitting the 'to-done' button.</li>
+					<li>Focus on gratitude for perspective and happiness.</li>
+					<li>Share using tools designed for work (not cat pictures).</li>
+				</ul>
+				{% if open_registration %}
+					<a href="{% url person.views.register %}" class="btn btn-primary btn-large">Sign Up Now</a>
+				{% endif %}
+			</div>
 		  </div>
-		  <div id="users-title-row" class="row-fluid">
-		  	<h2>Meet the people:</h2>
-		  </div>
-		  <div id="users-row" class="row-fluid">
-		  	{% for user in promoted_users|slice:":2" %}
-				<div class="span4">
-					<div class='testimonial'>
-						<h3>{{ user.get_full_name }}</h3>
-						<p>{{ user.get_profile.bio|striptags|truncatewords:"30" }}</p>
-					</div>
-					<div class='testimonial-buttons'>
-						<a href="{{ user.get_absolute_url }}" class="btn" href="#">Track {{ user.first_name }}'s work &raquo;</a>
-					</div>
-				</div><!--/span-->
-			{% endfor %}
-			{% if open_registration %}
-				<div class="span4">
-					<div class='testimonial'>
-						<h2>You?</h2>
-						<p>If your job is your stage and you'd like to share your performance, give us a whirl.</p>
-					</div>
-					<div class='testimonial-buttons'>
-						<a href="{% url person.views.register %}" class="btn">Sign up &raquo;</a>
-					</div>
-				</div><!--/span-->
-			{% endif %}
-		  </div><!--/row-->
-		</div><!--/span-->
-		<div class="span3">
-			<h3 id="recent-todones-title">Recent to&ndash;dones</h3>
+		</div>
+	  </div>
+	  <div class="row-fluid">
+		<div class="span4">
+			<h3>Recent to&ndash;dones</h3>
 			<ul class="update-list">
-			{% with "True" as show_completed_item_user %}
-			{% with "True" as hide_meta %}
-				{% for completed_item in completed_items|slice:":10" %}
-					{% completed_item_widget %}
-				{% endfor %}
-			{% endwith %}
-			{% endwith %}
+				{% with "True" as show_completed_item_user %}
+					{% with "True" as hide_meta %}
+						{% for completed_item in completed_items|slice:":10" %}
+							{% completed_item_widget %}
+						{% endfor %}
+					{% endwith %}
+				{% endwith %}
 			</ul>
 		</div>
+		<div class="span4">
+			<h3>Recent gratitudes</h3>
+			<ul class="update-list">
+				{% with "True" as show_user %}
+					{% with "True" as hide_meta %}
+						{% for gratitude in gratitudes|slice:":10" %}
+							{% include "banana/gratitude.frag" %}
+						{% endfor %}
+					{% endwith %}
+				{% endwith %}
+			</ul>
+		</div>
+		<div class="span4">
+		  	<h3>Meet the people</h3>
+				{% with "True" as show_user %}
+					{% for user in promoted_users|slice:":10" %}
+						{% include "banana/promoted_user.frag" %}
+					{% endfor %}
+				{% endwith %}
+		</div><!--/span-->
 	  </div><!--/row-->
 {% endblock %}
