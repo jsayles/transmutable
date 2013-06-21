@@ -71,7 +71,29 @@
 									<li id="help-nav"><a href="{{ default_help_url }}">Help</a></li>
 								{% endif %}
 								{% if request.user.is_staff %}
-									<li id="staff-nav"><a href="{% url apple.views.index %}">Staff</a></li>
+									<li id="staff-nav" class="dropdown">
+										<a id="staff-dropdown" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Staff <b class="caret"></b></a>
+										<ul class="dropdown-menu" role="menu" aria-labelledby="staff-dropdown">
+											<li role="presentation">
+												<a role="menuitem" tabindex="-1" href="{% url apple.views.index %}">Dashboard</a>
+											</li>
+											<li role="presentation">
+												<a href="{% url apple.views.create_account %}">Create an Account</a>
+											</li>
+											<li role="presentation">
+												<a href="{% url apple.views.email_everyone %}">Email All Active Accounts</a>
+											</li>
+											<li role="presentation">
+												<a href="{% url apple.views.send_test %}">Send Test Messages</a>
+											</li>
+											<li role="presentation">
+												<a href="{% url apple.views.add_invites %}">Add Invites</a>
+											</li>
+											<li role="presentation">
+												<a href="{% url admin:index %}">Admin</a>
+											</li>
+										</ul>
+									</li>
 								{% endif %}
 
 								{% if request.user.is_authenticated and not request.user.get_profile.photo %}

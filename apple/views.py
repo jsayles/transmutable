@@ -1,6 +1,6 @@
 import logging
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
 from django.utils.html import urlize
 from django.core.urlresolvers import reverse
@@ -30,7 +30,14 @@ from forms import CreateAccountForm, SendTestEmailForm, EmailEveryoneForm, AddIn
 
 @staff_member_required
 def index(request):
-	return render_to_response('apple/index.html', { }, context_instance=RequestContext(request))
+	day_limit = 7
+	day_limit_delta = datetime.now() - timedelta(days=day_limit)
+
+	context = {
+		'user_count': User.objects.exclude(is_staff=True).count(),
+		'new_users': User.objects.exclude(is_staff=True).filter(date_joined__gte=day_limit_delta).order_by('-date_joined')
+	}
+	return render_to_response('apple/index.html', context, context_instance=RequestContext(request))
 
 @staff_member_required
 def email_everyone(request):

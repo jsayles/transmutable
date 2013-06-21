@@ -8,18 +8,50 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 
-{% block style %}
-#content li { 	padding-left: 0em; margin-left: 1.6em;}
-#content ul > li { list-style-type: disc; }
-#content ol > li { list-style-type: decimal; }
+{% block sub-style %}
+.user-list {
+	padding-left: 0;
+	margin-left: 0;
+}
+.user-list li {
+	margin-bottom: 0.5em;
+	list-style-type: none;
+	clear: both;
+}
+.user-list a { display: block; }
+
+.date-item {
+	font-weight: bold;
+}
+.person-photo { 
+	float: left; 
+	clear: both; 
+	margin-right: 0.5em;
+	margin-bottom: 1em;
+}
 {% endblock %}
 
 {% block content %}
-<ul>
-	<li><a href="{% url apple.views.create_account %}">Create an Account</a></li>
-	<li><a href="{% url apple.views.email_everyone %}">Email All Active Accounts</a></li>
-	<li><a href="{% url apple.views.send_test %}">Send Test Messages</a></li>
-	<li><a href="{% url apple.views.add_invites %}">Add Invites</a></li>
-	<li><a href="{% url admin:index %}">Admin</a></li>
-</ul>
+	<div class="row-fluid">
+		<div class="span4">
+			<h3>New users: {{ new_users.count }}</h3>
+			<ul class="user-list">
+				{% with "True" as show_user %}
+					{% for user in new_users %}
+						{% ifchanged user.date_joined.date %}
+							<li class='date-item'>{{ user.date_joined.date }}</li>
+						{% endifchanged %}
+						<li>
+							{% include "banana/user_photo_small.frag" %}
+							<a href="{{user.get_absolute_url}}">{{ user.get_full_name }}</a>
+							{{user.email}}
+						</li>
+					{% endfor %}
+				{% endwith %}
+			</ul>
+		</div>
+		<div class="span4">
+			<h3>User count: {{ user_count }}</h3>
+		</div>
+	</div>
 {% endblock %}
