@@ -21,9 +21,6 @@
 #registration-form input[type=text], #registration-form input[type=password] { width: 195px; }
 .hero-unit {
 	padding: 2em;
-	background-image: url('{{STATIC_URL}}banana/logo.svg');
-	background-repeat: no-repeat;
-	background-position: -19% 1433%;
 	text-shadow: 1px 1px 9px #eee;
 }
 .hero-unit h1 {
@@ -60,7 +57,6 @@
 					<li>Purge your mind of open loops and nagging thoughts.</li>
 					<li>Feel the satisfaction of hitting the 'to-done' button.</li>
 					<li>Focus on gratitude for perspective and happiness.</li>
-					<li>Share using tools designed for work (not cat pictures).</li>
 				</ul>
 				{% if open_registration %}
 					<a href="{% url person.views.register %}" class="btn btn-primary btn-large">Sign Up Now</a>
