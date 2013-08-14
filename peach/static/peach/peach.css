@@ -13,6 +13,7 @@ a[href='#delete'] { color: red; }
 .wiki-page-edit-form textarea { width: 98%; min-height: 30em;}
 .wiki-page-edit-form .controls-div { text-align: right; }
 .wiki-page-edit-form .controls-div button { margin-left: 0.5em; }
+.wiki-page-edit-form .controls-div a { float: left; font-weight: bold; }
 
 #content .wiki-page-item-view { position: relative; cursor: pointer; }
 #content .wiki-page-item-view a { cursor: pointer; }

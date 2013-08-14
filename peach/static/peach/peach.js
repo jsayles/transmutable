@@ -157,7 +157,7 @@ peach.views.NamespaceBreadcrumbView = Backbone.View.extend({
 		this.archiveToggleItem = this.nsCrumb.append($.el.a(this.archiveToggleIcon));
 		$(this.archiveToggleItem).click(this.handleArchiveToggle);
 
-		var deleteMessage = $.el.p('This will ', $.el.strong('permanently delete'), ' this ',  $.el.strong('entire note'), ' and all of its pages.');
+		var deleteMessage = $.el.p('This will ', $.el.strong('permanently delete'), ' the ',  $.el.strong(this.model.get('display_name')), ' note and ',  $.el.strong('all of its sub-pages.'));
 		this.deleteDialog = new peach.views.ModalDialog(null, {
 			'title':'Are you sure?',
 			'message':deleteMessage,
@@ -401,6 +401,10 @@ peach.views.WikiPageEditForm = Backbone.View.extend({
 
 		this.controlsDiv = $.el.div({'class':'controls-div'});
 		this.$el.append(this.controlsDiv);
+
+		this.markdownLink = $.el.a({'href':'http://daringfireball.net/projects/markdown/syntax', 'target':'_new'}, 'Formatting');
+		this.controlsDiv.append(this.markdownLink);
+
 		this.cancelButton = this.controlsDiv.append($.el.button({'type':'button'}, 'Cancel'));
 		$(this.cancelButton).click(this.handleCancel);
 		this.saveButton = this.controlsDiv.append($.el.button({'type':'button'}, 'Save'));

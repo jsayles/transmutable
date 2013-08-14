@@ -141,8 +141,7 @@ def password_edit(request):
 			message = 'Your password has not been changed.'
 	else:
 		message = 'Your password has not been changed'
-	
-	return HttpResponseRedirect('%s#change-password?message=%s' % (reverse('person.views.profile', kwargs={'username':request.user.username}), message))
+	return HttpResponseRedirect('%s#change-password?message=%s' % (reverse('person.views.profile', kwargs={'username':request.user.username}), urllib.quote(message)))
 
 
 @login_required

@@ -10,14 +10,16 @@ $(document).ready(function(){
 	} else {
 		$('a[href=#edit-view]').tab('show')
 	}
-	setTimeout("hideMessage();", 5000);
 	if($.urlVar("message")){
 		$('#content').prepend('<h2 id="message">' + $.urlVar("message") + '</h2>');
 	}
+	$('ul.nav-tabs').click(function(){
+		hideMessage();
+	});
 });
 
 function hideMessage(){
-	$("#message").hide();
+	$("#message").hide(1000);
 }
 </script>
 {% endblock %}
