@@ -5,11 +5,6 @@
 {% block sub-head %}
 	<script>
 	$(document).ready(function() {
-		{% if request.user.is_authenticated %}
-			if($.isMobile()){
-				$('body').prepend('<div id="mobile-ui-header"><a href="{% url banana.mobile_views.index %}">Go to the mobile version &raquo;</a>');
-			}
-		{% endif %}
 		$('button[name="add-search-button"]').click(function(){ $('#search-form').show();  $('#id_terms').focus(); });
 	});
 	</script>
@@ -48,6 +43,7 @@
 {% endblock %}
 
 {% block content %}
+	{% if not request.user.is_authenticated %}
 	  <div class="row-fluid">
 		<div class="span12">
 		  <div class="hero-unit">
@@ -65,6 +61,7 @@
 		  </div>
 		</div>
 	  </div>
+	{% endif %}
 	  <div class="row-fluid">
 		<div class="span4">
 			<h3>Recent to&ndash;dones</h3>
