@@ -223,7 +223,6 @@ peach.views.WikiPageItemView = Backbone.View.extend({
 		$(this.link).click(this.handleSelection);
 		this.listenTo(this.options.namespace, peach.events.wikiPageRequested, this.handleWikiPageRequested);
 
-
 		var deleteMessage = $.el.p('This will permanently delete this page, ', this.model.get('name'), '.');
 		this.deleteDialog = new peach.views.ModalDialog(null, {
 			'title':'Are you sure?',
@@ -347,6 +346,22 @@ peach.views.WikiPageRenderView = Backbone.View.extend({
 	className: 'wiki-page-render-view',
 	initialize: function(){
 		_.bindAll(this);
+
+		this.wikiEditControlsView = new peach.views.WikiEditControlsView({
+			'model':this.model, 
+			'namespace':this.options.namespace, 
+			'user':this.options.user, 
+			'isMobile':this.options.isMobile
+		});
+		this.$el.append(this.wikiEditControlsView.el);
+
+		this.wikiPhotoCollectionView = new transmutable.views.GenericCollectionView({
+			'collection': this.options.photoCollection,
+			'itemClass':peach.views.WikiPhotoItemView
+		});
+		this.wikiPhotoCollectionView.$el.addClass('wiki-photo-collection-view');
+		this.$el.append(this.wikiPhotoCollectionView.el);
+
 		this.markdownConverter = new Markdown.Converter();
 		this.renderedEl = $.el.div({'class':'markup-view rendered-wrapper'});
 		this.$el.append(this.renderedEl);
@@ -450,28 +465,144 @@ peach.views.WikiPageEditForm = Backbone.View.extend({
 	}
 })
 
-peach.views.WikiPageEditorView = Backbone.View.extend({
-	className: 'wiki-page-editor-view',
+peach.views.makeFileDrop = function(targetEl, filesCallback){
+	var el = $(targetEl);
+	el.addClass('file-drop');
+	el.on('dragover', function(e) { e.preventDefault(); e.stopPropagation(); } );
+	el.on('dragenter', function(e) { e.preventDefault(); e.stopPropagation(); } );
+	el.on('drop',
+		_.bind(function(e){
+			if(!e.originalEvent.dataTransfer) return;
+			if(e.originalEvent.dataTransfer.files.length <= 0) return;
+			e.preventDefault();
+			e.stopPropagation();
+			filesCallback(e.originalEvent.dataTransfer.files);
+		}, this)
+	);
+}
+
+peach.views.WikiPhotoEditItemView = Backbone.View.extend({
+	tagName: 'li',
+	className:'wiki-photo-item-view',
 	initialize: function(){
 		_.bindAll(this);
-		this.wikiEditControlsView = new peach.views.WikiEditControlsView({
-			'model':this.model, 
-			'namespace':this.options.namespace, 
-			'user':this.options.user, 
-			'isMobile':this.options.isMobile
+		var deleteIcon = $.el.a({'class':'delete-link', 'href':'#delete'}, $.el.i({'class':'icon-trash'}));
+		this.$el.append(deleteIcon);
+		this.$el.append($.el.a({'href':this.model.get('web_image'), 'target':'_new'}, $.el.img({'src':this.model.get('web_thumb')})));
+		this.$el.append($.el.div(this.model.get('display_name')));
+
+		var deleteMessage = $.el.p('This will permanently delete this image, ', this.model.get('display_name'), '.');
+		this.deleteDialog = new peach.views.ModalDialog(null, {
+			'title':'Are you sure?',
+			'message':deleteMessage,
+			'buttons':[['Cancel'], ['Delete']],
+			'danger': true
 		});
-		this.$el.append(this.wikiEditControlsView.el);
+		this.listenTo(this.deleteDialog, peach.events.dialogButtonPressed, this.handleDeleteDialog);
+		$(deleteIcon).click(this.deleteDialog.goModal);
+	},
+	showDeleteDialog: function(event){
+		event.preventDefault();
+		event.stopPropagation();
+	},
+	handleDeleteDialog: function(buttonName){
+		if(buttonName != 'Delete') return;
+		this.model.destroy({
+			'success':this.handleDestroySuccess,
+			'error':this.handleDestoryError
+		});
+	},
+	handleDestroySuccess: function(){
+		console.log("Success", arguments);
+	},
+	handleDestoryError: function(){
+		console.log('Error', arguments);
+	}
+});
+
+peach.views.WikiPhotoItemView = Backbone.View.extend({
+	tagName: 'div',
+	className:'wiki-photo-item-view',
+	initialize: function(){
+		_.bindAll(this);
+		this.$el.append($.el.a({'href':this.model.get('web_image'), 'target':'_new'}, $.el.img({'src':this.model.get('web_thumb')})));
+		this.$el.append($.el.div(this.model.get('display_name')));
+	}
+});
+
+peach.views.WikiPageFileEditorView = Backbone.View.extend({
+	className: 'wiki-page-file-editor-view',
+	initialize: function(){
+		_.bindAll(this);
+
+		this.wikiPhotoCollectionView = new transmutable.views.GenericCollectionView({
+			'collection': this.options.collection,
+			'itemClass':peach.views.WikiPhotoEditItemView
+		});
+		this.wikiPhotoCollectionView.$el.addClass('wiki-photo-collection-view');
+		this.$el.append(this.wikiPhotoCollectionView.el);
+
+		this.addImageLink = $.el.a({'href':'#', 'alt':'add or drop image'},
+			$.el.i({'class':'icon-plus', 'title':'add or drop image'}), 
+			' ',
+			$.el.i({'class':'icon-picture', 'title':'add or drop image'})
+		);
+		this.$el.append(this.addImageLink);
+		$(this.addImageLink).click(this.handleAddImageClick);
+		peach.views.makeFileDrop(this.addImageLink, this.handleFiles);
+
+		// A hidden form whose file dialog is shown when the addImageLink is clicked
+        var form = $.el.form({'class':'file-form', 'action':'.', 'method':'post', 'enctype':'multipart-form-data'});
+        this.$el.append(form);
+        var input = form.append($.el.input({'type':'file', 'accept':'image/png,image/jpeg,image/gif,image/tiff'}));
+        $(input).change(this.handleFileInputChange);
+	},
+	handleAddImageClick: function(event){
+		event.preventDefault();
+		event.stopPropagation();
+        this.$el.find('.file-form input').click();
+	},
+	handleFileInputChange: function(event){ this.handleFiles(event.target.files); },
+	handleFiles: function(files){
+		console.log('files', files);
+	}
+})
+
+peach.views.WikiPageEditorView = Backbone.View.extend({
+	className: 'wiki-page-editor-view container',
+	initialize: function(){
+		_.bindAll(this);
+		this.photoCollection = new window.schema.api.peach.WikiPhotoCollection();
+
+		var row = $.el.div({'class':'row-fluid'});
+		this.$el.append(row);
+
 		this.wikiPageRenderView = new peach.views.WikiPageRenderView({
 			'model':this.model,
-			'isMobile':this.options.isMobile
+			'user':this.options.user,
+			'isMobile':this.options.isMobile,
+			'namespace':this.options.namespace, 
+			'photoCollection':this.photoCollection
 		});
-		this.$el.append(this.wikiPageRenderView.el);
+		this.wikiPageRenderView.$el.addClass('span12')
+		row.append(this.wikiPageRenderView.el);
+
 		this.wikiPageEditForm = new peach.views.WikiPageEditForm({
 			'model':this.model,
 			'isMobile':this.options.isMobile
 		})
-		this.$el.append(this.wikiPageEditForm.el);
+		this.wikiPageEditForm.$el.addClass('span9')
+		row.append(this.wikiPageEditForm.el);
 		$(this.wikiPageEditForm.el).hide();
+
+		this.wikiPageFileEditorView = new peach.views.WikiPageFileEditorView({
+			'model':this.model,
+			'collection':this.photoCollection,
+			'isMobile':this.options.isMobile
+		})
+		this.wikiPageFileEditorView.$el.addClass('span3')
+		row.append(this.wikiPageFileEditorView.el);
+		$(this.wikiPageFileEditorView.el).hide();
 
 		this.model.on(peach.events.editRequested, this.editRequested);
 		this.model.on(peach.events.editCanceled, this.editCompleted);
@@ -481,13 +612,14 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 		this.$el.append(this.editAccessLink);
 		$(this.editAccessLink).click(this.editRequested);
 
+		this.photoCollection.reset(this.model.get('wiki_photos'));
 		if(this.model.get('content').trim() == '') this.editRequested();
 	},
 	editRequested: function(){
 		this.wikiPageEditForm.prepareForEdit();
 		$(this.wikiPageEditForm.el).show();
+		$(this.wikiPageFileEditorView.el).show();
 		$(this.wikiPageRenderView.el).hide();
-		$(this.wikiEditControlsView.el).hide();
 		// The DOM isn't ready for a focus event, so wait a bit
 		setTimeout(_.bind(function(){
 			$(this.wikiPageEditForm.textArea).focus();
@@ -495,8 +627,8 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 	},
 	editCompleted: function(){
 		$(this.wikiPageEditForm.el).hide();
+		$(this.wikiPageFileEditorView.el).hide();
 		$(this.wikiPageRenderView.el).show();
-		$(this.wikiEditControlsView.el).show();
 	}
 });
 
@@ -511,6 +643,7 @@ peach.views.NamespaceEditorSwitcherView = Backbone.View.extend({
 	handleWikiPageDestroyed: function(wikiPage){
 		if(!this.wikiPageEditorView) return;
 		if(this.wikiPageEditorView.model == wikiPage){
+			// The page removed is the currently edited page, so remove that and switch to the splash page
 			this.wikiPageEditorView.remove();
 			this.wikiPageEditorView = null;
 			this.model.trigger(peach.events.wikiPageRequested, this.collection.at(0));

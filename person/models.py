@@ -31,23 +31,43 @@ PASSWORD_RESET_ID_PARAMETER = "id"
 
 class ThumbnailedModel(models.Model):
 	"""An abstract base class for models with an ImageField named "image" """
-	def thumb(self):
+
+	WEB_WIDTH = 1000
+	WEB_HEIGHT = 1000
+	WEB_THUMB_WIDTH = 200
+	WEB_THUMB_HEIGHT = 200
+
+	def get_or_create_thumbnail(self, width=250, height=250):
+		if hasattr(self, 'image') and self.image:
+			image = self.image
+		elif hasattr(self, 'photo') and self.photo:
+			image = self.photo.image
+		else:
+			return ""
 		try:
-			if hasattr(self, 'image') and self.image:
-				image = self.image
-			elif hasattr(self, 'photo') and self.photo:
-				image = self.photo.image
-			else:
-				return ""
-			file = settings.MEDIA_URL + image.path[len(settings.MEDIA_ROOT):]
-			filename, miniature_filename, miniature_dir, miniature_url = imagetags.determine_resized_image_paths(file, "admin_thumb")
+			original_file = settings.MEDIA_URL + image.path[len(settings.MEDIA_ROOT):]
+			filename, miniature_filename, miniature_dir, miniature_url = imagetags.determine_resized_image_paths(original_file, "%sx%s" % (width, height))
 			if not os.path.exists(miniature_dir): os.makedirs(miniature_dir)
-			if not os.path.exists(miniature_filename): imagetags.fit_crop(filename, 200, 100, miniature_filename)
-			return """<img src="%s" />""" % miniature_url
+			if not os.path.exists(miniature_filename): imagetags.fit_crop(filename, width, height, miniature_filename)
+			return miniature_url
 		except:
 			traceback.print_exc()
 			return None
+
+	@property
+	def web_image_url(self):
+		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_WIDTH, ThumbnailedModel.WEB_HEIGHT)
+
+	@property
+	def web_thumb_url(self):
+		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_THUMB_WIDTH, ThumbnailedModel.WEB_THUMB_HEIGHT)
+
+	def thumb(self):
+		miniature_url = self.get_or_create_thumbnail(200, 100)
+		if not miniature_url: return ''
+		return """<img src="%s" />""" % miniature_url
 	thumb.allow_tags = True
+
 	class Meta:
 		abstract = True
 

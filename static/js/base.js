@@ -19,6 +19,47 @@ transmutable.views.FormattingHelpView = Backbone.View.extend({
 	}
 })
 
+transmutable.views.GenericCollectionView = Backbone.View.extend({
+	tagName: 'ul',
+	className: 'collection-view',
+	initialize: function(){
+		_.bindAll(this);
+		this.itemViews = [];
+		this.collection.on('reset', this.handleSync);
+		this.collection.on('sync', this.handleSync);
+		this.collection.on('remove', this.handleRemove);
+	},
+	getItemView: function(model){
+		for(var i=0; i < this.itemViews.length; i++){
+			if(this.itemViews[i].model == model) return this.itemViews[i];
+		}
+		return null;
+	},
+	addOne: function(model){
+		var itemView = this.itemViews[this.itemViews.length] = new this.options.itemClass({
+			'model':model,
+			'collection':this.collection
+		});
+		this.$el.append(itemView.el);
+	},
+	handleRemove: function(model){
+		var itemView = this.getItemView(model);
+		if(!itemView) return;
+		this.itemViews = _.without(this.itemViews, itemView);
+		itemView.$el.remove();
+	},
+	handleSync: function(){
+		for(var i=0; i < this.itemViews.length; i++){
+			this.itemViews[i].remove();
+		}
+		this.itemViews = [];
+		for(var i=0; i < this.collection.length; i++){
+			this.addOne(this.collection.at(i));
+		}
+		this.collection.on('add', this.addOne);
+	}
+})
+
 $.urlVars = function(){
 	var vars = [], hash;
 	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');

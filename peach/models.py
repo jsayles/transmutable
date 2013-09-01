@@ -100,7 +100,7 @@ class WikiPage(models.Model):
 	def get_api_url(self): 
 		return reverse('api_dispatch_detail', args=['v0.1', 'peach/wiki-page', self.id])
 
-	def __unicode__(self): return self.name
+	def __unicode__(self): return '%s %s' % (self.name, self.id)
 
 	def save(self, *args, **kwargs):
 		"""When saving the content, render via markdown and save to self.rendered"""
@@ -157,18 +157,22 @@ class WikiFile(models.Model):
 class WikiPhoto(ThumbnailedModel):
 	"""An image and metadata associated with a WikiPage."""
 	image = models.ImageField(upload_to='wiki_photo', blank=False)
-	wiki_page = models.ForeignKey(WikiPage, blank=False, null=False)
+	wiki_page = models.ForeignKey(WikiPage, related_name='wiki_photos', blank=False, null=False)
 	title = models.CharField(max_length=1024, null=True, blank=True)
 	caption = models.CharField(max_length=1024, null=True, blank=True)
 	description = models.TextField(blank=True, null=True)
 	created = models.DateTimeField(auto_now_add=True)
+
+	@property
 	def display_name(self):
 		if self.title: return self.title
 		return os.path.basename(self.image.name)
+
 	@models.permalink
 	def get_absolute_url(self):
 		return ('peach.views.photo', (), { 'username':self.owner.username, 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
+
 	class Meta:
 		ordering = ['-created']
-	def __unicode__(self):
-		return str(self.image)
+
+	def __unicode__(self): return str(self.image)

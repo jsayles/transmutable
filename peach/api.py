@@ -19,7 +19,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect, HttpResponsePermanentRedirect
 
-from models import Namespace, WikiPage
+from models import Namespace, WikiPage, WikiPhoto
 from forms import NamespaceForm, WikiPageForm
 
 from transmutable import API, UserResource, UserIsRequestorAuthorization
@@ -48,6 +48,64 @@ def get_namespace_by_resource_url(url):
 	'''Returns a Namespace for a resource URL like /api/v0.1/peach/namespace/3/'''
 	return get_model_by_resource_url(url, Namespace)
 
+class WikiPhotoAuthorization(Authorization):
+	'''
+	Create: User must be logged in and 'wiki_page' must be a resource URL for a WikiPage owned by the logged in user
+	Read: If the wiki_page is public, True.  Otherwise, only if owned by the logged in user
+	Update: Any logged in user can update their own object
+	Delete: Any logged in user can delete their own object
+	'''
+
+	def create_detail(self, object_list, bundle):
+		raise Unauthorized("Sorry, no creates.  Use the photo post resource instead.")
+
+	def read_detail(self, object_list, bundle):
+		if not bundle.request.user.is_authenticated(): return False
+		if bundle.obj.wiki_page.namespace.public == True: return True
+		return bundle.obj.wiki_page.namespace.owner == bundle.request.user
+
+	def update_detail(self, object_list, bundle):
+		if not bundle.request.user.is_authenticated(): return False
+		return bundle.obj.wiki_page.namespace.owner == bundle.request.user
+
+	def delete_detail(self, object_list, bundle):
+		if not bundle.request.user.is_authenticated(): return False
+		return bundle.obj.wiki_page.namespace.owner == bundle.request.user
+
+	def create_list(self, object_list, bundle):
+		raise Unauthorized("Sorry, no creates.")
+
+	def read_list(self, object_list, bundle):
+		return object_list.filter(wiki_page__namespace__owner=bundle.request.user)
+
+	def update_list(self, object_list, bundle):
+		raise Unauthorized("Sorry, no updates.")
+
+	def delete_list(self, object_list, bundle):
+		raise Unauthorized("Sorry, no deletes.")
+
+class WikiPhotoResource(ModelResource):
+	web_image = fields.CharField(readonly=True)
+	web_thumb = fields.CharField(readonly=True)
+	display_name = fields.CharField(readonly=True, attribute='display_name')
+
+	def dehydrate_web_image(self, bundle):
+		return bundle.obj.web_image_url
+
+	def dehydrate_web_thumb(self, bundle):
+		return bundle.obj.web_thumb_url
+
+	class Meta:
+		queryset = WikiPhoto.objects.all()
+		resource_name = 'peach/wiki-photo'
+		allowed_methods = ['get', 'delete']
+		filtering = {
+			'wiki_page': ALL_WITH_RELATIONS,
+		}
+		authentication = SessionAuthentication()
+		authorization = WikiPhotoAuthorization()
+API.register(WikiPhotoResource())
+
 class WikiPageAuthorization(Authorization):
 	'''
 	Create: User must be logged in and 'namespace' must be a resource URL for a Namespace owned by the logged in user
@@ -59,7 +117,7 @@ class WikiPageAuthorization(Authorization):
 	def create_detail(self, object_list, bundle):
 		if not bundle.request.user.is_authenticated(): return False
 		if not 'namespace' in bundle.data: return False
-		namespace = get_namespace_by_resource_url(bundle.data['namespace'])
+		namespace = get_model_by_resource_url(bundle.data['namespace'], WikiPagePhoto)
 		if not namespace: return False
 		if namespace.owner != bundle.request.user: return False
 		return True
@@ -89,9 +147,10 @@ class WikiPageAuthorization(Authorization):
 	def delete_list(self, object_list, bundle):
 		raise Unauthorized("Sorry, no deletes.")
 
-
 class WikiPageResource(ModelResource):
 	namespace = fields.ForeignKey(NamespaceResource, 'namespace')
+	wiki_photos = fields.ToManyField(WikiPhotoResource, 'wiki_photos', null=True, full=True, readonly=True)
+
 	class Meta:
 		queryset = WikiPage.objects.all()
 		resource_name = 'peach/wiki-page'
