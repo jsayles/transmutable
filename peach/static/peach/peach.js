@@ -347,21 +347,6 @@ peach.views.WikiPageRenderView = Backbone.View.extend({
 	initialize: function(){
 		_.bindAll(this);
 
-		this.wikiEditControlsView = new peach.views.WikiEditControlsView({
-			'model':this.model, 
-			'namespace':this.options.namespace, 
-			'user':this.options.user, 
-			'isMobile':this.options.isMobile
-		});
-		this.$el.append(this.wikiEditControlsView.el);
-
-		this.wikiPhotoCollectionView = new transmutable.views.GenericCollectionView({
-			'collection': this.options.photoCollection,
-			'itemClass':peach.views.WikiPhotoItemView
-		});
-		this.wikiPhotoCollectionView.$el.addClass('wiki-photo-collection-view');
-		this.$el.append(this.wikiPhotoCollectionView.el);
-
 		this.markdownConverter = new Markdown.Converter();
 		this.renderedEl = $.el.div({'class':'markup-view rendered-wrapper'});
 		this.$el.append(this.renderedEl);
@@ -530,7 +515,7 @@ peach.views.WikiPhotoItemView = Backbone.View.extend({
 	}
 });
 
-peach.views.WikiPageFileEditorView = Backbone.View.extend({
+peach.views.WikiPhotosEditorView = Backbone.View.extend({
 	className: 'wiki-page-file-editor-view',
 	initialize: function(){
 		_.bindAll(this);
@@ -584,8 +569,26 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 			'namespace':this.options.namespace, 
 			'photoCollection':this.photoCollection
 		});
-		this.wikiPageRenderView.$el.addClass('span12')
+		this.wikiPageRenderView.$el.addClass('span9')
 		row.append(this.wikiPageRenderView.el);
+
+		this.leftRenderColumn = $.el.div({'class':'span3'});
+		row.append(this.leftRenderColumn);
+
+		this.wikiEditControlsView = new peach.views.WikiEditControlsView({
+			'model':this.model, 
+			'user':this.options.user, 
+			'namespace':this.options.namespace, 
+			'isMobile':this.options.isMobile
+		});
+		this.leftRenderColumn.append(this.wikiEditControlsView.el);
+
+		this.wikiPhotoCollectionView = new transmutable.views.GenericCollectionView({
+			'collection': this.photoCollection,
+			'itemClass':peach.views.WikiPhotoItemView
+		});
+		this.wikiPhotoCollectionView.$el.addClass('wiki-photo-collection-view');
+		this.leftRenderColumn.append(this.wikiPhotoCollectionView.el);
 
 		this.wikiPageEditForm = new peach.views.WikiPageEditForm({
 			'model':this.model,
@@ -595,14 +598,14 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 		row.append(this.wikiPageEditForm.el);
 		$(this.wikiPageEditForm.el).hide();
 
-		this.wikiPageFileEditorView = new peach.views.WikiPageFileEditorView({
+		this.wikiPhotosEditorView = new peach.views.WikiPhotosEditorView({
 			'model':this.model,
 			'collection':this.photoCollection,
 			'isMobile':this.options.isMobile
 		})
-		this.wikiPageFileEditorView.$el.addClass('span3')
-		row.append(this.wikiPageFileEditorView.el);
-		$(this.wikiPageFileEditorView.el).hide();
+		this.wikiPhotosEditorView.$el.addClass('span3')
+		row.append(this.wikiPhotosEditorView.el);
+		$(this.wikiPhotosEditorView.el).hide();
 
 		this.model.on(peach.events.editRequested, this.editRequested);
 		this.model.on(peach.events.editCanceled, this.editCompleted);
@@ -617,18 +620,20 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 	},
 	editRequested: function(){
 		this.wikiPageEditForm.prepareForEdit();
-		$(this.wikiPageEditForm.el).show();
-		$(this.wikiPageFileEditorView.el).show();
-		$(this.wikiPageRenderView.el).hide();
+		this.wikiPageEditForm.$el.show();
+		this.wikiPhotosEditorView.$el.show();
+		this.wikiPageRenderView.$el.hide();
+		$(this.leftRenderColumn).hide();
 		// The DOM isn't ready for a focus event, so wait a bit
 		setTimeout(_.bind(function(){
 			$(this.wikiPageEditForm.textArea).focus();
 		}, this), 100);
 	},
 	editCompleted: function(){
-		$(this.wikiPageEditForm.el).hide();
-		$(this.wikiPageFileEditorView.el).hide();
-		$(this.wikiPageRenderView.el).show();
+		this.wikiPageEditForm.$el.hide();
+		this.wikiPhotosEditorView.$el.hide();
+		this.wikiPageRenderView.$el.show();
+		$(this.leftRenderColumn).show();
 	}
 });
 

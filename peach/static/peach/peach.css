@@ -20,8 +20,8 @@
 	width: 100%;
 }
 
-.wiki-edit-controls-view { float: right;  }
-.wiki-edit-controls-view a { font-size: 1.2em; margin-left: 1em; }
+.wiki-edit-controls-view { margin-bottom: 2em;}
+.wiki-edit-controls-view a { font-size: 1.2em; margin-right: 0.8em; }
 .wiki-edit-controls-view a i { padding-right: 0.2em; }
 a[href='#delete'] { color: red; }
 .wiki-page-editor-view { width: 100%; }
