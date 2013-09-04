@@ -23,6 +23,9 @@ class WikiPhotosForm(forms.Form):
 			wiki_photo.image.save(name, val, save=False)
 			wiki_photo.save()
 			results.append(wiki_photo)
+			if wiki_photo.web_thumb_url == None:
+				for photo in results: photo.delete()
+				raise IOError('could not read that image')
 		return results
 
 class WikiPageForm(forms.ModelForm):

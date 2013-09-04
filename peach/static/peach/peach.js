@@ -588,12 +588,24 @@ peach.views.WikiPhotosEditorView = Backbone.View.extend({
 		}
 		if(progress == -1){ // error
 			console.log("Error uploading");
+			var content = $.el.p('There was an error handling that image. I\'m sorry.');
+			var dialog = new peach.views.ModalDialog(null, {
+				'title':'Error uploading image',
+				'message':content,
+				'buttons':[],
+				'danger': false
+			});
+			dialog.on(peach.events.dialogButtonPressed, this.handleDialogButtonPress);
+			dialog.goModal();
 		} else if(progress == 100){ // success
 			var newPhotos = JSON.parse(uploader.xhr.response);
 			for(var i=0; i < newPhotos.length; i++){
 				this.options.collection.add(new window.schema.api.peach.WikiPhoto(newPhotos[i]));
 			}
 		}
+	},
+	handleDialogButtonPress: function(buttonName){
+		console.log("Butt", buttonName);
 	}
 })
 
