@@ -9,6 +9,7 @@ import unicodedata
 
 from django.db import models
 from django.conf import settings
+from django.http import HttpResponse
 from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -176,9 +177,17 @@ class WikiPhoto(ThumbnailedModel):
 		if self.title: return self.title
 		return os.path.basename(self.image.name)
 
-	@models.permalink
-	def get_absolute_url(self):
-		return ('peach.views.photo', (), { 'username':self.owner.username, 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
+	@property
+	def web_thumb_url(self):
+		return reverse('peach.views.photo_image', args=[], kwargs={'id': self.id, 'size':'thumb'})
+
+	@property
+	def web_image_url(self):
+		return reverse('peach.views.photo_image', args=[], kwargs={'id': self.id, 'size':'web'})
+
+	@property
+	def full_image_url(self):
+		return reverse('peach.views.photo_image', args=[], kwargs={'id': self.id, 'size':'full'})
 
 	class Meta:
 		ordering = ['created']

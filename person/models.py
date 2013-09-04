@@ -1,28 +1,29 @@
 import os
-import os.path
 import Image
 import urllib
+import os.path
+import mimetypes
 import datetime, calendar
-import random
-import time
-import re
 import unicodedata
 import traceback
 import logging
-import pprint
+import random
+import time
+import re
 
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.db import models
-from django.db.models import signals
+from django.db.models import Q
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
+from django.http import HttpResponse
+from django.db.models import signals
 from django.dispatch import dispatcher
 from django.core.mail import send_mail
-from django.utils.encoding import force_unicode
-from django.db.models import Q
+from django.utils.html import strip_tags
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
+from django.utils.encoding import force_unicode
+from django.template.loader import render_to_string
 
 import person.templatetags.imagetags as imagetags
 
@@ -37,6 +38,20 @@ class ThumbnailedModel(models.Model):
 	WEB_THUMB_WIDTH = 200
 	WEB_THUMB_HEIGHT = 200
 
+	def http_response_for_image_field(self, full_path, url, name=None):
+		'''
+		Returns an HttpResponse which is either a Nginx redirect or an HttpResponse for direct image service
+		'''
+		mime_type = mimetypes.guess_type(full_path)[0]
+		if mime_type is None and name is not None:
+			mime_type = mimetypes.guess_type(name)[0]
+		if settings.FRONTED_BY_NGINX:
+			# This sends a signal header to Nginx so that it takes over service of the file
+			response = HttpResponse(mimetype=mime_type)
+			response['X-Accel-Redirect'] = url
+			return response
+		return HttpResponse(file(full_path), content_type=mime_type)
+
 	def get_or_create_thumbnail(self, width=250, height=250):
 		if hasattr(self, 'image') and self.image:
 			image = self.image
@@ -49,23 +64,27 @@ class ThumbnailedModel(models.Model):
 			filename, miniature_filename, miniature_dir, miniature_url = imagetags.determine_resized_image_paths(original_file, "%sx%s" % (width, height))
 			if not os.path.exists(miniature_dir): os.makedirs(miniature_dir)
 			if not os.path.exists(miniature_filename): imagetags.fit_crop(filename, width, height, miniature_filename)
-			return miniature_url
+			return filename, miniature_filename, miniature_dir, miniature_url
 		except:
 			traceback.print_exc()
 			return None
 
 	@property
 	def web_image_url(self):
-		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_WIDTH, ThumbnailedModel.WEB_HEIGHT)
+		results = self.get_or_create_thumbnail(ThumbnailedModel.WEB_WIDTH, ThumbnailedModel.WEB_HEIGHT)
+		if results == None: return None
+		return results[3]
 
 	@property
 	def web_thumb_url(self):
-		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_THUMB_WIDTH, ThumbnailedModel.WEB_THUMB_HEIGHT)
+		results = self.get_or_create_thumbnail(ThumbnailedModel.WEB_THUMB_WIDTH, ThumbnailedModel.WEB_THUMB_HEIGHT)
+		if results == None: return None
+		return results[3]
 
 	def thumb(self):
-		miniature_url = self.get_or_create_thumbnail(200, 100)
-		if not miniature_url: return ''
-		return """<img src="%s" />""" % miniature_url
+		results = self.get_or_create_thumbnail(200, 100)
+		if not results: return ''
+		return """<img src="%s" />""" % results[3]
 	thumb.allow_tags = True
 
 	class Meta:

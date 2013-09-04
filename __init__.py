@@ -1,5 +1,9 @@
 '''Transmutable is a Django project which provides tools for working in public'''
+import os
 
+from django.db import models
+from django.conf import settings
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
@@ -7,6 +11,10 @@ from tastypie.api import Api
 from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authentication import Authentication, SessionAuthentication
+
+def file_field_full_path(self): return os.path.join(settings.PROJECT_ROOT, self.path) 
+models.fields.files.ImageFieldFile.full_path = property(file_field_full_path)        
+models.fields.files.FieldFile.full_path = property(file_field_full_path)
 
 API = Api(api_name='v0.1')
 
@@ -89,7 +97,6 @@ class UserResource(ModelResource):
 		allowed_methods = ['get']
 		filtering = { 'username': ALL }
 API.register(UserResource())
-
 
 from banana.api import CompletedItemResource
 from peach.api import NamespaceResource

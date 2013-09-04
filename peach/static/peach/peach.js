@@ -517,7 +517,7 @@ peach.views.WikiPhotoItemView = Backbone.View.extend({
 
 		this.photoModalContent = $.el.div(
 			$.el.img({'src':this.model.get('web_image'), 'width':'1000'}),
-			$.el.a({'href':this.model.get('image'), 'target':'_new'}, 'original')
+			$.el.a({'href':this.model.get('full_image'), 'target':'_new'}, 'original')
 		);
 		this.photoModalDialog = new peach.views.ModalDialog(null, {
 			'title': this.model.get('display_name'),

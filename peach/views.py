@@ -41,19 +41,25 @@ def namespace(request, username, namespace):
 		return render_to_response('peach/namespace.html', { 'namespace':ns, 'wiki_pages':WikiPage.objects.filter(namespace=ns).exclude(name='SplashPage'), 'page':page }, context_instance=RequestContext(request))
 	else:
 		return render_to_response('peach/namespace_public.html', { 'namespace':ns, 'wiki_pages':WikiPage.objects.filter(namespace=ns).exclude(name='SplashPage'), 'page':page }, context_instance=RequestContext(request))
-		
-def photo_redirect(request, id):
-	photo = get_object_or_404(WikiPhoto, pk=id)
-	return HttpResponseRedirect(photo.image.url)
 
-def photo_detail_redirect(request, id):
+def photo_image(request, id, size=None):
+	'''Returns the photo image data iff the request user is allowed to read the namespace'''
+	if size == None: size = 'web'
+	if not size in ['thumb', 'web', 'full']:
+		raise Http404('Invalid size')
 	photo = get_object_or_404(WikiPhoto, pk=id)
-	return HttpResponseRedirect(photo.get_absolute_url())
-
-def photo(request, name, id):
-	photo = get_object_or_404(WikiPhoto, wiki_page__name=name, pk=id)
-	if not photo.wiki_page.namespace.can_read(request.user): return render_to_response('peach/not_authed.html', {}, context_instance=RequestContext(request))
-	return render_to_response('peach/photo.html', { 'photo':photo }, context_instance=RequestContext(request))
+	if not photo.wiki_page.namespace.can_read(request.user):
+		return HttpResponse(status=403)
+	if size == 'full':
+		full_path = photo.image.full_path
+		url = photo.image.url
+	elif size == 'thumb':
+		filename, miniature_filename, miniature_dir, url = photo.get_or_create_thumbnail(width=photo.WEB_THUMB_WIDTH, height=photo.WEB_THUMB_HEIGHT)
+		full_path = os.path.join(miniature_dir, miniature_filename)
+	elif size == 'web':
+		filename, miniature_filename, miniature_dir, url = photo.get_or_create_thumbnail(width=photo.WEB_WIDTH, height=photo.WEB_HEIGHT)
+		full_path = os.path.join(miniature_dir, miniature_filename)
+	return photo.http_response_for_image_field(full_path, url, photo.title)
 
 def file(request, namespace, name, id):
 	file = get_object_or_404(WikiFile, wiki_page__name=name, pk=id)

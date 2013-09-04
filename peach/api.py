@@ -85,17 +85,22 @@ class WikiPhotoAuthorization(Authorization):
 		raise Unauthorized("Sorry, no deletes.")
 
 class WikiPhotoResource(ModelResource):
-	web_image = fields.CharField(readonly=True)
 	web_thumb = fields.CharField(readonly=True)
+	web_image = fields.CharField(readonly=True)
+	full_image = fields.CharField(readonly=True)
 	display_name = fields.CharField(readonly=True, attribute='display_name')
-
-	def dehydrate_web_image(self, bundle):
-		return bundle.obj.web_image_url
 
 	def dehydrate_web_thumb(self, bundle):
 		return bundle.obj.web_thumb_url
 
+	def dehydrate_web_image(self, bundle):
+		return bundle.obj.web_image_url
+
+	def dehydrate_full_image(self, bundle):
+		return bundle.obj.full_image_url
+
 	class Meta:
+		fields = ['id', 'title', 'wiki_page', 'description', 'caption', 'created']
 		queryset = WikiPhoto.objects.all()
 		resource_name = 'peach/wiki-photo'
 		allowed_methods = ['get', 'delete']

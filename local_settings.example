@@ -1,6 +1,8 @@
 import logging
 import traceback
 
+FRONTED_BY_NGINX = False
+
 ADMINS = ( ('Your Name', 'your_email@somedomainyouown.com'), )
 MANAGERS = ADMINS
 
