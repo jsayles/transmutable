@@ -13,6 +13,18 @@ class ToggleNamespacePublicForm(forms.Form):
 class ToggleNamespaceArchiveForm(forms.Form):
 	toggle_namespace_archive_action = forms.BooleanField(required=True, initial=True, widget=forms.HiddenInput())
 
+class WikiPhotosForm(forms.Form):
+	upload_photos_action = forms.BooleanField(required=True, initial=True, widget=forms.HiddenInput())
+
+	def save(self, wiki_page, request_files):
+		results = []
+		for name, val  in request_files.items():
+			wiki_photo = WikiPhoto(wiki_page=wiki_page)
+			wiki_photo.image.save(name, val, save=False)
+			wiki_photo.save()
+			results.append(wiki_photo)
+		return results
+
 class WikiPageForm(forms.ModelForm):
 	class Meta:
 		model = WikiPage

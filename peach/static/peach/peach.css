@@ -45,6 +45,9 @@ a[href='#delete'] { color: red; }
 	vertical-align: top;
 	margin-right: 1em;
 }
+.wiki-photo-item-img {
+	cursor: pointer;
+}
 #content .wiki-page-item-view { position: relative; cursor: pointer; }
 #content .wiki-page-item-view a { cursor: pointer; }
 

@@ -498,7 +498,7 @@ peach.views.WikiPhotoEditItemView = Backbone.View.extend({
 		});
 	},
 	handleDestroySuccess: function(){
-		console.log("Success", arguments);
+		//pass
 	},
 	handleDestoryError: function(){
 		console.log('Error', arguments);
@@ -510,8 +510,24 @@ peach.views.WikiPhotoItemView = Backbone.View.extend({
 	className:'wiki-photo-item-view',
 	initialize: function(){
 		_.bindAll(this);
-		this.$el.append($.el.a({'href':this.model.get('web_image'), 'target':'_new'}, $.el.img({'src':this.model.get('web_thumb')})));
+		var image = $.el.img({'class':'wiki-photo-item-img', 'src':this.model.get('web_thumb')});
+		this.$el.append(image);
+		$(image).click(this.handleImageClick);
 		this.$el.append($.el.div(this.model.get('display_name')));
+
+		this.photoModalContent = $.el.div(
+			$.el.img({'src':this.model.get('web_image'), 'width':'1000'}),
+			$.el.a({'href':this.model.get('image'), 'target':'_new'}, 'original')
+		);
+		this.photoModalDialog = new peach.views.ModalDialog(null, {
+			'title': this.model.get('display_name'),
+			'danger': false,
+			'buttons':[['Close']],
+			'message': this.photoModalContent
+		});
+	},
+	handleImageClick: function(){
+		this.photoModalDialog.goModal();
 	}
 });
 
@@ -527,12 +543,18 @@ peach.views.WikiPhotosEditorView = Backbone.View.extend({
 		this.wikiPhotoCollectionView.$el.addClass('wiki-photo-collection-view');
 		this.$el.append(this.wikiPhotoCollectionView.el);
 
-		this.addImageLink = $.el.a({'href':'#', 'alt':'add or drop image'},
+		this.addImageGraphic = $.el.div(
 			$.el.i({'class':'icon-plus', 'title':'add or drop image'}), 
 			' ',
 			$.el.i({'class':'icon-picture', 'title':'add or drop image'})
+		)
+		this.spinner = $.el.i({'class':'icon-spinner icon-spin'});
+		this.addImageLink = $.el.a({'href':'#', 'alt':'add or drop image'},
+			this.addImageGraphic,
+			this.spinner
 		);
 		this.$el.append(this.addImageLink);
+		$(this.spinner).hide();
 		$(this.addImageLink).click(this.handleAddImageClick);
 		peach.views.makeFileDrop(this.addImageLink, this.handleFiles);
 
@@ -549,7 +571,29 @@ peach.views.WikiPhotosEditorView = Backbone.View.extend({
 	},
 	handleFileInputChange: function(event){ this.handleFiles(event.target.files); },
 	handleFiles: function(files){
-		console.log('files', files);
+		var data = {
+			'upload_photos_action':true
+		};
+		for(var i=0; i < files.length; i++){
+			data[files[i].name] = files[i];
+		}
+		$(this.addImageGraphic).hide();
+		$(this.spinner).show();
+		new transmutable.MultipartUploader(data, this.handleUploaderProgress, this.model.get('public_url'));
+	},
+	handleUploaderProgress: function(uploader, progress){
+		if(progress == 100 || progress == -1){
+			$(this.spinner).hide();
+			$(this.addImageGraphic).show();
+		}
+		if(progress == -1){ // error
+			console.log("Error uploading");
+		} else if(progress == 100){ // success
+			var newPhotos = JSON.parse(uploader.xhr.response);
+			for(var i=0; i < newPhotos.length; i++){
+				this.options.collection.add(new window.schema.api.peach.WikiPhoto(newPhotos[i]));
+			}
+		}
 	}
 })
 

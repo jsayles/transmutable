@@ -87,8 +87,16 @@ class WikiPage(models.Model):
 
 	def serialize_fields(self): return ['id', 'namespace_id', 'name', 'content', 'rendered', 'get_absolute_url']
 
+	@property
+	def public_url(self):
+		return reverse('peach.views.wiki', args=[], kwargs={ 'username':self.namespace.owner.username, 'namespace':self.namespace.name, 'name':self.name })
+
 	@models.permalink
 	def get_absolute_url(self):
+		'''
+		NOTE: This will return the URL to the Namespace (not the public page URL) for SplashPage WikiPages.
+		To get the public page URL, use WikiPage.get_public_url()
+		'''
 		if self.name == "SplashPage": return ('peach.views.namespace', [], {'username':self.namespace.owner.username, 'namespace':self.namespace.name })
 		return ('peach.views.wiki', [], { 'username':self.namespace.owner.username, 'namespace':self.namespace.name, 'name':self.name })
 
@@ -173,6 +181,6 @@ class WikiPhoto(ThumbnailedModel):
 		return ('peach.views.photo', (), { 'username':self.owner.username, 'namespace':self.wiki_page.namespace.name, 'name':self.wiki_page.name, 'id':self.id })
 
 	class Meta:
-		ordering = ['-created']
+		ordering = ['created']
 
 	def __unicode__(self): return str(self.image)

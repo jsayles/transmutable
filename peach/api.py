@@ -150,9 +150,11 @@ class WikiPageAuthorization(Authorization):
 class WikiPageResource(ModelResource):
 	namespace = fields.ForeignKey(NamespaceResource, 'namespace')
 	wiki_photos = fields.ToManyField(WikiPhotoResource, 'wiki_photos', null=True, full=True, readonly=True)
+	public_url = fields.CharField('public_url', readonly=True)
 
 	class Meta:
 		queryset = WikiPage.objects.all()
+		include_absolute_url = True
 		resource_name = 'peach/wiki-page'
 		allowed_methods = ['get', 'post', 'put', 'delete']
 		filtering = {

@@ -23,6 +23,21 @@ def get_user_by_resource_url(url):
 	'''Returns a User for a resource URL like /api/v0.1/auth/user/3/'''
 	return get_model_by_resource_url(url, User)
 
+def serialize_query_set(query_set, resource_class, request):
+	'''
+	Returns the query_set serialized to JSON
+	'resource_class' should be a tastypie Resource and 'request' should be an HttpRequest
+	'''
+	res = resource_class()
+	request_bundle = res.build_bundle(request=request)
+	queryset = res.obj_get_list(request_bundle)
+	bundles = []
+	for obj in query_set:
+		bundle = res.build_bundle(obj=obj, request=request)
+		bundles.append(res.full_dehydrate(bundle, for_list=True))
+
+	return res.serialize(None, bundles, "application/json")
+
 class UserIsRequestorAuthorization(Authorization):
 	'''
 	Create: User must be logged in and 'user' must be a resource URL for the logged in user
