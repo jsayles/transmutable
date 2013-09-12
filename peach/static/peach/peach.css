@@ -2,28 +2,94 @@
 
 .rendered-wrapper { margin: 20px 0px;  }
 
+.file-drop{
+	border-radius: 4px;
+	text-align: center;
+	border: dashed 1px #AAA;
+	background-color: #F5F5F5;
+}
+.file-drop:hover {
+	background-color: #AAFFAA;
+	text-decoration: none;
+}
 
-.wiki-edit-controls-view { float: right;  }
-.wiki-edit-controls-view a { font-size: 1.2em; margin-left: 1em; }
+.wiki-page-editor-view .file-drop {
+	padding-top: 2em;
+	display: block;
+	height: 4em;
+	width: 100%;
+}
+
+.wiki-edit-controls-view { margin-bottom: 2em;}
+.wiki-edit-controls-view a { font-size: 1.2em; margin-right: 0.8em; }
 .wiki-edit-controls-view a i { padding-right: 0.2em; }
 a[href='#delete'] { color: red; }
 .wiki-page-editor-view { width: 100%; }
+.wiki-page-edit-form.span9 { margin-left: 0; }
 .mobile .wiki-page-edit-form textarea { min-height: 10em;}
 .wiki-page-edit-form form { width: 100%; margin-bottom: 0.1em; }
 .wiki-page-edit-form textarea { width: 98%; min-height: 30em;}
 .wiki-page-edit-form .controls-div { text-align: right; }
 .wiki-page-edit-form .controls-div button { margin-left: 0.5em; }
 .wiki-page-edit-form .controls-div a { float: left; font-weight: bold; }
-
+.wiki-page-file-editor-view .file-form {
+  visibility: hidden;
+  position: absolute;
+  width: 0px;
+  height: 0px;
+}
+.wiki-page-render-view .rendered-wrapper { margin: 0; }
+.wiki-page-render-view .wiki-photo-item-view {
+	width: 10%;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 1em;
+}
+.wiki-photo-item-img {
+	cursor: pointer;
+}
 #content .wiki-page-item-view { position: relative; cursor: pointer; }
 #content .wiki-page-item-view a { cursor: pointer; }
+
+.wiki-photo-collection-view {
+	list-style: none;
+	margin-left: 0;
+	margin: 0;
+}
+.wiki-photo-item-view {
+	padding: 1em;
+	margin: 0 0 0.5em 0;
+	border-radius: 4px;
+	border: solid 1px #ddd;
+	overflow: hidden;
+}
+.wiki-photo-item-view img {
+	width: 98%;
+}
+.wiki-photo-item-view .delete-link {
+	float: right;
+	visibility: hidden;
+}
+.wiki-photo-item-view:hover .delete-link {
+	visibility: visible;
+}
+.wiki-photo-item-view:hover {
+	background-color: #F5F5F5;
+}
+.wiki-page-file-editor-view .wiki-photo-item-view img {
+	width: 85%;
+}
+
+.delete-link, .delete-link:hover {
+	color: red;
+	text-decoration: none;
+}
 
 #content .wiki-page-item-view .delete-link {
 	display: none;
 	position: absolute;
 	top: 1em;
 	right: 0.5em;
-	color: red;
 }
 #content .wiki-page-item-view:hover .delete-link { display: block; }
 

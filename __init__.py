@@ -1,5 +1,9 @@
 '''Transmutable is a Django project which provides tools for working in public'''
+import os
 
+from django.db import models
+from django.conf import settings
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
@@ -7,6 +11,10 @@ from tastypie.api import Api
 from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authentication import Authentication, SessionAuthentication
+
+def file_field_full_path(self): return os.path.join(settings.PROJECT_ROOT, self.path) 
+models.fields.files.ImageFieldFile.full_path = property(file_field_full_path)        
+models.fields.files.FieldFile.full_path = property(file_field_full_path)
 
 API = Api(api_name='v0.1')
 
@@ -22,6 +30,21 @@ def get_model_by_resource_url(url, model_class):
 def get_user_by_resource_url(url):
 	'''Returns a User for a resource URL like /api/v0.1/auth/user/3/'''
 	return get_model_by_resource_url(url, User)
+
+def serialize_query_set(query_set, resource_class, request):
+	'''
+	Returns the query_set serialized to JSON
+	'resource_class' should be a tastypie Resource and 'request' should be an HttpRequest
+	'''
+	res = resource_class()
+	request_bundle = res.build_bundle(request=request)
+	queryset = res.obj_get_list(request_bundle)
+	bundles = []
+	for obj in query_set:
+		bundle = res.build_bundle(obj=obj, request=request)
+		bundles.append(res.full_dehydrate(bundle, for_list=True))
+
+	return res.serialize(None, bundles, "application/json")
 
 class UserIsRequestorAuthorization(Authorization):
 	'''
@@ -74,7 +97,6 @@ class UserResource(ModelResource):
 		allowed_methods = ['get']
 		filtering = { 'username': ALL }
 API.register(UserResource())
-
 
 from banana.api import CompletedItemResource
 from peach.api import NamespaceResource

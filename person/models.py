@@ -1,28 +1,29 @@
 import os
-import os.path
 import Image
 import urllib
+import os.path
+import mimetypes
 import datetime, calendar
-import random
-import time
-import re
 import unicodedata
 import traceback
 import logging
-import pprint
+import random
+import time
+import re
 
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.db import models
-from django.db.models import signals
+from django.db.models import Q
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
+from django.http import HttpResponse
+from django.db.models import signals
 from django.dispatch import dispatcher
 from django.core.mail import send_mail
-from django.utils.encoding import force_unicode
-from django.db.models import Q
+from django.utils.html import strip_tags
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
+from django.utils.encoding import force_unicode
+from django.template.loader import render_to_string
 
 import person.templatetags.imagetags as imagetags
 
@@ -31,23 +32,54 @@ PASSWORD_RESET_ID_PARAMETER = "id"
 
 class ThumbnailedModel(models.Model):
 	"""An abstract base class for models with an ImageField named "image" """
-	def thumb(self):
+
+	WEB_WIDTH = 1000
+	WEB_HEIGHT = 1000
+	WEB_THUMB_WIDTH = 200
+	WEB_THUMB_HEIGHT = 200
+
+	def http_response_for_image_field(self, full_path, url, name=None):
+		'''
+		Returns an HttpResponse which is either a Nginx redirect or an HttpResponse for direct image service
+		'''
+		mime_type = mimetypes.guess_type(full_path)[0]
+		if mime_type is None and name is not None:
+			mime_type = mimetypes.guess_type(name)[0]
+		if settings.FRONTED_BY_NGINX:
+			# This sends a signal header to Nginx so that it takes over service of the file
+			response = HttpResponse(mimetype=mime_type)
+			response['X-Accel-Redirect'] = url
+			return response
+		return HttpResponse(file(full_path), content_type=mime_type)
+
+	def get_or_create_thumbnail(self, width=250, height=250):
+		if hasattr(self, 'image') and self.image:
+			image = self.image
+		elif hasattr(self, 'photo') and self.photo:
+			image = self.photo.image
+		else:
+			return ""
 		try:
-			if hasattr(self, 'image') and self.image:
-				image = self.image
-			elif hasattr(self, 'photo') and self.photo:
-				image = self.photo.image
-			else:
-				return ""
-			file = settings.MEDIA_URL + image.path[len(settings.MEDIA_ROOT):]
-			filename, miniature_filename, miniature_dir, miniature_url = imagetags.determine_resized_image_paths(file, "admin_thumb")
-			if not os.path.exists(miniature_dir): os.makedirs(miniature_dir)
-			if not os.path.exists(miniature_filename): imagetags.fit_crop(filename, 200, 100, miniature_filename)
-			return """<img src="%s" />""" % miniature_url
+			original_file = settings.MEDIA_URL + image.path[len(settings.MEDIA_ROOT):]
+			return imagetags.fit_image_detail(original_file, width, height)
 		except:
 			traceback.print_exc()
 			return None
+
+	@property
+	def web_image_url(self):
+		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_WIDTH, ThumbnailedModel.WEB_HEIGHT)
+
+	@property
+	def web_thumb_url(self):
+		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_THUMB_WIDTH, ThumbnailedModel.WEB_THUMB_HEIGHT)
+
+	def thumb(self):
+		result_url = self.get_or_create_thumbnail(200, 100)
+		if not result_url: return ''
+		return """<img src="%s" />""" % result_url
 	thumb.allow_tags = True
+
 	class Meta:
 		abstract = True
 

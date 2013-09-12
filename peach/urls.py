@@ -4,16 +4,17 @@ from django.conf import settings
  
 urlpatterns = patterns('',
 	(r'^$', 'peach.views.index'),
-	(r'^photo/(?P<id>[\d]+)/$' , 'peach.views.photo_redirect'),
-	(r'^photo-detail/(?P<id>[\d]+)/$' , 'peach.views.photo_detail_redirect'),
+
 	(r'^m/$', 'peach.mobile_views.index'),
 	(r'^m/(?P<namespace>[^/]+)/$', 'peach.mobile_views.namespace'),
 	(r'^m/(?P<namespace>[^/]+)/(?P<name>[^/]+)/$', 'peach.mobile_views.wiki'),
+
+	(r'^photo/(?P<id>[\d]+)/$' , 'peach.views.photo_image'),
+	(r'^photo/(?P<id>[\d]+)/(?P<size>[^/]+)/$' , 'peach.views.photo_image'),
 	(r'^(?P<username>[^/]+)/(?P<namespace>[^/]+)/$', 'peach.views.namespace'),
 	(r'^(?P<username>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)/$', 'peach.views.wiki'),
 	(r'^(?P<username>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)/history/(?P<id>[^/]+)$' , 'peach.views.wiki_page_log'),
 	(r'^(?P<username>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)/history/$' , 'peach.views.wiki_history'),
-	(r'^(?P<username>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)/photo/(?P<id>[\d]+)/$' , 'peach.views.photo'),
 	(r'^(?P<username>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)/file/(?P<id>[\d]+)/$' , 'peach.views.file'),
 	(r'^(?P<username>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)/print/$' , 'peach.views.wiki_print'),
 )

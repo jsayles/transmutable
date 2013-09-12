@@ -7,8 +7,6 @@ from models import *
  
 class StyledAdmin(admin.ModelAdmin):
 	save_on_top=True
-	class Media:
-		css = { "all": ('admin.css', )}
 
 class PhotoAdmin(StyledAdmin):
 	list_display = ('image', 'thumb')

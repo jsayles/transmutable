@@ -35,7 +35,7 @@
 			<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 		{% endif %}
 	</div>
-	<div id="main-column" class="span10">
+	<div id="main-column" class="{% if page.wiki_photos.all %}span8{% else %}span10{% endif %}">
 		<ul class="breadcrumb">
 			<li>
 				<a href="{{ page.namespace.owner.get_absolute_url }}">{{ page.namespace.owner.get_full_name }}</a> <span class="divider">/</span>
@@ -44,7 +44,15 @@
 				{{ namespace.display_name }}
 			</li>
 		</ul>
-		<div class="rendered-wrapper">{{ page.rendered|include_constants|safe }}</div>
+		<div class="rendered-wrapper span9">{{ page.rendered|include_constants|safe }}</div>
 	</div>
+	{% if page.wiki_photos.all %}
+		<div class="span2">
+			<ul class="breadcrumb">
+				<li>Photos</li>
+			</ul>
+			{% include "peach/wiki_photo_collection_view.frag" %}
+		</div>
+	{% endif %}
 </div>
 {% endblock %}

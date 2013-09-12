@@ -7,8 +7,6 @@ from models import *
 
 class StyledModelAdmin(admin.ModelAdmin):
 	save_on_top=True
-	class Media:
-		css = { "all": ('peach/admin.css', )}
 
 class NamespaceAdmin(StyledModelAdmin):
 	search_fields = ('name',)

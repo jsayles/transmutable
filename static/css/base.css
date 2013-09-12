@@ -26,6 +26,8 @@ footer a {
 	padding: 9px 0;
 }
 
+.rendered-wrapper h1, .rendered-wrapper h2, .rendered-wrapper h3, .rendered-wrapper h4, .rendered-wrapper h5, .rendered-wrapper h6 { margin-top: 0; }
+
 .rendered-wrapper h1 {
   font-size: 24px;
   line-height: 36px;

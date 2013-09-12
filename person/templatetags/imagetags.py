@@ -61,15 +61,10 @@ def squarecrop(file, size_param='100'):
 		return ''
 register.filter('squarecrop', squarecrop)
 
-def fit_image(file, size_param="300x300"):
-	"""Fit an image into the dimensions with no change in height/width ratio"""
+def fit_image_detail(file_url, width, height):
 	try:
 		if not file: return None
-		width_param, height_param = size_param.split('x')
-		width = int(width_param)
-		height = int(height_param)
-
-		filename, miniature_filename, miniature_dir, miniature_url = determine_resized_image_paths(file, 'fit_' + size_param)
+		filename, miniature_filename, miniature_dir, miniature_url = determine_resized_image_paths(file_url, 'fit_%sx%s' % (width, height))
 		if os.path.isdir(miniature_filename): return ''
 		if not os.path.exists(miniature_dir): os.makedirs(miniature_dir)
 		if os.path.exists(miniature_filename) and os.path.getmtime(filename) > os.path.getmtime(miniature_filename): 
@@ -79,10 +74,19 @@ def fit_image(file, size_param="300x300"):
 			image = Image.open(filename)
 			image.save(miniature_filename, image.format)
 			fit(miniature_filename, width, height)
-		return miniature_url
+		return filename, miniature_filename, miniature_dir, miniature_url
 	except:
-		print "Could not fit_image %s" % filename
-		return ''
+		print "Could not fit_image %s" % file_url
+		return None
+
+def fit_image(file_url, size_param="300x300"):
+	"""Fit an image into the dimensions with no change in height/width ratio"""
+	width_param, height_param = size_param.split('x')
+	width = int(width_param)
+	height = int(height_param)
+	results = fit_image_detail(file_url, width, height)
+	if not results: return ''
+	return results[3]
 register.filter('fit_image', fit_image)
 
 # Thumbnail filter based on code from http://batiste.dosimple.ch/blog/2007-05-13-1/
