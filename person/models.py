@@ -61,30 +61,23 @@ class ThumbnailedModel(models.Model):
 			return ""
 		try:
 			original_file = settings.MEDIA_URL + image.path[len(settings.MEDIA_ROOT):]
-			filename, miniature_filename, miniature_dir, miniature_url = imagetags.determine_resized_image_paths(original_file, "%sx%s" % (width, height))
-			if not os.path.exists(miniature_dir): os.makedirs(miniature_dir)
-			if not os.path.exists(miniature_filename): imagetags.fit_crop(filename, width, height, miniature_filename)
-			return filename, miniature_filename, miniature_dir, miniature_url
+			return imagetags.fit_image_detail(original_file, width, height)
 		except:
 			traceback.print_exc()
 			return None
 
 	@property
 	def web_image_url(self):
-		results = self.get_or_create_thumbnail(ThumbnailedModel.WEB_WIDTH, ThumbnailedModel.WEB_HEIGHT)
-		if results == None: return None
-		return results[3]
+		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_WIDTH, ThumbnailedModel.WEB_HEIGHT)
 
 	@property
 	def web_thumb_url(self):
-		results = self.get_or_create_thumbnail(ThumbnailedModel.WEB_THUMB_WIDTH, ThumbnailedModel.WEB_THUMB_HEIGHT)
-		if results == None: return None
-		return results[3]
+		return self.get_or_create_thumbnail(ThumbnailedModel.WEB_THUMB_WIDTH, ThumbnailedModel.WEB_THUMB_HEIGHT)
 
 	def thumb(self):
-		results = self.get_or_create_thumbnail(200, 100)
-		if not results: return ''
-		return """<img src="%s" />""" % results[3]
+		result_url = self.get_or_create_thumbnail(200, 100)
+		if not result_url: return ''
+		return """<img src="%s" />""" % result_url
 	thumb.allow_tags = True
 
 	class Meta:
