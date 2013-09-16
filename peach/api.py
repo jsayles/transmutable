@@ -122,7 +122,7 @@ class WikiPageAuthorization(Authorization):
 	def create_detail(self, object_list, bundle):
 		if not bundle.request.user.is_authenticated(): return False
 		if not 'namespace' in bundle.data: return False
-		namespace = get_model_by_resource_url(bundle.data['namespace'], WikiPagePhoto)
+		namespace = get_model_by_resource_url(bundle.data['namespace'], Namespace)
 		if not namespace: return False
 		if namespace.owner != bundle.request.user: return False
 		return True
