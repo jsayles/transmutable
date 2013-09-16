@@ -10,7 +10,7 @@ register = template.Library()
 @register.filter
 def wiki(text):
 	"""Convert the text into HTML using markdown and image name replacement."""
-	md = markdown.Markdown(safe_mode="escape", extensions=['nofollow'])
+	md = markdown.Markdown(safe_mode="escape", extensions=['nofollow', 'whitelist'])
 	return md.convert(text)
 
 @register.filter
