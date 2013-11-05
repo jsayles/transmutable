@@ -73,8 +73,8 @@ peach.views.NewNotesTourView = Backbone.View.extend({
 		_.bindAll(this);
 		this.options = options;
 		this.titleRow = $.el.div(
-			{'class':'row-fluid new-notes-tour-title-row'}, 
-			$.el.h2({'class':'span12'}, 'Let\'s get started with notes!'),
+			{'class':'row new-notes-tour-title-row'}, 
+			$.el.h2({'class':'col-sm-12'}, 'Let\'s get started with notes!'),
 			$.el.p('Create a note to store thoughts about a project you\'re working on.')
 
 		);
@@ -88,8 +88,8 @@ peach.views.NewNamespaceTourView = Backbone.View.extend({
 		_.bindAll(this);
 		this.options = options;
 		this.titleRow = $.el.div(
-			{'class':'row-fluid new-namespace-tour-title-row'}, 
-			$.el.h2({'class':'span12'}, 'Now add some content.'),
+			{'class':'row new-namespace-tour-title-row'}, 
+			$.el.h2({'class':'col-sm-12'}, 'Now add some content.'),
 			$.el.p('Write up your latest, brilliant thoughts and perhaps make a list or two.')
 		);
 		this.$el.append(this.titleRow);
@@ -98,10 +98,10 @@ peach.views.NewNamespaceTourView = Backbone.View.extend({
 		this.collection.on(peach.events.wikiPageCreated, this.handlePageCreated);
 	},
 	handleEditCompleted: function(){
-		$(this.titleRow).empty().append($.el.h2({'class':'span12'}, 'Now, add another page over on the left.'), $.el.p('(don\'t worry, you can delete it later)'));
+		$(this.titleRow).empty().append($.el.h2({'class':'col-sm-12'}, 'Now, add another page over on the left.'), $.el.p('(don\'t worry, you can delete it later)'));
 	},
 	handlePageCreated: function(){
-		$(this.titleRow).empty().append($.el.h2({'class':'span12'}, 'You did it. Keep going!'));
+		$(this.titleRow).empty().append($.el.h2({'class':'col-sm-12 col-md-'}, 'You did it. Keep going!'));
 		setTimeout(function(){
 			$('.new-namespace-tour-view').hide(400);
 		}, 5000);
@@ -197,7 +197,7 @@ peach.views.NamespaceBreadcrumbView = Backbone.View.extend({
 			$(this.wikiPageCrumb).remove();
 		}
 		if(wikiPage.get('name') == 'SplashPage') return;
-		this.wikiPageCrumb = $.el.li({'class':'active'}, $.el.span({'class':'divider'}, '/'), wikiPage.get('name'));
+		this.wikiPageCrumb = $.el.li({'class':'active'}, wikiPage.get('name'));
 		this.$el.append(this.wikiPageCrumb);
 		this.wikiPageCrumb.wikiPage = wikiPage;
 	},
@@ -274,7 +274,7 @@ peach.views.NamespacePagesView = Backbone.View.extend({
 	initialize: function(){
 		_.bindAll(this);
 		this.selectedName = 'SplashPage';
-		this.list = $.el.ul({'class':'nav nav-tabs nav-stacked'});
+		this.list = $.el.ul({'class':'nav nav-pills nav-stacked'});
 		this.$el.append(this.list);
 		this.wikiPageItemViews = [];
 
@@ -365,7 +365,9 @@ peach.views.WikiEditControlsView = Backbone.View.extend({
 	initialize: function(){
 		_.bindAll(this);
 
-		this.editLink = $.el.a($.el.i({'class':'icon-edit', 'title':'edit (alt-o)', 'alt':'edit'}), 'edit');
+		this.editLink = $.el.a($.el.i(
+			{'class':'icon-edit', 'title':'edit (alt-o)', 'alt':'edit'}
+		), 'edit');
 		$(this.editLink).click(this.editRequested);
 		this.printLink = $.el.a(
 			{'target':'_new', 'accessKey':'p', 'href':window.urlLoader.urls.peach.username_namespace_name_print(this.options.user.get('username'), this.options.namespace.get('name'), this.model.get('name'))},
@@ -381,6 +383,7 @@ peach.views.WikiEditControlsView = Backbone.View.extend({
 		this.$el.append(this.editLink);
 		if(!this.options.isMobile){
 			this.$el.append(this.printLink);
+			this.$el.append($.el.br());
 			this.$el.append(this.historyLink);
 		}
 	},
@@ -405,9 +408,9 @@ peach.views.WikiPageEditForm = Backbone.View.extend({
 		this.markdownLink = $.el.a({'href':'http://daringfireball.net/projects/markdown/syntax', 'target':'_new'}, 'Formatting');
 		this.controlsDiv.append(this.markdownLink);
 
-		this.cancelButton = this.controlsDiv.append($.el.button({'type':'button'}, 'Cancel'));
+		this.cancelButton = this.controlsDiv.append($.el.button({'type':'button', 'class':'btn'}, 'Cancel'));
 		$(this.cancelButton).click(this.handleCancel);
-		this.saveButton = this.controlsDiv.append($.el.button({'type':'button'}, 'Save'));
+		this.saveButton = this.controlsDiv.append($.el.button({'type':'button', 'class':'btn'}, 'Save'));
 		$(this.saveButton).click(this.handleSave);
 
 		this.saveAccessLink = $.el.a({'accessKey':'s'});
@@ -615,7 +618,7 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 		_.bindAll(this);
 		this.photoCollection = new window.schema.api.peach.WikiPhotoCollection();
 
-		var row = $.el.div({'class':'row-fluid'});
+		var row = $.el.div({'class':'row'});
 		this.$el.append(row);
 
 		this.wikiPageRenderView = new peach.views.WikiPageRenderView({
@@ -625,11 +628,11 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 			'namespace':this.options.namespace, 
 			'photoCollection':this.photoCollection
 		});
-		this.wikiPageRenderView.$el.addClass('span9')
+		this.wikiPageRenderView.$el.addClass('col-sm-12 col-md-9')
 		row.append(this.wikiPageRenderView.el);
 
-		this.leftRenderColumn = $.el.div({'class':'span3'});
-		row.append(this.leftRenderColumn);
+		this.rightRenderColumn = $.el.div({'class':'col-sm-12 col-md-3'});
+		row.append(this.rightRenderColumn);
 
 		this.wikiEditControlsView = new peach.views.WikiEditControlsView({
 			'model':this.model, 
@@ -637,20 +640,20 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 			'namespace':this.options.namespace, 
 			'isMobile':this.options.isMobile
 		});
-		this.leftRenderColumn.append(this.wikiEditControlsView.el);
+		this.rightRenderColumn.append(this.wikiEditControlsView.el);
 
 		this.wikiPhotoCollectionView = new transmutable.views.GenericCollectionView({
 			'collection': this.photoCollection,
 			'itemClass':peach.views.WikiPhotoItemView
 		});
 		this.wikiPhotoCollectionView.$el.addClass('wiki-photo-collection-view');
-		this.leftRenderColumn.append(this.wikiPhotoCollectionView.el);
+		this.rightRenderColumn.append(this.wikiPhotoCollectionView.el);
 
 		this.wikiPageEditForm = new peach.views.WikiPageEditForm({
 			'model':this.model,
 			'isMobile':this.options.isMobile
 		})
-		this.wikiPageEditForm.$el.addClass('span9')
+		this.wikiPageEditForm.$el.addClass('col-sm-12 col-md-9')
 		row.append(this.wikiPageEditForm.el);
 		$(this.wikiPageEditForm.el).hide();
 
@@ -659,7 +662,7 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 			'collection':this.photoCollection,
 			'isMobile':this.options.isMobile
 		})
-		this.wikiPhotosEditorView.$el.addClass('span3')
+		this.wikiPhotosEditorView.$el.addClass('col-sm-12 col-md-3')
 		row.append(this.wikiPhotosEditorView.el);
 		$(this.wikiPhotosEditorView.el).hide();
 
@@ -679,7 +682,7 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 		this.wikiPageEditForm.$el.show();
 		this.wikiPhotosEditorView.$el.show();
 		this.wikiPageRenderView.$el.hide();
-		$(this.leftRenderColumn).hide();
+		$(this.rightRenderColumn).hide();
 		// The DOM isn't ready for a focus event, so wait a bit
 		setTimeout(_.bind(function(){
 			$(this.wikiPageEditForm.textArea).focus();
@@ -689,7 +692,7 @@ peach.views.WikiPageEditorView = Backbone.View.extend({
 		this.wikiPageEditForm.$el.hide();
 		this.wikiPhotosEditorView.$el.hide();
 		this.wikiPageRenderView.$el.show();
-		$(this.leftRenderColumn).show();
+		$(this.rightRenderColumn).show();
 	}
 });
 

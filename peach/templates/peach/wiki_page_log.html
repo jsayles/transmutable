@@ -9,11 +9,11 @@
 {% block content %}
 <ul class="breadcrumb">
 	<li>
-		<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
+		<a href="{% url peach.views.index %}">Notes</a>
 	</li>
-	<li><a href="{{page_log.wiki_page.namespace.get_absolute_url}}">{{ page_log.wiki_page.namespace.display_name }}</a> <span class="divider">/</span></li>
-	<li><a href="{{page_log.wiki_page.get_absolute_url}}">{{ page_log.wiki_page.name }}</a> <span class="divider">/</span></li>
-	<li><a href="{% url peach.views.wiki_history page_log.wiki_page.namespace.owner.username page_log.wiki_page.namespace.name page_log.wiki_page.name %}">history</a> <span class="divider">/</span></li>
+	<li><a href="{{page_log.wiki_page.namespace.get_absolute_url}}">{{ page_log.wiki_page.namespace.display_name }}</a></li>
+	<li><a href="{{page_log.wiki_page.get_absolute_url}}">{{ page_log.wiki_page.name }}</a></li>
+	<li><a href="{% url peach.views.wiki_history page_log.wiki_page.namespace.owner.username page_log.wiki_page.namespace.name page_log.wiki_page.name %}">history</a></li>
 	<li class="active">{{ page_log.created|date:"F j, g:i A"}}</li>
 </ul>
 

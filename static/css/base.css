@@ -1,5 +1,4 @@
 body {
-	padding-top: 60px;
 	padding-bottom: 40px;
 }
 
@@ -13,6 +12,10 @@ footer {
 footer a {
   margin-left: 2em;
   color: #888;
+}
+
+header.navbar {
+  margin-bottom: 0;
 }
 
 .nav .badge-success {
@@ -68,9 +71,3 @@ footer a {
         width: 98%;
 }
 .search-form li { display: inline; }
-
-@media (max-width: 980px) {
-  body {
-    padding-top: 0;
-  }
-}

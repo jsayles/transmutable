@@ -37,7 +37,7 @@ a[href="#delete"] { float: right; color: grey; }
 
 {% block content %}
 <div class="row">
-	<div id="user-info" class="span2 offset3">
+	<div id="user-info" class="col-sm-12">
 		{% if gratitude.user.get_profile.photo %}
 			<a href="{{ gratitude.user.get_absolute_url }}"><img class="person-photo" src="{{ gratitude.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ gratitude.user.get_full_name}}" alt="{{ gratitude.user.get_full_name}}" /></a>
 		{% else %}
@@ -48,7 +48,7 @@ a[href="#delete"] { float: right; color: grey; }
 		</h4>
 	</div>
 
-	<div class="span4">
+	<div class="col-sm-12">
 		<h3 class='section-title'>I'm grateful for:</h3>
 		{% include "banana/gratitude.frag" %}
 		{% if request.user == gratitude.user %}

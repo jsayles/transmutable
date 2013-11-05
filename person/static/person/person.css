@@ -21,7 +21,7 @@
 	margin: 0 0.5em 0 0;
 }
 #registration-form table { width: 100%; }
-#registration-form input[type=text], #content form input[type=password] { width: 95%; }
+#registration-form input[type=text], #content form input[type=password] { width: 100%; }
 #registration-form label[for=id_tos] { display: none; }
 #id_tos { margin; 0 0.2em 0 0; }
 

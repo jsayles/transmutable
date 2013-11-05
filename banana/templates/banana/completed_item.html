@@ -38,7 +38,7 @@ a[href="#delete"] { float: right; color: grey; }
 
 {% block content %}
 <div class="row">
-	<div id="user-info" class="span2 offset3">
+	<div id="user-info" class="col-sm-12">
 		{% if completed_item.user.get_profile.photo %}
 			<a href="{{ completed_item.user.get_absolute_url }}">
 				<img class="person-photo" src="{{ completed_item.user.get_profile.photo.image.url|thumbnail:"150w" }}" width="150" title="{{ completed_item.user.get_full_name}}" alt="{{ completed_item.user.get_full_name}}" />
@@ -51,7 +51,7 @@ a[href="#delete"] { float: right; color: grey; }
 		</h4>
 	</div>
 
-	<div class="span4">
+	<div class="col-sm-12">
 		<h3 class='section-title'>What I did:</h3>
 		{% with "true" as hide_rocks %}
 			{% completed_item_widget %}

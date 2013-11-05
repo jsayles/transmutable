@@ -19,7 +19,7 @@ $(document).ready(function() {
 
 <ul class="breadcrumb">
       <li>
-         <a href="{% url apple.views.index %}">Staff tools</a> <span class="divider">/</span>
+         <a href="{% url apple.views.index %}">Staff tools</a>
       </li>
       <li class="active">Email all active accounts</li>
 </ul>
@@ -33,6 +33,6 @@ $(document).ready(function() {
 		{{ field }}
 		{% if field.errors %}{{ field.errors }}{% endif %}
 	{% endfor %}
-	<input type="submit" value="Email All Active Users" />
+	<input type="submit" class="btn pull-right" value="Email All Active Users" />
 </form>
 {% endblock %}

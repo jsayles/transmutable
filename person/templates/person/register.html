@@ -4,6 +4,8 @@
 
 {% block sub-style %}
 #content h1 { text-align: right; }
+#registration-form input[type=text], #registration-form input[type=password]{
+}
 {% endblock %}
 
 {% block sub-head %}
@@ -14,9 +16,8 @@
 
 {% block content%}
 	{% if open_registration and not request.user.is_authenticated %}
-		<div class="row-fluid">
-			<div class="span4 offset1">
-				<h1>Brains Welcome:</h1>
+		<div class="row">
+			<div class="col-sm-12 col-md-6">
 				<form id="registration-form" action="{% url person.views.register %}" method="post">
 					<table>
 						{{ registration_form }}
@@ -24,12 +25,6 @@
 					</table>
 					{% csrf_token %}
 				</form>
-			</div>
-			<div class="span5 offset1">
-				<h2>Work in public:</h2>
-				<p class='alert alert-info'>Purge your mind of open loops and nagging thoughts.</p>
-				<p class='alert alert-info'>Feel the satisfaction of hitting the 'to-done' button.</p>
-				<p class='alert alert-info'>Focus on gratitude for perspective and happiness.</p>
 			</div>
 		</div>
 	{% elif open_registration and request.user.is_authenticated %}

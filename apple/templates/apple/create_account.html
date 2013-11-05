@@ -18,9 +18,9 @@ $(document).ready(function() {
 
 <ul class="breadcrumb">
       <li>
-         <a href="{% url apple.views.index %}">Staff tools</a> <span class="divider">/</span>
+         <a href="{% url apple.views.index %}">Staff tools</a>
       </li>
-      <li class="active">Sreate an account</li>
+      <li class="active">Create an account</li>
 </ul>
 
 <form enctype="multipart/form-data" action='.' method='post'>
@@ -38,7 +38,7 @@ $(document).ready(function() {
             {% endif %}
          </tr>
       {% endfor %}
-      <tr><td></td><td><input type="submit" value="Create!" /></td></tr>
+      <tr><td></td><td><input type="submit" value="Create!" class="btn pull-right" /></td></tr>
    </table>
 </form>
 {% endblock %}

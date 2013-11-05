@@ -9,10 +9,10 @@
 {% block content %}
 	<ul class="breadcrumb">
 		<li>
-			<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
+			<a href="{% url peach.views.index %}">Notes</a>
 		</li>
-		<li><a href="{{page.namespace.get_absolute_url}}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
-		<li><a href="{{page.get_absolute_url}}">{{ page.name }}</a> <span class="divider">/</span></li>
+		<li><a href="{{page.namespace.get_absolute_url}}">{{ page.namespace.display_name }}</a></li>
+		<li><a href="{{page.get_absolute_url}}">{{ page.name }}</a></li>
 		<li class="active">history</li>
 	</ul>
 

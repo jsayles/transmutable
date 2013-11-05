@@ -27,106 +27,114 @@
 		{% block sub-head %}{% endblock %}
 	</head>
 
-	<body data-spy="scroll" data-target=".subnav" data-offset="50">{% block body %}
+	<body>{% block body %}
 		{%block navbar %}
-			<div class="navbar navbar-fixed-top">
-				<div class="navbar-inner">
-					<div class="container">
-						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<header class="navbar">
+				<div class="container">
+					<div class="navbar-header">
+						<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
-						</a>
-						<a class="brand" href="{% url banana.views.index %}">{{ site.name }}</a>
-						<div class="nav-collapse">
-							<ul class="nav">
-								{% if request.user.is_authenticated %}
-									<li id="home-nav"><a href="{% url banana.views.user request.user.username %}">Home</a></li>
-									<li id="notes-nav" class="dropdown">
-										<a id="notes-dropdown" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
-										<ul class="dropdown-menu" role="menu" aria-labelledby="notes-dropdown">
-											<li role="presentation"><a role="menuitem" tabindex="-1" href="{% url peach.views.index %}">All</a></li>
-											{% if request.user.namespaces.not_archived %}
-												<li role="presentation" class="divider"></li>
-											{% endif %}
-											{% for namespace in request.user.namespaces.not_archived %}
-												<li role="presentation">
-													<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
-												</li>
-											{% endfor %}
-
-										</ul>
-									</li>
-								{% endif %}
-
-								<li id="activity-nav"><a href="{% url banana.views.activity %}">Activity</a></li>
-
-								{% if request.user.is_authenticated and request.user.get_profile.available_invites.count > 0 %}
-									<li id="invites-nav">
-										<a href="{% url person.views.invites %}">Invites <span class="badge badge-success">{{ request.user.get_profile.available_invites.count }}</span></a>
-									</li>
-								{% endif %}
-
-								{% if default_help_url %}
-									<li id="help-nav"><a href="{{ default_help_url }}">Help</a></li>
-								{% endif %}
-								{% if request.user.is_staff %}
-									<li id="staff-nav" class="dropdown">
-										<a id="staff-dropdown" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Staff <b class="caret"></b></a>
-										<ul class="dropdown-menu" role="menu" aria-labelledby="staff-dropdown">
-											<li role="presentation">
-												<a role="menuitem" tabindex="-1" href="{% url apple.views.index %}">Dashboard</a>
-											</li>
-											<li role="presentation">
-												<a href="{% url apple.views.create_account %}">Create an Account</a>
-											</li>
-											<li role="presentation">
-												<a href="{% url apple.views.email_everyone %}">Email All Active Accounts</a>
-											</li>
-											<li role="presentation">
-												<a href="{% url apple.views.send_test %}">Send Test Messages</a>
-											</li>
-											<li role="presentation">
-												<a href="{% url apple.views.add_invites %}">Add Invites</a>
-											</li>
-											<li role="presentation">
-												<a href="{% url admin:index %}">Admin</a>
-											</li>
-										</ul>
-									</li>
-								{% endif %}
-
-								{% if request.user.is_authenticated and not request.user.get_profile.photo %}
-									<li id="intrusive-camera">
-										<a href="{% url person.views.profile request.user.username %}#edit-photo">
-											<i class="icon-camera-retro"></i>
-										</a>
-									</li>
-								{% endif %}
-
-							</ul>
-							{% if request.user.is_authenticated %}
-								<p class="navbar-text pull-right">
-									/&nbsp;<a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a>
-								</p>
-								<p class="navbar-text pull-right">
-									<a href="{% url person.views.profile request.user.username %}">account</a>&nbsp;
-								</p>
-							{% else %}
-								<p class="navbar-text pull-right"><a href="{% url django.contrib.auth.views.login %}">login</a></p>
-							{% endif %}
-						</div><!--/.nav-collapse -->
+						</button>
+						<a href="{% url banana.views.index %}" class="navbar-brand">{{ site.name }}</a>
 					</div>
+					<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+						<ul class="nav navbar-nav">
+							{% if request.user.is_authenticated %}
+								<li id="home-nav">
+									<a href="{% url banana.views.user request.user.username %}">Home</a>
+								</li>
+								<li id="notes-nav" class="dropdown">
+									<a id="notes-dropdown" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="notes-dropdown">
+										<li role="presentation"><a role="menuitem" tabindex="-1" href="{% url peach.views.index %}">All</a></li>
+										{% if request.user.namespaces.not_archived %}
+											<li role="presentation" class="divider"></li>
+										{% endif %}
+										{% for namespace in request.user.namespaces.not_archived %}
+											<li role="presentation">
+												<a href="{{ namespace.get_absolute_url }}">{{ namespace.display_name }}</a>
+											</li>
+										{% endfor %}
+
+									</ul>
+								</li>
+							{% endif %}
+
+							<li id="activity-nav"><a href="{% url banana.views.activity %}">Activity</a></li>
+
+							{% if request.user.is_authenticated and request.user.get_profile.available_invites.count > 0 %}
+								<li id="invites-nav">
+									<a href="{% url person.views.invites %}">Invites <span class="badge badge-success">{{ request.user.get_profile.available_invites.count }}</span></a>
+								</li>
+							{% endif %}
+
+							{% if default_help_url %}
+								<li id="help-nav"><a href="{{ default_help_url }}">Help</a></li>
+							{% endif %}
+							{% if request.user.is_staff %}
+								<li id="staff-nav" class="dropdown">
+									<a id="staff-dropdown" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Staff <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="staff-dropdown">
+										<li role="presentation">
+											<a role="menuitem" tabindex="-1" href="{% url apple.views.index %}">Dashboard</a>
+										</li>
+										<li role="presentation">
+											<a href="{% url apple.views.create_account %}">Create an Account</a>
+										</li>
+										<li role="presentation">
+											<a href="{% url apple.views.email_everyone %}">Email All Active Accounts</a>
+										</li>
+										<li role="presentation">
+											<a href="{% url apple.views.send_test %}">Send Test Messages</a>
+										</li>
+										<li role="presentation">
+											<a href="{% url apple.views.add_invites %}">Add Invites</a>
+										</li>
+										<li role="presentation">
+											<a href="{% url admin:index %}">Admin</a>
+										</li>
+									</ul>
+								</li>
+							{% endif %}
+
+							{% if request.user.is_authenticated and not request.user.get_profile.photo %}
+								<li id="intrusive-camera">
+									<a href="{% url person.views.profile request.user.username %}#edit-photo">
+										<i class="icon-camera-retro"></i>
+									</a>
+								</li>
+							{% endif %}
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							{% if request.user.is_authenticated %}
+								<li>
+									<a href="{% url django.contrib.auth.views.logout_then_login %}">logout</a>
+								</li>
+								<li>
+									<a href="{% url person.views.profile request.user.username %}">account</a>
+								</li>
+							{% else %}
+								<li>
+									<a href="{% url django.contrib.auth.views.login %}">login</a>
+								</li>
+							{% endif %}
+						</ul>
+					</nav>
 				</div>
-			</div>
+			</header>
 		{% endblock %}
-		<div id="content" class="container-fluid">
+
+		<div id="content" class="container">
 			{% block content %}{% endblock %}
-		</div><!--/.fluid-container-->
+		</div>
+
 		{% block footer %}
-			<footer class="container-fluid">
-				<div class="row-fluid">
-					<div class="span12">
+			<footer class="container">
+				<div class="row">
+					<div class="col-12">
 						{% if terms_of_service_url %}
 							<a href="{{ terms_of_service_url }}">terms of service</a>
 						{% endif %}

@@ -52,8 +52,8 @@ function handleNamespaceCreated(namespace){
 
 {% block content %}
 	{% if request.user.namespaces.all %}
-		<div class="row-fluid">
-			<ul id="public-list" class="namespace-list span4">
+		<div class="row">
+			<ul id="public-list" class="namespace-list col-sm-12 col-md-4">
 				<h3 class="section-title">Public</h3>
 				{% if not request.user.namespaces.public_not_archived %}
 					<div class='alert alert-info'>
@@ -66,7 +66,7 @@ function handleNamespaceCreated(namespace){
 					</li>
 				{% endfor %}
 			</ul>
-			<ul id="private-list" class="namespace-list span4">
+			<ul id="private-list" class="namespace-list col-sm-12 col-md-4">
 				<h3 class="section-title">Private</h3>
 				{% if not request.user.namespaces.private_not_archived %}
 					<div class='alert alert-info'>
@@ -79,7 +79,7 @@ function handleNamespaceCreated(namespace){
 					</li>
 				{% endfor %}
 			</ul>
-			<ul id="archive-list" class="namespace-list span4">
+			<ul id="archive-list" class="namespace-list col-sm-12 col-md-4">
 				<h3 class="section-title">Archive</h3>
 				{% if not request.user.namespaces.archived %}
 					<div class='alert alert-info'>

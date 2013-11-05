@@ -14,14 +14,14 @@ $(document).ready(function() {
 {% block content %}
 <ul class="breadcrumb">
       <li>
-         <a href="{% url apple.views.index %}">Staff tools</a> <span class="divider">/</span>
+         <a href="{% url apple.views.index %}">Staff tools</a>
       </li>
       <li class="active">add invites</li>
 </ul>
 
 {% if page_message %}
-   <div class="row-fluid">
-      <div class="span12 alert alert-info">
+   <div class="row">
+      <div class="col-sm-12 alert alert-info">
          {{ page_message }}
       </div>
    </div>

@@ -47,10 +47,10 @@ $(document).ready(function() {
 		<ul class="breadcrumb">
 			{% if page.namespace.owner == request.user %}
 			<li>
-				<a href="{% url peach.views.index %}">Notes</a> <span class="divider">/</span>
+				<a href="{% url peach.views.index %}">Notes</a>
 			</li>
 			{% endif %}			
-			<li><a href="{{page.namespace.get_absolute_url}}">{{ page.namespace.display_name }}</a> <span class="divider">/</span></li>
+			<li><a href="{{page.namespace.get_absolute_url}}">{{ page.namespace.display_name }}</a></li>
 			<li class="active">{{ page.name }}</li>
 		</ul>
 	{% endif %}

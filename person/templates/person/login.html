@@ -2,38 +2,63 @@
 
 {% block sub-head %}
 <style type="text/css">
-#login-form th { padding-right: 5px; }
+	#login-form { max-width: 20em;}
+	#login-form th { padding-right: 5px; }
+	#login-form label {
+		margin-bottom: 0;
+		display: block;
+		font-weight: normal;
+	}
+	#login-form input[type=text], #login-form input[type=password] {
+		display: block;
+		width: 100%;
+		margin-bottom: 1em;
+	}
+	.align-right {
+		text-align: right;
+	}
 </style>
 <script>
 $(document).ready(function(){
 	$('#id_username').focus();
-})
+});
 </script>
 {% endblock %}
 	
 {% block content%}
-<h2>Login:</h2>
+<div class="row">
+	<div class="col-sm-12 col-md-offset-3 col-md-6">
+		{% if form.errors %}
+			<p>Your username and password didn't match.</p>
+		{% endif %}
 
-{% if form.errors %}
-<p>Your username and password didn't match.</p>
-{% endif %}
+		<form id="login-form" method="post" action=".">
 
-<form id="login-form" method="post" action=".">
-<table>
-<tr><th>{{ form.username.label_tag }}</th><td>{{ form.username }}</td></tr>
-<tr><th>{{ form.password.label_tag }}</th><td>{{ form.password }}</td></tr>
-<tr><td colspan="2" style="text-align: right;">
-	<button type="submit">login</button>
-	<input type="hidden" name="next" value="{{ next }}" />
-</td></tr>
-</table>
-{% csrf_token %}
-</form>
+			{{ form.username.label_tag }}
+			{{ form.username }}
 
-<p style="margin-top: 20px;">Don't remember your password?  Try our <a href="{% url person.views.password_reset %}">password reset page</a>.</p>
+			{{ form.password.label_tag }}
+			{{ form.password }}
 
-{% if open_registration %}
-<p style="margin-top: 20px;">Don't have an account yet?  Try our <a href="{% url person.views.register %}">registration page</a>.</p>
-{% endif %}
+			<div class="align-right">
+				<button class="btn" type="submit">login</button>
+				<input type="hidden" name="next" value="{{ next }}" />
+				{% csrf_token %}
+			</div>
+		</form>
+
+		<p style="margin-top: 20px;">
+			Don't remember your password?
+			Try our <a href="{% url person.views.password_reset %}">password reset page</a>.
+		</p>
+
+		{% if open_registration %}
+			<p style="margin-top: 20px;">
+				Don't have an account yet?  
+				Try our <a href="{% url person.views.register %}">registration page</a>.
+			</p>
+		{% endif %}
+	</div>
+</div>
 
 {% endblock %}

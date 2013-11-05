@@ -32,8 +32,8 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-	<div class="row-fluid">
-		<div class="span4">
+	<div class="row">
+		<div class="col-sm-12 col-md-4">
 			<h3>New users: {{ new_users.count }}</h3>
 			<ul class="user-list">
 				{% with "True" as show_user %}
@@ -50,7 +50,7 @@ $(document).ready(function() {
 				{% endwith %}
 			</ul>
 		</div>
-		<div class="span4">
+		<div class="col-sm-12 col-md-4">
 			<h3>User count: {{ user_count }}</h3>
 		</div>
 	</div>

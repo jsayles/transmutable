@@ -30,15 +30,15 @@
 
 {% block content %}
 
-<div class='row-fluid'>
+<div class='row'>
 	<ul class="nav nav-tabs" id="activities-tab">
 	  <li><a href="#completed-items" data-toggle="tab">To-dones</a></li>
 	  <li><a href="#gratitudes" data-toggle="tab">Gratitudes</a></li>
 	</ul>
 </div>
 
-<div class='row-fluid'>
-	<div class="tab-content span12">
+<div class='row'>
+	<div class="tab-content col-sm-12">
 	  <div class="tab-pane" id="completed-items">
 				<ul class="update-list">
 				{% with "True" as show_completed_item_user %}

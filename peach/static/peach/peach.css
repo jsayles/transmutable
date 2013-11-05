@@ -14,24 +14,31 @@
 }
 
 .wiki-page-editor-view .file-drop {
-	padding-top: 2em;
+	padding-top: 1.2em;
 	display: block;
 	height: 4em;
 	width: 100%;
 }
 
-.wiki-edit-controls-view { margin-bottom: 2em;}
-.wiki-edit-controls-view a { font-size: 1.2em; margin-right: 0.8em; }
+.wiki-edit-controls-view {
+	text-align: center;
+	margin-bottom: 1em;
+}
+.wiki-edit-controls-view a {
+	font-size: 1.2em;
+	margin-right: 0.8em;
+	white-space: nowrap;
+}
 .wiki-edit-controls-view a i { padding-right: 0.2em; }
 a[href='#delete'] { color: red; }
-.wiki-page-editor-view { width: 100%; }
-.wiki-page-edit-form.span9 { margin-left: 0; }
+.wiki-page-editor-view { padding: 0; width: 100%; }
 .mobile .wiki-page-edit-form textarea { min-height: 10em;}
 .wiki-page-edit-form form { width: 100%; margin-bottom: 0.1em; }
-.wiki-page-edit-form textarea { width: 98%; min-height: 30em;}
+.wiki-page-edit-form textarea { width: 100%; min-height: 30em;}
 .wiki-page-edit-form .controls-div { text-align: right; }
 .wiki-page-edit-form .controls-div button { margin-left: 0.5em; }
 .wiki-page-edit-form .controls-div a { float: left; font-weight: bold; }
+.wiki-page-edit-form button { margin-top: 0.3em; }
 .wiki-page-file-editor-view .file-form {
   visibility: hidden;
   position: absolute;
@@ -54,6 +61,7 @@ a[href='#delete'] { color: red; }
 .wiki-photo-collection-view {
 	list-style: none;
 	margin-left: 0;
+	padding-left: 0;
 	margin: 0;
 }
 .wiki-photo-item-view {
@@ -93,6 +101,9 @@ a[href='#delete'] { color: red; }
 }
 #content .wiki-page-item-view:hover .delete-link { display: block; }
 
+.namespace-pages-view ul {
+	margin-bottom: 1em;
+}
 .namespace-pages-view input[type=text] { width: 90%; }
 .namespace-breadcrumb-view li i { padding-left: 0.3em;  }
 .create-namespace-view input {

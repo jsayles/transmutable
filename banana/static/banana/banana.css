@@ -6,7 +6,7 @@
 	=========================================
 */
 .work-doc-edit-view textarea {
-	width: 96%;
+	width: 100%;
 	height: 30em;
 	margin: 0 0 0.6em 0;
 }
@@ -84,7 +84,7 @@
 	min-height: 11em;
 }
 .update-edit-view textarea, .edit-view input[type=text] {
-	width: 97%;
+	width: 100%;
 }
 .update-edit-view input[type=checkbox] {
 	margin: 0 0.25em 0 0; padding: 0;
@@ -93,6 +93,6 @@
 .update-edit-view label {
 	display: inline;
 }
-
+.update-edit-view button { margin-top: 0.3em; }
 .update-edit-view input[type=text] { margin-top: 1em; }
 button[name="submit-form-button"] { float: right; z-index: 1; }

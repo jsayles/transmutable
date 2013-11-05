@@ -1,12 +1,7 @@
 <script src="{{STATIC_URL}}js/jquery-1.7.1.js"></script>
 <script src="{{STATIC_URL}}js/timeago-1.0.2.js"></script>
 <script src="{{STATIC_URL}}js/laconic.js"></script>
-<script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-tab.js"></script>
-<script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-scrollspy.js"></script>
-<script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-dropdown.js"></script>
-<script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-modal.js"></script>
-<script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-collapse.js"></script>
-<script src="{{STATIC_URL}}bootstrap-2.2.2/js/bootstrap-alert.js"></script>
+<script src="{{STATIC_URL}}bootstrap-3.0.1/js/bootstrap.min.js"></script>
 <script src="{{STATIC_URL}}phlogiston/underscore-1.4.4-min.js"></script>
 <script src="{{STATIC_URL}}phlogiston/json/json2.js"></script>
 <script src="{{STATIC_URL}}phlogiston/backbone-1.0.0-min.js"></script>

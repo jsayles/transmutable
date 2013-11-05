@@ -14,23 +14,19 @@
 #mobile-ui-header { font-size: 1.1em; height: 1.5em; line-height: 1.5em; }
 #registration-form span.helptext { display: none; }
 #registration-form input[type=text], #registration-form input[type=password] { width: 195px; }
-.hero-unit {
-	padding: 2em;
-	text-shadow: 1px 1px 9px #eee;
-}
-.hero-unit h1 {
+.jumbotron h1 {
 	font-size: 4em;
 	text-align: center;
 }
-.hero-unit ul {
+.jumbotron ul {
 	text-align: center;
 	list-style: none;
 	font-size: 1.2em;
 }
-.hero-unit li {
+.jumbotron li {
 	margin-top: 0.5em;
 }
-.hero-unit .btn {
+.jumbotron .btn {
 	margin-left: 44%;
 	margin-top: 1em;	
 }
@@ -44,9 +40,9 @@
 
 {% block content %}
 	{% if not request.user.is_authenticated %}
-	  <div class="row-fluid">
-		<div class="span12">
-		  <div class="hero-unit">
+	  <div class="row">
+		<div class="col-12">
+		  <div class="jumbotron">
 		  	<div class="call-to-arms">
 				<h1>Get Cotivated!</h1>
 				<ul>
@@ -62,8 +58,8 @@
 		</div>
 	  </div>
 	{% endif %}
-	  <div class="row-fluid">
-		<div class="span4">
+	  <div class="row">
+		<div class="col-sm-12 col-md-4">
 			<h3>Recent to&ndash;dones</h3>
 			<ul class="update-list">
 				{% with "True" as show_completed_item_user %}
@@ -75,7 +71,7 @@
 				{% endwith %}
 			</ul>
 		</div>
-		<div class="span4">
+		<div class="col-sm-12 col-md-4">
 			<h3>Recent gratitudes</h3>
 			<ul class="update-list">
 				{% with "True" as show_user %}
@@ -87,7 +83,7 @@
 				{% endwith %}
 			</ul>
 		</div>
-		<div class="span4">
+		<div class="col-sm-12 col-md-4">
 		  	<h3>Meet the people</h3>
 				{% with "True" as show_user %}
 					{% for user in promoted_users|slice:":10" %}

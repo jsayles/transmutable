@@ -33,14 +33,14 @@ banana.views.NewUserTourView = Backbone.View.extend({
 		this.completed = false;
 
 		this.titleRow = $.el.div(
-			{'class':'row-fluid new-user-tour-title-row'}, 
-			$.el.h2({'class':'span12'}, 'Let\'s get started with ' + this.options.siteName + '!')
+			{'class':'row new-user-tour-title-row'}, 
+			$.el.h2({'class':'col-sm-12'}, 'Let\'s get started with ' + this.options.siteName + '!')
 		);
 		this.$el.append(this.titleRow);
 
 		this.congratulationsRow = $.el.div(
-			{'class':'row-fluid new-user-tour-congratulations-row'}, 
-			$.el.h2({'class':'span12'}, 'That\'s the core of Transmutable Work.  Keep going!')
+			{'class':'row new-user-tour-congratulations-row'}, 
+			$.el.h2({'class':'col-sm-12'}, 'That\'s the core of Transmutable Work.  Keep going!')
 		);
 		this.$el.append(this.congratulationsRow);
 
