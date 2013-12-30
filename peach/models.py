@@ -28,7 +28,9 @@ def clean_url_element(element):
 class NamespaceManager(models.Manager):
 	def public(self): return self.filter(public=True)
 	def public_not_archived(self): return self.filter(public=True).filter(archive=False)
+	def public_archived(self): return self.filter(public=True).filter(archive=True)
 	def private_not_archived(self): return self.filter(public=False).filter(archive=False)
+	def private_archived(self): return self.filter(public=False).filter(archive=True)
 	def not_archived(self): return self.filter(archive=False)
 	def archived(self): return self.filter(archive=True)
 
