@@ -2,6 +2,7 @@ import logging
 import traceback
 from datetime import datetime, timedelta, date
 
+from django.utils import timezone
 from django.utils.html import urlize
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -31,7 +32,7 @@ from forms import CreateAccountForm, SendTestEmailForm, EmailEveryoneForm, AddIn
 @staff_member_required
 def index(request):
 	day_limit = 7
-	day_limit_delta = datetime.now() - timedelta(days=day_limit)
+	day_limit_delta = timezone.now() - timedelta(days=day_limit)
 
 	context = {
 		'user_count': User.objects.exclude(is_staff=True).count(),

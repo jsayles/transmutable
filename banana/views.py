@@ -37,8 +37,8 @@ def index(request):
 	day_limit = 4
 	context = {
 		'promoted_users': User.objects.exclude(profile__bio='').exclude(profile__bio=None).exclude(profile__mute=True).order_by('?'),
-		'completed_items': CompletedItem.objects.recent(max_count=10, created_after=datetime.now() - timedelta(days=day_limit), exclude_users_younger_than=timezone.now() - timedelta(days=day_limit + 1)),
-		'gratitudes': Gratitude.objects.recent(max_count=10, created_after=datetime.now() - timedelta(days=day_limit),  exclude_users_younger_than=timezone.now() - timedelta(days=day_limit + 1))
+		'completed_items': CompletedItem.objects.recent(max_count=10, created_after=timezone.now() - timedelta(days=day_limit), exclude_users_younger_than=timezone.now() - timedelta(days=day_limit + 1)),
+		'gratitudes': Gratitude.objects.recent(max_count=10, created_after=timezone.now() - timedelta(days=day_limit),  exclude_users_younger_than=timezone.now() - timedelta(days=day_limit + 1))
 	}
 	return render_to_response('banana/index.html', context, context_instance=RequestContext(request))
 
@@ -46,8 +46,8 @@ def activity(request):
 	'''A timely snapshot of what's going on around the site.'''
 	day_limit = 20
 	context = {
-		'completed_items': CompletedItem.objects.recent(max_count=100, created_after=datetime.now() - timedelta(days=day_limit)),
-		'gratitudes': Gratitude.objects.recent(max_count=100, created_after=datetime.now() - timedelta(days=day_limit))
+		'completed_items': CompletedItem.objects.recent(max_count=100, created_after=timezone.now() - timedelta(days=day_limit)),
+		'gratitudes': Gratitude.objects.recent(max_count=100, created_after=timezone.now() - timedelta(days=day_limit))
 	}
 	return render_to_response('banana/activity.html', context, context_instance=RequestContext(request))
 

@@ -15,6 +15,7 @@ from boto.exception import S3ResponseError
 from boto.s3.connection import S3Connection
 
 from django.conf import settings
+from django.utils import timezone
 
 def last_modified(directory_path):
 	"""Returns the path to the file in the directory which was last modified, or None if the directory is empty."""
@@ -118,7 +119,7 @@ class BackupManager(object):
 		self.check_dirs()
 		db_user, db_name, db_password = self.get_db_info()
 
-		now = datetime.datetime.now()
+		now = timezone.now()
 		file_token = '%d-%02d-%02d_%02d-%02d-%02d' % (now.year, now.month, now.day, now.hour, now.minute, now.second)
 
 		sql_file = '%s-sql.gz' % file_token

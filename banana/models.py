@@ -2,6 +2,7 @@ import os
 import Image
 import urllib
 import datetime, calendar
+from django.utils import timezone
 import random
 import time
 import re
@@ -31,7 +32,7 @@ class MarkedUpModel(models.Model):
 	markup = models.TextField(blank=False, null=False, default='')
 	rendered = models.TextField(blank=True, null=True)
 	modified = models.DateTimeField(auto_now=True)
-	created = models.DateTimeField(auto_now_add=True, null=True, blank=True, default=datetime.datetime.now())
+	created = models.DateTimeField(auto_now_add=True, null=True, blank=True, default=timezone.now())
 
 	def save_markup(self, markup):
 		self.markup = markup
@@ -157,7 +158,7 @@ class WorkDoc(MarkedUpModel):
 
 User.work_doc = property(lambda u: WorkDoc.objects.get_or_create(user=u)[0])
 User.get_absolute_url = lambda u: reverse('banana.views.user', kwargs={ 'username':u.username })	
-User.has_unused_tada = lambda u: u.date_joined < datetime.datetime.now() - datetime.timedelta(days=2) and CompletedItem.objects.filter(user=u).filter(promoted=True).filter(created__gt=datetime.datetime.now() - datetime.timedelta(days=2)).count() == 0
+User.has_unused_tada = lambda u: u.date_joined < timezone.now() - datetime.timedelta(days=2) and CompletedItem.objects.filter(user=u).filter(promoted=True).filter(created__gt=timezone.now() - datetime.timedelta(days=2)).count() == 0
 User.get_api_url = lambda u: reverse('api_dispatch_detail', args=['v0.1', 'auth/user', u.id])
 
 

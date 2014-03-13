@@ -5,6 +5,7 @@ import traceback
 import urllib
 import simplejson as json
 
+from django.utils import timezone
 from django.utils.html import urlize
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -36,7 +37,7 @@ def index(request): #aka to-do
 
 @login_required
 def activity(request):
-	return render_to_response('banana/mobile/activity.html', {  'completed_items':CompletedItem.objects.recent(max_count=10, created_after=datetime.datetime.now() - datetime.timedelta(days=4)) }, context_instance=RequestContext(request))
+	return render_to_response('banana/mobile/activity.html', {  'completed_items':CompletedItem.objects.recent(max_count=10, created_after=timezone.now() - datetime.timedelta(days=4)) }, context_instance=RequestContext(request))
 
 @login_required
 def notes(request):

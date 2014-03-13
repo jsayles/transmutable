@@ -21,7 +21,7 @@ LOGIN_REDIRECT_URL = '/u/'
 SOUTH_AUTO_FREEZE_APP = True
 
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-TIME_ZONE = 'America/Vancouver'
+TIME_ZONE = 'America/Los_Angeles'
 
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
